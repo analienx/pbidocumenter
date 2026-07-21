@@ -4,9 +4,8 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Optional
 
-from pbip_documenter.cache.manifest import Manifest, ManifestEntry, ManifestStatus
+from pbip_documenter.cache.manifest import ManifestEntry, ManifestStatus
 
 
 class RefreshDecision(Enum):
@@ -27,8 +26,8 @@ class RefreshPolicy:
 
     def decide(
         self,
-        entry: Optional[ManifestEntry],
-        cache_file: Optional[Path] = None,
+        entry: ManifestEntry | None,
+        cache_file: Path | None = None,
     ) -> RefreshDecision:
         """Decide whether to use cache or refresh.
 
@@ -62,8 +61,8 @@ class RefreshPolicy:
 
     def should_refresh(
         self,
-        entry: Optional[ManifestEntry],
-        cache_file: Optional[Path] = None,
+        entry: ManifestEntry | None,
+        cache_file: Path | None = None,
     ) -> bool:
         """Check if refresh is needed.
 

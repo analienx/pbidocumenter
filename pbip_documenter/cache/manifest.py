@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pbip_documenter.cache.atomic_write import atomic_write_json
 
@@ -27,9 +27,9 @@ class ManifestEntry:
         self,
         key: str,
         status: ManifestStatus,
-        created_at: Optional[datetime] = None,
-        updated_at: Optional[datetime] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        created_at: datetime | None = None,
+        updated_at: datetime | None = None,
+        metadata: dict[str, Any] | None = None,
     ):
         self.key = key
         self.status = status
@@ -37,7 +37,7 @@ class ManifestEntry:
         self.updated_at = updated_at or datetime.now(timezone.utc)
         self.metadata = metadata or {}
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert entry to dictionary."""
         return {
             "key": self.key,
@@ -48,7 +48,7 @@ class ManifestEntry:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "ManifestEntry":
+    def from_dict(cls, data: dict[str, Any]) -> "ManifestEntry":
         """Create entry from dictionary."""
         return cls(
             key=data["key"],
@@ -64,7 +64,7 @@ class Manifest:
 
     def __init__(
         self,
-        path: Optional[Path] = None,
+        path: Path | None = None,
         *,
         source: str | None = None,
         generated_at: datetime | None = None,
@@ -81,7 +81,7 @@ class Manifest:
             path: Path to manifest file. Defaults to .pbip_cache/manifest.json
         """
         self.path = path or Path(".pbip_cache/manifest.json")
-        self.entries: Dict[str, ManifestEntry] = {}
+        self.entries: dict[str, ManifestEntry] = {}
         self.source = source
         self.generated_at = generated_at
         self.last_success_at = last_success_at
@@ -103,9 +103,7 @@ class Manifest:
                 self.last_attempt_at = _parse_datetime(data.get("last_attempt_at"))
                 raw_status = data.get("status")
                 self.status = ManifestStatus(raw_status) if raw_status else self.status
-                self.freshness_threshold_hours = data.get(
-                    "freshness_threshold_hours", self.freshness_threshold_hours
-                )
+                self.freshness_threshold_hours = data.get("freshness_threshold_hours", self.freshness_threshold_hours)
                 self.record_count = data.get("record_count", self.record_count)
                 self.error_summary = data.get("error_summary", self.error_summary)
                 for key, entry_data in data.get("entries", {}).items():
@@ -118,7 +116,7 @@ class Manifest:
         """Save manifest to disk."""
         if path is not None:
             self.path = path
-        data: Dict[str, Any] = {
+        data: dict[str, Any] = {
             "version": "1.0",
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "entries": {k: v.to_dict() for k, v in self.entries.items()},
@@ -143,7 +141,7 @@ class Manifest:
         """Load a source manifest when it exists."""
         return cls(path) if path.exists() else None
 
-    def get(self, key: str) -> Optional[ManifestEntry]:
+    def get(self, key: str) -> ManifestEntry | None:
         """Get entry by key."""
         return self.entries.get(key)
 
@@ -151,7 +149,7 @@ class Manifest:
         self,
         key: str,
         status: ManifestStatus,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
     ) -> ManifestEntry:
         """Set entry status."""
         now = datetime.now(timezone.utc)
@@ -186,7 +184,7 @@ class Manifest:
         age = datetime.now(timezone.utc).replace(tzinfo=None) - entry.updated_at.replace(tzinfo=None)
         return age.total_seconds() < (max_age_hours * 3600)
 
-    def list_by_status(self, status: ManifestStatus) -> List[ManifestEntry]:
+    def list_by_status(self, status: ManifestStatus) -> list[ManifestEntry]:
         """List all entries with given status."""
         return [e for e in self.entries.values() if e.status == status]
 

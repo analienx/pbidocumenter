@@ -1,15 +1,16 @@
 """Atomic file write operations for cache."""
 
+import contextlib
 import json
 import os
 import tempfile
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import pandas as pd
 
 
-def atomic_write_json(path: Path, data: Dict[str, Any]) -> None:
+def atomic_write_json(path: Path, data: dict[str, Any]) -> None:
     """Write JSON data atomically to avoid corruption.
 
     Args:
@@ -28,10 +29,8 @@ def atomic_write_json(path: Path, data: Dict[str, Any]) -> None:
         os.replace(temp_path, path)
     except Exception:
         # Clean up temp file on failure
-        try:
+        with contextlib.suppress(OSError):
             os.unlink(temp_path)
-        except OSError:
-            pass
         raise
 
 
@@ -54,8 +53,6 @@ def atomic_write_parquet(path: Path, df: pd.DataFrame) -> None:
         os.replace(temp_path, path)
     except Exception:
         # Clean up temp file on failure
-        try:
+        with contextlib.suppress(OSError):
             os.unlink(temp_path)
-        except OSError:
-            pass
         raise
