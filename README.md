@@ -31,8 +31,6 @@ Open the generated `.docx` in Word and update its table-of-contents fields.
 - Native Word schema, lineage, and page-wireframe diagrams.
 - Actionable naming, dependency, privacy, and maintainability observations.
 
-![Example page wireframe](docs/images/wireframe.png)
-
 ## Commands
 
 ```powershell
