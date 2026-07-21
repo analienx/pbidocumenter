@@ -1,0 +1,131 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pbip-documenter"
+dynamic = ["version"]
+description = "Generate Word design-specification documents from Power BI PBIP projects"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.10"
+authors = [
+    {name = "Jakub Holasek"}
+]
+keywords = [
+    "powerbi",
+    "pbip",
+    "pbir",
+    "documentation",
+    "docx",
+    "word",
+    "tmdl",
+    "dax",
+    "data-model",
+    "design-specification",
+    "wireframe",
+    "report",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = [
+    "python-docx>=1.0.0",
+    "lxml>=4.9.0",
+]
+
+[project.optional-dependencies]
+augmentation = [
+    "pandas>=1.5.0",
+    "pyarrow>=12.0.0",
+]
+inventory = [
+    "requests>=2.28.0",
+    "msal>=1.20.0",
+    "pandas>=1.5.0",
+    "pyarrow>=12.0.0",
+    "azure-identity>=1.15.0",
+    "azure-keyvault-secrets>=4.7.0",
+]
+dev = [
+    "build>=1.2.0",
+    "pandas-stubs>=2.0.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+all = [
+    "requests>=2.28.0",
+    "msal>=1.20.0",
+    "pandas>=1.5.0",
+    "pyarrow>=12.0.0",
+    "azure-identity>=1.15.0",
+    "azure-keyvault-secrets>=4.7.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+[project.scripts]
+pbip-documenter = "pbip_documenter.bootstrap:main"
+
+[project.urls]
+Homepage = "https://github.com/analienx/pbip-documenter"
+Documentation = "https://github.com/analienx/pbip-documenter/blob/main/README.md"
+Repository = "https://github.com/analienx/pbip-documenter"
+Issues = "https://github.com/analienx/pbip-documenter/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pbip_documenter*"]
+exclude = ["tests*"]
+
+[tool.setuptools]
+py-modules = ["copiloter"]
+
+[tool.setuptools.dynamic]
+version = {attr = "pbip_documenter.version.__version__"}
+
+[tool.setuptools.package-data]
+pbip_documenter = ["py.typed"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B", "C4", "SIM"]
+ignore = ["B008", "E501", "E741", "SIM102", "SIM115"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+strict_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+show_column_numbers = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["msal", "azure.*"]
+ignore_missing_imports = true

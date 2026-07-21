@@ -1,0 +1,7 @@
+PBIP Documenter
+Copyright 2026 Jakub Holasek
+
+This product includes software developed by Jakub Holasek.
+
+Third-party dependencies used by this project are licensed under their own respective terms.
+See Python package metadata for details (e.g., python-docx, lxml, requests, msal, pandas).

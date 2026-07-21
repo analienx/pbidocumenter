@@ -1,0 +1,33 @@
+{
+  "compatibilityLevel": 1600,
+  "model": {
+    "tables": [
+      {
+        "name": "Sales",
+        "columns": [
+          {"name": "Order Date", "dataType": "dateTime"},
+          {"name": "Amount", "dataType": "decimal"}
+        ],
+        "measures": [
+          {"name": "Total Revenue", "expression": "SUM ( Sales[Amount] )", "formatString": "$#,0"}
+        ]
+      },
+      {
+        "name": "Product",
+        "columns": [
+          {"name": "Product Key", "dataType": "int64"},
+          {"name": "Category", "dataType": "string"}
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "fromTable": "Sales",
+        "fromColumn": "Product Key",
+        "toTable": "Product",
+        "toColumn": "Product Key",
+        "isActive": true
+      }
+    ]
+  }
+}

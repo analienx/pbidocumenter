@@ -1,0 +1,82 @@
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.spec
+!pbip_documenter.spec
+
+# Local/environment-specific config and secrets
+.env
+.env.*
+*.settings.json
+settings*.json
+
+# Runtime caches (keep the pbip_documenter.cache source package tracked)
+/cache/
+/.cache/
+cache/
+.cache/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.tmp
+
+# Data and export directories — ignore all content but preserve empty folder structure
+Reports/*
+!Reports/.gitkeep
+Exported Documents/*
+!Exported Documents/.gitkeep
+
+# Generated artifacts
+*.lnk
+matches.json
+matching_analysis_results.json
+
+# Debug / personal scripts & helpers (keep only published helpers)
+analyze_matching_data.py
+check_blanks.py
+check_quality.py
+debug_titles.py
+find_report_matches.py
+reports_dump.py
+verify_changes.py
+snapper.py
+snapper.ps1
+contextor.py
+convert_pdf.ps1
+convert_pdf.py
+llm.ps1
+meta.py
+repo_virtual_fs.py
+update_dump.ps1
+unlock-project-files.ps1
+scripts/update_contextor_onedrive.py
+
+# Claude / AI memory
+claude.md
+.claude-memory.md
+updates.md
+
+# Temporary files
+*.log
+*.bak
+~$*
+
+# Docx files are ignored globally, except in Templates/
+*.docx
+!Templates/*.docx

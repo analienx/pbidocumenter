@@ -1,0 +1,16 @@
+name: Bug report
+description: Report a reproducible problem.
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Include the command, expected result, actual result, and sanitized input details.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Version
+      placeholder: pbip-documenter 5.13.0
+    validations:
+      required: true

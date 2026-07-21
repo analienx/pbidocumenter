@@ -1,0 +1,26 @@
+{
+  "sections": [
+    {
+      "id": "overview",
+      "displayName": "Executive Overview",
+      "width": 1280,
+      "height": 720,
+      "visualContainers": [
+        {
+          "x": 24,
+          "y": 24,
+          "width": 360,
+          "height": 140,
+          "config": "{\"singleVisual\":{\"visualType\":\"card\",\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Revenue'\"}}}}}]}}}"
+        },
+        {
+          "x": 24,
+          "y": 190,
+          "width": 720,
+          "height": 420,
+          "config": "{\"singleVisual\":{\"visualType\":\"lineChart\"}}"
+        }
+      ]
+    }
+  ]
+}
