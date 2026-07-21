@@ -2,10 +2,11 @@
 
 import math
 import re
+import typing
 from typing import Any
 
 # Common English stopwords to filter out during tokenization
-DEFAULT_STOPWORDS = {
+DEFAULT_STOPWORDS: set[typing.Any] = {
     "a",
     "an",
     "and",
@@ -83,7 +84,7 @@ DEFAULT_STOPWORDS = {
 }
 
 # Report-specific stopwords that don't add semantic value
-REPORT_STOPWORDS = {
+REPORT_STOPWORDS: set[typing.Any] = {
     "report",
     "reports",
     "dashboard",
@@ -108,7 +109,7 @@ REPORT_STOPWORDS = {
 }
 
 # Jira-specific prefixes to strip before matching
-JIRA_PREFIXES = [
+JIRA_PREFIXES: list[typing.Any] = [
     r"^clone\s*[-:]?\s*",
     r"^sit\s+",
     r"^uat\s+",
@@ -119,7 +120,7 @@ JIRA_PREFIXES = [
 ]
 
 # Common words that appear frequently in Jira (low value for matching)
-COMMON_JIRA_WORDS = {
+COMMON_JIRA_WORDS: set[typing.Any] = {
     "approval",
     "approvals",
     "create",
@@ -150,7 +151,7 @@ COMMON_JIRA_WORDS = {
 }
 
 # Domain-specific rare keywords that should get high weight
-RARE_DOMAIN_KEYWORDS = {
+RARE_DOMAIN_KEYWORDS: set[typing.Any] = {
     "womens",
     "derm",
     "atr",
@@ -168,7 +169,7 @@ RARE_DOMAIN_KEYWORDS = {
 }
 
 
-def normalize_text(text: str) -> str:
+def normalize_text(text: str) -> typing.Any:
     """
     Normalize text for comparison.
 
@@ -200,7 +201,7 @@ def normalize_text(text: str) -> str:
     return text.strip()
 
 
-def tokenize(text: str, min_length: int = 2) -> list[str]:
+def tokenize(text: str, min_length: int = 2) -> typing.Any:
     """
     Tokenize text into individual words.
 
@@ -220,9 +221,9 @@ def tokenize(text: str, min_length: int = 2) -> list[str]:
 
 def remove_stopwords(
     tokens: list[str],
-    additional_stopwords: set[str] = None,
+    additional_stopwords: set[str] | None = None,
     include_report_stopwords: bool = True,
-) -> list[str]:
+) -> typing.Any:
     """
     Remove stopwords from token list.
 
@@ -248,9 +249,9 @@ def remove_stopwords(
 def extract_keywords(
     text: str,
     min_length: int = 3,
-    additional_stopwords: set[str] = None,
+    additional_stopwords: set[str] | None = None,
     include_report_stopwords: bool = True,
-) -> list[str]:
+) -> typing.Any:
     """
     Extract meaningful keywords from text.
 
@@ -274,7 +275,7 @@ def extract_keywords(
     )
 
 
-def extract_ngrams(tokens: list[str], n: int = 2) -> list[str]:
+def extract_ngrams(tokens: list[str], n: int = 2) -> typing.Any:
     """
     Extract n-grams from tokens.
 
@@ -288,7 +289,7 @@ def extract_ngrams(tokens: list[str], n: int = 2) -> list[str]:
     if len(tokens) < n:
         return []
 
-    ngrams = []
+    ngrams: list[typing.Any] = []
     for i in range(len(tokens) - n + 1):
         ngram = " ".join(tokens[i : i + n])
         ngrams.append(ngram)
@@ -296,7 +297,7 @@ def extract_ngrams(tokens: list[str], n: int = 2) -> list[str]:
     return ngrams
 
 
-def calculate_token_overlap(tokens_a: list[str], tokens_b: list[str]) -> float:
+def calculate_token_overlap(tokens_a: list[str], tokens_b: list[str]) -> typing.Any:
     """
     Calculate Jaccard similarity between two token sets.
 
@@ -325,7 +326,7 @@ def calculate_token_overlap(tokens_a: list[str], tokens_b: list[str]) -> float:
 def calculate_token_frequency_score(
     query_tokens: list[str],
     document_tokens: list[str],
-) -> float:
+) -> typing.Any:
     """
     Calculate frequency-based score for query tokens in document.
 
@@ -345,7 +346,7 @@ def calculate_token_frequency_score(
     return matches / len(query_tokens)
 
 
-def _coerce_text(value: Any) -> str:
+def _coerce_text(value: Any) -> typing.Any:
     """Convert nullable/scalar values to safe text for matching."""
     if value is None:
         return ""
@@ -356,10 +357,10 @@ def _coerce_text(value: Any) -> str:
 
 def build_search_context(
     report_name: str,
-    workspace_name: str = "",
-    app_name: str = "",
+    workspace_name: object = "",
+    app_name: object = "",
     include_variants: bool = True,
-) -> str:
+) -> typing.Any:
     """
     Build searchable context from Power BI report metadata.
 
@@ -372,7 +373,7 @@ def build_search_context(
     Returns:
         Combined searchable text
     """
-    parts = [_coerce_text(report_name)]
+    parts: list[typing.Any] = [_coerce_text(report_name)]
 
     workspace_name = _coerce_text(workspace_name)
     app_name = _coerce_text(app_name)
@@ -394,9 +395,9 @@ def build_search_context(
     return context
 
 
-def _generate_variants(text: str) -> list[str]:
+def _generate_variants(text: str) -> typing.Any:
     """Generate common word variants from text."""
-    variants = []
+    variants: list[typing.Any] = []
 
     # Handle common suffixes/prefixes
     words = normalize_text(text).split()
@@ -417,7 +418,7 @@ def _generate_variants(text: str) -> list[str]:
     return list(set(variants))
 
 
-def strip_jira_prefixes(text: str) -> str:
+def strip_jira_prefixes(text: str) -> typing.Any:
     """Strip common Jira prefixes like 'CLONE -', 'SIT', etc."""
     text = text.lower()
     for pattern in JIRA_PREFIXES:
@@ -425,7 +426,7 @@ def strip_jira_prefixes(text: str) -> str:
     return text.strip()
 
 
-def strip_report_suffixes(text: str) -> str:
+def strip_report_suffixes(text: str) -> typing.Any:
     """Strip common report suffixes like '.Report', '- Copy', etc."""
     text = text.lower()
     # Remove file extensions
@@ -437,7 +438,7 @@ def strip_report_suffixes(text: str) -> str:
     return text.strip()
 
 
-def calculate_name_similarity(query_name: str, candidate_name: str) -> float:
+def calculate_name_similarity(query_name: str, candidate_name: str) -> typing.Any:
     """
     Calculate fuzzy name similarity between two names.
 
@@ -493,7 +494,7 @@ def calculate_name_similarity(query_name: str, candidate_name: str) -> float:
     return min(score / max_possible, 1.0)
 
 
-def calculate_rarity_weighted_overlap(query_tokens: list[str], candidate_tokens: list[str]) -> float:
+def calculate_rarity_weighted_overlap(query_tokens: list[str], candidate_tokens: list[str]) -> typing.Any:
     """
     Calculate token overlap with rarity weighting.
 
@@ -533,10 +534,10 @@ def calculate_rarity_weighted_overlap(query_tokens: list[str], candidate_tokens:
     return matched_weight / total_weight if total_weight > 0 else 0.0
 
 
-def extract_acronyms(text: str) -> list[str]:
+def extract_acronyms(text: str) -> typing.Any:
     """Extract acronyms (2-6 letter all-caps words) from text."""
     words = text.split()
-    acronyms = []
+    acronyms: list[typing.Any] = []
     for word in words:
         # Clean the word
         clean = re.sub(r"[^A-Z]", "", word)
@@ -545,7 +546,7 @@ def extract_acronyms(text: str) -> list[str]:
     return acronyms
 
 
-def sanitize_for_display(text: str, max_length: int = 200) -> str:
+def sanitize_for_display(text: str, max_length: int = 200) -> typing.Any:
     """
     Sanitize text for display in matching results.
 

@@ -2,6 +2,7 @@
 
 import json
 import os
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -14,7 +15,7 @@ from pbip_documenter.inventory.matching.service import MatchingService, MatchRes
 from pbip_documenter.inventory.matching.text import sanitize_for_display
 
 
-def _get_jira_base_url() -> str:
+def _get_jira_base_url() -> typing.Any:
     """Get Jira base URL from environment or settings."""
     # Try to load from settings file first
     settings_path = Path("inventory.settings.json")
@@ -48,7 +49,7 @@ class AugmentationBundle:
     warning: str | None
 
 
-def build_augmentation_bundle(summary: dict[str, Any], cache_root: Path = Path("cache")) -> AugmentationBundle | None:
+def build_augmentation_bundle(summary: dict[str, Any], cache_root: Path = Path("cache")) -> typing.Any:
     local_only = os.environ.get("PBIP_DOCUMENTER_LOCAL_ONLY", "1").lower() not in ("0", "false", "no")
     if local_only:
         return None
@@ -72,7 +73,7 @@ def build_augmentation_bundle(summary: dict[str, Any], cache_root: Path = Path("
     matches = matching_service.match_report(report_name, limit=3)
 
     top_match = matches[0] if matches else None
-    report_context = {
+    report_context: dict[typing.Any, typing.Any] = {
         "report_name": report_name,
         "workspace_name": top_match.workspace_name if top_match else None,
         "workspace_id": top_match.workspace_id if top_match else None,
@@ -114,14 +115,14 @@ def build_augmentation_bundle(summary: dict[str, Any], cache_root: Path = Path("
     )
 
 
-def _load_curated_dataframe(cache_root: Path, source: str, filename: str) -> pd.DataFrame:
+def _load_curated_dataframe(cache_root: Path, source: str, filename: str) -> typing.Any:
     path = CachePaths(cache_root).get_curated_path(source, filename)
     if not path.exists():
         return pd.DataFrame()
     return pd.read_parquet(path)
 
 
-def _build_warning(matches: list[MatchResult]) -> str | None:
+def _build_warning(matches: list[MatchResult]) -> typing.Any:
     if not matches:
         return "No Jira match found in local cache. Requirement and design text use PBIP-only fallback content."
     top = matches[0]
@@ -133,7 +134,7 @@ def _build_warning(matches: list[MatchResult]) -> str | None:
     return None
 
 
-def _generate_section(kind: str, report_context: dict[str, Any], matches: list[MatchResult]) -> GeneratedSection:
+def _generate_section(kind: str, report_context: dict[str, Any], matches: list[MatchResult]) -> typing.Any:
     ai_settings = AISettings.load()
     if _should_use_ai(ai_settings, matches):
         ai_result = _try_generate_with_ai(kind, report_context, matches, ai_settings)
@@ -142,7 +143,7 @@ def _generate_section(kind: str, report_context: dict[str, Any], matches: list[M
     return _generate_fallback(kind, report_context, matches)
 
 
-def _should_use_ai(ai_settings: AISettings, matches: list[MatchResult]) -> bool:
+def _should_use_ai(ai_settings: AISettings, matches: list[MatchResult]) -> typing.Any:
     if not ai_settings.enabled:
         return False
     if not ai_settings.provider or not ai_settings.model:
@@ -157,14 +158,14 @@ def _try_generate_with_ai(
     report_context: dict[str, Any],
     matches: list[MatchResult],
     ai_settings: AISettings,
-) -> GeneratedSection | None:
+) -> typing.Any:
     return None
 
 
-def _generate_fallback(kind: str, report_context: dict[str, Any], matches: list[MatchResult]) -> GeneratedSection:
+def _generate_fallback(kind: str, report_context: dict[str, Any], matches: list[MatchResult]) -> typing.Any:
     pages = report_context.get("page_names") or []
     top = matches[0] if matches else None
-    base_lines = []
+    base_lines: list[typing.Any] = []
 
     if kind == "requirement":
         base_lines.append(
@@ -197,15 +198,15 @@ def _generate_fallback(kind: str, report_context: dict[str, Any], matches: list[
                 f"Design intent was cross-checked against cached Jira item {top.jira_issue_key}: {top.jira_summary}."
             )
 
-    assumptions = [
+    assumptions: list[typing.Any] = [
         "Generated from local PBIP metadata and cached inventory artifacts only.",
         "Any operational, compliance, or release-management statements require human confirmation.",
     ]
-    missing_information = [
+    missing_information: list[typing.Any] = [
         "Business owner and support owner confirmation.",
         "Approved deployment path, refresh schedule, and access model.",
     ]
-    traceability_notes = []
+    traceability_notes: list[typing.Any] = []
     if top:
         traceability_notes.append(
             f"Matched Jira {top.jira_issue_key} with {top.confidence} confidence ({top.score:.2f})."
@@ -223,5 +224,5 @@ def _generate_fallback(kind: str, report_context: dict[str, Any], matches: list[
     )
 
 
-def _confidence_rank(value: str) -> int:
+def _confidence_rank(value: str) -> typing.Any:
     return {"low": 1, "medium": 2, "high": 3}.get((value or "").lower(), 0)

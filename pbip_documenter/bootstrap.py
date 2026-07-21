@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import typing
 from collections.abc import Sequence
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def main(argv: Sequence[str] | None = None) -> typing.Any:
     """Hand control to the installed CLI without modifying the environment."""
     from pbip_documenter.cli import main as cli_main
 

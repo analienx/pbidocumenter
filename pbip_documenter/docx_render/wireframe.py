@@ -1,5 +1,7 @@
 """Wireframe page layout diagram generation."""
 
+import typing
+
 from pbip_documenter.analysis.registries import (
     _BTN_VTS,
     _DECO_VTS,
@@ -17,10 +19,10 @@ from pbip_documenter.docx_render.diagrams import (
 from pbip_documenter.docx_render.typography import body
 
 # Mutable counter (module-level state)
-_DIAGRAM_ID_COUNTER = [1000]
+_DIAGRAM_ID_COUNTER: list[typing.Any] = [1000]
 
 
-def _pick_rep_field(fields, vt):
+def _pick_rep_field(fields: typing.Any, vt: typing.Any) -> typing.Any:
     IS_SLICER = vt in _SLICER_VTS
     IS_CHART = vt in {
         "barChart",
@@ -43,7 +45,7 @@ def _pick_rep_field(fields, vt):
         "decompositionTreeVisual",
     }
 
-    def _lbl(f):
+    def _lbl(f: typing.Any) -> typing.Any:
         ent = (f.get("entity", "") or "").strip()
         prop = (f.get("property", "") or "").strip()
         if not prop or prop == ".":
@@ -57,14 +59,14 @@ def _pick_rep_field(fields, vt):
                 return prop[:28]
         return None
     if IS_CHART:
-        VALUE_ROLES = {"Y", "Values", "Value", "Measure", "Size", "Y Axis"}
+        VALUE_ROLES: set[typing.Any] = {"Y", "Values", "Value", "Measure", "Size", "Y Axis"}
         return next((l for f in fields if f.get("role", "") in VALUE_ROLES for l in [_lbl(f)] if l), None) or next(
             (l for f in fields for l in [_lbl(f)] if l), None
         )
     return next((l for f in fields for l in [_lbl(f)] if l), None)
 
 
-def _infer_custom_visual_type(vis):
+def _infer_custom_visual_type(vis: typing.Any) -> typing.Any:
     roles = {(f.get("role", "") or "").lower() for f in vis.get("fields", [])}
     if roles & {"category", "series", "values", "y", "x", "legend"}:
         return "Custom Chart"
@@ -79,7 +81,7 @@ def _infer_custom_visual_type(vis):
     return "Custom Visual"
 
 
-def _classify_slicer_readability(width_emu, full_w_emu):
+def _classify_slicer_readability(width_emu: typing.Any, full_w_emu: typing.Any) -> typing.Any:
     """Classify slicer label readability as 'full', 'abbr', or 'tiny'."""
     if width_emu >= full_w_emu:
         return "full"
@@ -88,7 +90,9 @@ def _classify_slicer_readability(width_emu, full_w_emu):
     return "tiny"
 
 
-def _donate_to_rescue_slicers(row, adj_widths, readable_w_emu, donor_floors):
+def _donate_to_rescue_slicers(
+    row: typing.Any, adj_widths: typing.Any, readable_w_emu: typing.Any, donor_floors: typing.Any
+) -> typing.Any:
     """Donate width from oversized non-slicer visuals to unreadable slicers."""
     unreadable = sorted(
         [
@@ -102,7 +106,7 @@ def _donate_to_rescue_slicers(row, adj_widths, readable_w_emu, donor_floors):
         return adj_widths
 
     new_widths = list(adj_widths)
-    cap = {}
+    cap: dict[typing.Any, typing.Any] = {}
     for i, it in enumerate(row):
         cat = it["cat"]
         if cat in ("slicer", "button"):
@@ -135,9 +139,10 @@ def _donate_to_rescue_slicers(row, adj_widths, readable_w_emu, donor_floors):
     return new_widths
 
 
-def _find_unreadable_slicer_groups(row, adj_widths, readable_w_emu):
+def _find_unreadable_slicer_groups(row: typing.Any, adj_widths: typing.Any, readable_w_emu: typing.Any) -> typing.Any:
     """Return lists of consecutive indices where slicers are below readable width."""
-    groups, current = [], []
+    groups: list[list[typing.Any]] = []
+    current: list[typing.Any] = []
     for i, (it, w) in enumerate(zip(row, adj_widths, strict=False)):
         if it["cat"] == "slicer" and w < readable_w_emu:
             current.append(i)
@@ -150,7 +155,14 @@ def _find_unreadable_slicer_groups(row, adj_widths, readable_w_emu):
     return groups
 
 
-def _should_collapse_group(group_indices, row, adj_widths, gap_emu, min_group, area_title_w_emu):
+def _should_collapse_group(
+    group_indices: typing.Any,
+    row: typing.Any,
+    adj_widths: typing.Any,
+    gap_emu: typing.Any,
+    min_group: typing.Any,
+    area_title_w_emu: typing.Any,
+) -> typing.Any:
     """Return True only when grouped rendering is clearly more informative."""
     if len(group_indices) < min_group:
         return False
@@ -164,7 +176,9 @@ def _should_collapse_group(group_indices, row, adj_widths, gap_emu, min_group, a
     )
 
 
-def _collapse_slicer_group(row, adj_widths, group_indices, gap_emu):
+def _collapse_slicer_group(
+    row: typing.Any, adj_widths: typing.Any, group_indices: typing.Any, gap_emu: typing.Any
+) -> typing.Any:
     """Collapse exactly one consecutive slicer group into a Slicer Area box."""
     seen, merged_fields = set(), []
     for i in group_indices:
@@ -193,7 +207,7 @@ def _collapse_slicer_group(row, adj_widths, group_indices, gap_emu):
     return new_row, new_widths
 
 
-def _optimize_row(row, inner_w_in, min_box_w_in=0.50):
+def _optimize_row(row: typing.Any, inner_w_in: typing.Any, min_box_w_in: typing.Any = 0.50) -> typing.Any:
     """Merge overcrowded slicers + cap oversized custom visuals."""
     if not row:
         return row
@@ -231,7 +245,9 @@ def _optimize_row(row, inner_w_in, min_box_w_in=0.50):
     return result
 
 
-def insert_page_layout(doc, page, fig_num=3, dry_run=False):
+def insert_page_layout(
+    doc: typing.Any, page: typing.Any, fig_num: typing.Any = 3, dry_run: typing.Any = False
+) -> typing.Any:
     """Zone-based wireframe with proportional sizing.
 
     Left-sidebar Filters zone when slicers are detected in a left panel.
@@ -251,7 +267,7 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
     ZONE_HDR_H = E(0.17)
     ZONE_GAP = E(0.10)
 
-    CAT_MIN_H = {
+    CAT_MIN_H: dict[typing.Any, typing.Any] = {
         "table": 1.20,
         "chart": 0.70,
         "card": 0.32,
@@ -259,7 +275,7 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
         "button": 0.26,
         "other": 0.45,
     }
-    CAT_MAX_H = {
+    CAT_MAX_H: dict[typing.Any, typing.Any] = {
         "table": 3.50,
         "chart": 1.10,
         "card": 0.45,
@@ -285,7 +301,7 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
 
     GRID = 9525
 
-    def _snap(v):
+    def _snap(v: typing.Any) -> typing.Any:
         return round(v / GRID) * GRID
 
     _CHART_VTS = {
@@ -311,10 +327,10 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
             )
         )
     }
-    _TABLE_VTS = {"pivotTable", "tableEx"}
-    _CARD_VTS = {"card", "cardVisual", "multiRowCard", "kpi", "gauge", "scorecard"}
+    _TABLE_VTS: set[typing.Any] = {"pivotTable", "tableEx"}
+    _CARD_VTS: set[typing.Any] = {"card", "cardVisual", "multiRowCard", "kpi", "gauge", "scorecard"}
 
-    def _cat(vt):
+    def _cat(vt: typing.Any) -> typing.Any:
         if vt in _SLICER_VTS:
             return "slicer"
         if vt in _BTN_VTS:
@@ -337,7 +353,7 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
                 return "table"
         return "other"
 
-    def _colors(cat):
+    def _colors(cat: typing.Any) -> typing.Any:
         if cat == "slicer":
             return C.RUBINE, "FCEEF5"
         if cat == "table":
@@ -352,7 +368,7 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
     pw_pg = max(page.get("width", 1280) or 1280, 1)
     ph_pg = max(page.get("height", 720) or 720, 1)
 
-    items = []
+    items: list[typing.Any] = []
     for vis in page.get("visuals", []):
         if vis.get("is_hidden"):
             continue
@@ -396,7 +412,10 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
 
     # ── 2. Zone classification ────────────────────────────────────────────
     if len(items) <= 5:
-        header, left_sl, content, footer = [], [], items[:], []
+        header: list[typing.Any] = []
+        left_sl: list[typing.Any] = []
+        content: list[typing.Any] = items[:]
+        footer: list[typing.Any] = []
     else:
         header, left_sl, content, footer = [], [], [], []
         for it in items:
@@ -432,14 +451,14 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
         SIDEBAR_W = CONTENT_X = CONTENT_W = 0  # unused
 
     # ── 3. Row-building helper ────────────────────────────────────────────
-    def _build_rows(zitems):
+    def _build_rows(zitems: typing.Any) -> typing.Any:
         """Group items into visual rows by y-proximity (8% of page height)."""
         rows, used = [], set()
         sorted_items = sorted(zitems, key=lambda v: (v["fy"], v["fx"]))
         for i, it in enumerate(sorted_items):
             if i in used:
                 continue
-            row = [it]
+            row: list[typing.Any] = [it]
             used.add(i)
             for j, other in enumerate(sorted_items):
                 if j in used:
@@ -452,9 +471,9 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
         return rows
 
     # ── 4. Row-rendering helper ───────────────────────────────────────────
-    def _render_rows(rows, x_start, avail_w_emu, y_start):
+    def _render_rows(rows: typing.Any, x_start: typing.Any, avail_w_emu: typing.Any, y_start: typing.Any) -> typing.Any:
         """Render rows of visuals into shape dicts. Returns (shapes, end_y)."""
-        row_shapes = []
+        row_shapes: list[typing.Any] = []
         y = y_start
         avail_w_in = avail_w_emu / 914400
 
@@ -465,7 +484,7 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
                 others_r = [it for it in raw_row if it["cat"] != "slicer"]
                 slicers_r = [it for it in raw_row if it["cat"] == "slicer"]
                 mid = (len(slicers_r) + 1) // 2
-                sub_rows = [others_r + slicers_r[:mid], slicers_r[mid:]]
+                sub_rows: list[typing.Any] = [others_r + slicers_r[:mid], slicers_r[mid:]]
                 sub_rows = [sr for sr in sub_rows if sr]
                 is_split = True
             else:
@@ -478,7 +497,7 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
                 available_w = avail_w_emu - (len(row) - 1) * GAP
 
                 # Proportional widths from original page fractions
-                raw_widths = []
+                raw_widths: list[typing.Any] = []
                 for it in row:
                     w = max(it["fw"] * CANVAS_W_IN, MIN_BOX_W_IN) if total_fw > 0 else 1.0
                     raw_widths.append(w)
@@ -512,7 +531,7 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
                 # ── Slicer readability rescue ─────────────────────────
                 SLICER_READABLE_W = E(SLICER_FULL_LABEL_W_IN)
                 if any(it["cat"] == "slicer" and adj_widths[k] < SLICER_READABLE_W for k, it in enumerate(row)):
-                    donor_floors = {
+                    donor_floors: dict[typing.Any, typing.Any] = {
                         "other": E(DONOR_FLOOR_OTHER_W_IN),
                         "chart": E(DONOR_FLOOR_CHART_W_IN),
                         "card": E(DONOR_FLOOR_CARD_W_IN),
@@ -529,7 +548,8 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
                 # ── Button group collapse ─────────────────────────────
                 # Consecutive buttons too narrow to show name → "Buttons (N)"
                 BTN_READABLE_W = E(BTN_READABLE_W_IN)
-                btn_groups, btn_cur = [], []
+                btn_groups: list[list[typing.Any]] = []
+                btn_cur: list[typing.Any] = []
                 for k, (it, w) in enumerate(zip(row, adj_widths, strict=False)):
                     if it["cat"] == "button" and w < BTN_READABLE_W and not it.get("_btn_count"):
                         btn_cur.append(k)
@@ -617,6 +637,7 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
                     area_fields = it.get("_area_fields")
                     btn_count = it.get("_btn_count")
 
+                    lines: list[typing.Any]
                     if area_fields is not None:
                         # Slicer Area: grouped slicers with field list
                         max_chars = max(int(bw_in / 0.055), 10)
@@ -702,7 +723,9 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
         return row_shapes, y
 
     # ── 5. Zone header helper ─────────────────────────────────────────────
-    def _zone_hdr(x, y, w, label, count, color):
+    def _zone_hdr(
+        x: typing.Any, y: typing.Any, w: typing.Any, label: typing.Any, count: typing.Any, color: typing.Any
+    ) -> typing.Any:
         return _dml_shape(
             _snap(x),
             _snap(y),
@@ -722,10 +745,10 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
         )
 
     # ── 6. Render ─────────────────────────────────────────────────────────
-    shapes = []
+    shapes: list[typing.Any] = []
     y_cursor = PAD
 
-    def _render_full_zone(zitems, label, color):
+    def _render_full_zone(zitems: typing.Any, label: typing.Any, color: typing.Any) -> typing.Any:
         nonlocal y_cursor
         shapes.append(_zone_hdr(PAD, y_cursor, INNER_W, label, len(zitems), color))
         y_cursor += ZONE_HDR_H + GAP
@@ -765,7 +788,7 @@ def insert_page_layout(doc, page, fig_num=3, dry_run=False):
     # ── 7. Page info bar ──────────────────────────────────────────────────
     pg_tp = page.get("type", "Standard")
     n_deco = len(page.get("visuals", [])) - len(items)
-    parts = [f"{pw_pg}x{ph_pg}px"]
+    parts: list[typing.Any] = [f"{pw_pg}x{ph_pg}px"]
     if pg_tp and pg_tp.lower() != "standard":
         parts.append(pg_tp)
     if n_deco > 0:

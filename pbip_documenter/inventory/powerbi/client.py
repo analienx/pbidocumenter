@@ -2,6 +2,7 @@
 
 import logging
 import time
+import typing
 from dataclasses import dataclass
 from typing import Any
 
@@ -26,18 +27,18 @@ class PowerBIClient:
     MAX_RETRIES = 3
     BACKOFF_BASE_SECONDS = 2
 
-    def __init__(self, auth, page_size: int = DEFAULT_PAGE_SIZE):
+    def __init__(self: typing.Any, auth: typing.Any, page_size: int = DEFAULT_PAGE_SIZE) -> None:
         self.auth = auth
         self.page_size = page_size
 
-    def _get_headers(self) -> dict[str, str]:
+    def _get_headers(self: typing.Any) -> typing.Any:
         """Get request headers with authorization."""
         return {
             "Authorization": f"Bearer {self.auth.get_token()}",
             "Content-Type": "application/json",
         }
 
-    def _handle_throttle(self, response: requests.Response, attempt: int) -> bool:
+    def _handle_throttle(self: typing.Any, response: requests.Response, attempt: int) -> typing.Any:
         """
         Handle throttling by checking for 429 status.
         Returns True if should retry.
@@ -49,7 +50,7 @@ class PowerBIClient:
             return True
         return False
 
-    def _handle_error(self, response: requests.Response, attempt: int) -> bool:
+    def _handle_error(self: typing.Any, response: requests.Response, attempt: int) -> typing.Any:
         """
         Handle other errors with exponential backoff.
         Returns True if should retry.
@@ -62,11 +63,11 @@ class PowerBIClient:
         return False
 
     def _make_request(
-        self,
+        self: typing.Any,
         url: str,
         params: dict[str, Any] | None = None,
         attempt: int = 0,
-    ) -> requests.Response:
+    ) -> typing.Any:
         """Make HTTP request with retry logic."""
         try:
             response = requests.get(url, headers=self._get_headers(), params=params or {}, timeout=120)
@@ -88,9 +89,9 @@ class PowerBIClient:
         response.raise_for_status()
         return response
 
-    def _paginate(self, endpoint: str, params: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    def _paginate(self: typing.Any, endpoint: str, params: dict[str, Any] | None = None) -> typing.Any:
         """Paginate through API results."""
-        results = []
+        results: list[typing.Any] = []
         state = PagingState()
 
         url = f"{self.BASE_URL}/{endpoint}"
@@ -120,22 +121,22 @@ class PowerBIClient:
         logger.info(f"Completed pagination: {len(results)} total items from {endpoint}")
         return results
 
-    def get_reports(self) -> list[dict[str, Any]]:
+    def get_reports(self: typing.Any) -> typing.Any:
         """Get all reports across workspaces (requires Admin rights)."""
         logger.info("Fetching all reports from Power BI")
         return self._paginate("reports")
 
-    def get_groups(self) -> list[dict[str, Any]]:
+    def get_groups(self: typing.Any) -> typing.Any:
         """Get all workspaces (groups)."""
         logger.info("Fetching all workspaces from Power BI")
         return self._paginate("groups")
 
-    def get_apps(self) -> list[dict[str, Any]]:
+    def get_apps(self: typing.Any) -> typing.Any:
         """Get all apps."""
         logger.info("Fetching all apps from Power BI")
         return self._paginate("apps")
 
-    def get_reports_in_group(self, group_id: str) -> list[dict[str, Any]]:
+    def get_reports_in_group(self: typing.Any, group_id: str) -> typing.Any:
         """Get reports within a specific workspace (for testing/deep-dive)."""
         logger.info(f"Fetching reports in group {group_id}")
         return self._paginate(f"groups/{group_id}/reports")

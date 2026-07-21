@@ -10,6 +10,7 @@ The core rule:
 """
 
 import math
+import typing
 
 # Approximate rendered heights for common element types (inches).
 # Derived from space_before + font size + space_after in typography.py.
@@ -27,13 +28,13 @@ _TABLE_STD_ROW_IN = 0.20
 _SAFETY_IN = 0.22
 
 
-def usable_page_height_in(doc):
+def usable_page_height_in(doc: typing.Any) -> typing.Any:
     """Return usable content height in inches from the document's first section."""
     sec = doc.sections[0]
     return sec.page_height.inches - sec.top_margin.inches - sec.bottom_margin.inches - _SAFETY_IN
 
 
-def should_page_break(remaining_in, block_h_in, usable_in):
+def should_page_break(remaining_in: typing.Any, block_h_in: typing.Any, usable_in: typing.Any) -> typing.Any:
     """Return True when a block fits on one page but not in the remaining space.
 
     If the block is bigger than a full page we do not force a break — let it
@@ -42,7 +43,7 @@ def should_page_break(remaining_in, block_h_in, usable_in):
     return block_h_in <= usable_in and block_h_in > remaining_in
 
 
-def estimate_wireframe_h_emu(page):
+def estimate_wireframe_h_emu(page: typing.Any) -> typing.Any:
     """Quick wireframe canvas height estimate from visual count (no layout work).
 
     Used for preflight decisions only.  The cursor is updated with the actual
@@ -60,12 +61,14 @@ def estimate_wireframe_h_emu(page):
     )
 
 
-def estimate_wireframe_block_h(wireframe_h_emu):
+def estimate_wireframe_block_h(wireframe_h_emu: typing.Any) -> typing.Any:
     """Total block height: h3 + h4 (Wireframe label) + diagram + buffer."""
     return _H3_IN + _H4_IN + (wireframe_h_emu / 914400) + _BLOCK_BUFFER_IN
 
 
-def estimate_table_block_h(n_rows, compact=True, has_heading=True, has_title=False):
+def estimate_table_block_h(
+    n_rows: typing.Any, compact: typing.Any = True, has_heading: typing.Any = True, has_title: typing.Any = False
+) -> typing.Any:
     """Total block height: optional h4 + optional title + header + N rows + buffer.
 
     Small-table algorithm: if this fits on one page but not in remaining space,
@@ -85,7 +88,7 @@ def estimate_table_block_h(n_rows, compact=True, has_heading=True, has_title=Fal
     return total + _BLOCK_BUFFER_IN
 
 
-def estimate_large_table_start_h(compact=True, has_heading=True):
+def estimate_large_table_start_h(compact: typing.Any = True, has_heading: typing.Any = True) -> typing.Any:
     """Minimum sensible start height for a large (multi-page) table.
 
     Used for the large-table algorithm: do not start a table if remaining
@@ -94,7 +97,9 @@ def estimate_large_table_start_h(compact=True, has_heading=True):
     return estimate_table_block_h(2, compact=compact, has_heading=has_heading)
 
 
-def estimate_figure_block_h(figure_h_emu, has_heading=True, has_caption=True):
+def estimate_figure_block_h(
+    figure_h_emu: typing.Any, has_heading: typing.Any = True, has_caption: typing.Any = True
+) -> typing.Any:
     """Total block height: optional h3 + figure + optional caption + buffer."""
     total = figure_h_emu / 914400 + _BLOCK_BUFFER_IN
     if has_heading:

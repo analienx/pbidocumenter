@@ -2,11 +2,12 @@
 
 import json
 import os
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 
 
-def _load_dotenv(dotenv_path: Path = Path(".env")) -> None:
+def _load_dotenv(dotenv_path: Path = Path(".env")) -> typing.Any:
     """Load simple KEY=VALUE pairs from a local .env file if present."""
     if not dotenv_path.exists():
         return
@@ -24,7 +25,7 @@ def _load_dotenv(dotenv_path: Path = Path(".env")) -> None:
             os.environ[key] = value
 
 
-def _load_settings_json(settings_path: Path = Path("inventory.settings.json")) -> None:
+def _load_settings_json(settings_path: Path = Path("inventory.settings.json")) -> typing.Any:
     """Load JSON settings into environment if present."""
     if not settings_path.exists():
         return
@@ -55,7 +56,7 @@ class InventoryConfig:
     log_level: str = "INFO"
 
     @classmethod
-    def from_env(cls) -> "InventoryConfig":
+    def from_env(cls: typing.Any) -> typing.Any:
         """Create config from settings file and environment variables."""
         _load_settings_json()
         _load_dotenv()

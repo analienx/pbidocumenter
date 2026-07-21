@@ -1,6 +1,7 @@
 """Normalization and field mapping for Jira <JIRA_PROJECT_KEY> issues."""
 
 import logging
+import typing
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Any
@@ -44,13 +45,13 @@ class JiraNormalizer:
 
     # Default field mappings for common custom fields
     # These can be overridden via config
-    DEFAULT_CUSTOM_FIELDS = {
+    DEFAULT_CUSTOM_FIELDS: dict[typing.Any, typing.Any] = {
         "story_points": ["customfield_10016", "customfield_10004"],  # Common story point fields
         "epic_link": ["customfield_10014", "customfield_10008"],  # Common epic link fields
         "epic_name": ["customfield_10015", "customfield_10011"],  # Common epic name fields
     }
 
-    def __init__(self, custom_field_mappings: dict[str, list[str]] | None = None):
+    def __init__(self: typing.Any, custom_field_mappings: dict[str, list[str]] | None = None) -> None:
         """
         Initialize normalizer with optional custom field mappings.
 
@@ -61,9 +62,9 @@ class JiraNormalizer:
         self.custom_field_mappings = custom_field_mappings or self.DEFAULT_CUSTOM_FIELDS
 
     def normalize_issues(
-        self,
+        self: typing.Any,
         issues: list[dict[str, Any]],
-    ) -> pd.DataFrame:
+    ) -> typing.Any:
         """
         Normalize issues and extract key fields.
 
@@ -87,10 +88,10 @@ class JiraNormalizer:
         return self._to_dataframe(normalized)
 
     def _normalize_single_issue(
-        self,
+        self: typing.Any,
         issue: dict[str, Any],
         seen_ids: set[str],
-    ) -> NormalizedIssue | None:
+    ) -> typing.Any:
         """Normalize a single issue record."""
         issue_id = issue.get("id")
         issue_key = issue.get("key")
@@ -162,7 +163,7 @@ class JiraNormalizer:
             searchable_text=searchable_text,
         )
 
-    def _parse_datetime(self, value: str | None) -> datetime | None:
+    def _parse_datetime(self: typing.Any, value: str | None) -> typing.Any:
         """Parse ISO datetime string."""
         if not value:
             return None
@@ -177,7 +178,7 @@ class JiraNormalizer:
             logger.warning(f"Failed to parse datetime: {value}, error: {e}")
             return None
 
-    def _extract_description(self, description: Any) -> str | None:
+    def _extract_description(self: typing.Any, description: Any) -> typing.Any:
         """Extract plain text from Jira'sAtlassian Document Format."""
         if not description:
             return None
@@ -191,9 +192,9 @@ class JiraNormalizer:
 
         return None
 
-    def _extract_text_from_adf(self, node: dict[str, Any]) -> str:
+    def _extract_text_from_adf(self: typing.Any, node: dict[str, Any]) -> typing.Any:
         """Recursively extract text from Atlassian Document Format."""
-        texts = []
+        texts: list[typing.Any] = []
 
         if "text" in node:
             texts.append(node["text"])
@@ -207,10 +208,10 @@ class JiraNormalizer:
         return " ".join(filter(None, texts))
 
     def _extract_custom_field_str(
-        self,
+        self: typing.Any,
         fields: dict[str, Any],
         normalized_name: str,
-    ) -> str | None:
+    ) -> typing.Any:
         """Extract string value from custom field."""
         field_ids = self.custom_field_mappings.get(normalized_name, [])
         for field_id in field_ids:
@@ -224,10 +225,10 @@ class JiraNormalizer:
         return None
 
     def _extract_custom_field_float(
-        self,
+        self: typing.Any,
         fields: dict[str, Any],
         normalized_name: str,
-    ) -> float | None:
+    ) -> typing.Any:
         """Extract float/numeric value from custom field."""
         field_ids = self.custom_field_mappings.get(normalized_name, [])
         for field_id in field_ids:
@@ -240,14 +241,14 @@ class JiraNormalizer:
         return None
 
     def _build_searchable_text(
-        self,
+        self: typing.Any,
         summary: str,
         description: str | None,
         labels: list[str],
         components: list[str],
-    ) -> str:
+    ) -> typing.Any:
         """Build combined searchable text from issue fields."""
-        parts = [summary]
+        parts: list[typing.Any] = [summary]
 
         if description:
             parts.append(description)
@@ -260,7 +261,7 @@ class JiraNormalizer:
 
         return " ".join(filter(None, parts))
 
-    def _to_dataframe(self, records: list[NormalizedIssue]) -> pd.DataFrame:
+    def _to_dataframe(self: typing.Any, records: list[NormalizedIssue]) -> typing.Any:
         """Convert normalized records to DataFrame."""
         if not records:
             return pd.DataFrame(
@@ -312,7 +313,7 @@ class JiraNormalizer:
                 df[col] = df[col].astype("string")
 
         # Reorder columns
-        column_order = [
+        column_order: list[typing.Any] = [
             "issue_key",
             "summary",
             "issue_type",

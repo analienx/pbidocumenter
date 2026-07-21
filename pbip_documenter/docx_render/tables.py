@@ -1,8 +1,11 @@
 """Table and card widgets for the Word document."""
 
+import typing
+
 import docx
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.opc.constants import RELATIONSHIP_TYPE
 from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import nsdecls, qn
 from docx.shared import Pt
@@ -19,10 +22,10 @@ from pbip_documenter.docx_render.styles import (
 from pbip_documenter.docx_render.typography import _run, h4, page_break
 
 # Mutable counters (module-level state)
-_OBS_CARD_COUNTER = [0]
+_OBS_CARD_COUNTER: list[typing.Any] = [0]
 
 
-def doc_control_table(doc, pairs):
+def doc_control_table(doc: typing.Any, pairs: typing.Any) -> typing.Any:
     t = doc.add_table(rows=len(pairs), cols=2)
     t.style = "Table Grid"
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -41,7 +44,7 @@ def doc_control_table(doc, pairs):
     return t
 
 
-def kpi_strip(doc, metrics):
+def kpi_strip(doc: typing.Any, metrics: typing.Any) -> typing.Any:
     n = len(metrics)
     w = CW // n
     t = doc.add_table(rows=1, cols=n)
@@ -61,14 +64,21 @@ def kpi_strip(doc, metrics):
     return t
 
 
-def _add_hyperlink(paragraph, text, url, size=9, bold=False, color=C.CHARCOAL):
+def _add_hyperlink(
+    paragraph: typing.Any,
+    text: typing.Any,
+    url: typing.Any,
+    size: typing.Any = 9,
+    bold: typing.Any = False,
+    color: typing.Any = C.CHARCOAL,
+) -> typing.Any:
     """Add a clickable hyperlink to a paragraph.
 
     Returns the run with the hyperlink.
     """
     # Create the hyperlink element
     part = paragraph.part
-    r_id = part.relate_to(url, docx.opc.constants.RELATIONSHIP_TYPE.HYPERLINK, is_external=True)
+    r_id = part.relate_to(url, RELATIONSHIP_TYPE.HYPERLINK, is_external=True)
 
     # Create the w:hyperlink element
     hyperlink = OxmlElement("w:hyperlink")
@@ -113,7 +123,7 @@ def _add_hyperlink(paragraph, text, url, size=9, bold=False, color=C.CHARCOAL):
     return hyperlink
 
 
-def prop_table(doc, pairs):
+def prop_table(doc: typing.Any, pairs: typing.Any) -> typing.Any:
     """Build a property table with optional hyperlinks.
 
     Each value in pairs can be:
@@ -157,7 +167,7 @@ def prop_table(doc, pairs):
     return t
 
 
-def obs_card(doc, title, detail, accent=None):
+def obs_card(doc: typing.Any, title: typing.Any, detail: typing.Any, accent: typing.Any = None) -> typing.Any:
     accent = accent or C.RUBINE
     if BEAUTIFY:
         _OBS_CARD_COUNTER[0] += 1
@@ -223,12 +233,20 @@ def obs_card(doc, title, detail, accent=None):
     return t
 
 
-def _section_break_after_table(doc, rows, force=False):
+def _section_break_after_table(doc: typing.Any, rows: typing.Any, force: typing.Any = False) -> typing.Any:
     if force or (rows is not None and rows > _COMPACT_ROWS_PER_PAGE):
         page_break(doc)
 
 
-def data_table(doc, headers, rows, widths=None, compact=False, repeat_header=False, title=None):
+def data_table(
+    doc: typing.Any,
+    headers: typing.Any,
+    rows: typing.Any,
+    widths: typing.Any = None,
+    compact: typing.Any = False,
+    repeat_header: typing.Any = False,
+    title: typing.Any = None,
+) -> typing.Any:
     if title:
         tp = doc.add_paragraph()
         tp.paragraph_format.space_before = Pt(0)
@@ -273,7 +291,7 @@ def data_table(doc, headers, rows, widths=None, compact=False, repeat_header=Fal
     return t
 
 
-def code_block(doc, code, label=None):
+def code_block(doc: typing.Any, code: typing.Any, label: typing.Any = None) -> typing.Any:
     if label:
         h4(doc, label)
     for line in code.strip().split("\n"):

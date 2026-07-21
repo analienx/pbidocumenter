@@ -1,5 +1,6 @@
 """Refresh policy for inventory cache."""
 
+import typing
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
@@ -25,10 +26,10 @@ class RefreshPolicy:
     prefer_cache: bool = False
 
     def decide(
-        self,
+        self: typing.Any,
         entry: ManifestEntry | None,
         cache_file: Path | None = None,
-    ) -> RefreshDecision:
+    ) -> typing.Any:
         """Decide whether to use cache or refresh.
 
         Args:
@@ -60,10 +61,10 @@ class RefreshPolicy:
         return RefreshDecision.USE_CACHE
 
     def should_refresh(
-        self,
+        self: typing.Any,
         entry: ManifestEntry | None,
         cache_file: Path | None = None,
-    ) -> bool:
+    ) -> typing.Any:
         """Check if refresh is needed.
 
         Args:

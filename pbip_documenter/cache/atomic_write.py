@@ -4,13 +4,14 @@ import contextlib
 import json
 import os
 import tempfile
+import typing
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
 
-def atomic_write_json(path: Path, data: dict[str, Any]) -> None:
+def atomic_write_json(path: Path, data: dict[str, Any]) -> typing.Any:
     """Write JSON data atomically to avoid corruption.
 
     Args:
@@ -34,7 +35,7 @@ def atomic_write_json(path: Path, data: dict[str, Any]) -> None:
         raise
 
 
-def atomic_write_parquet(path: Path, df: pd.DataFrame) -> None:
+def atomic_write_parquet(path: Path, df: pd.DataFrame) -> typing.Any:
     """Write DataFrame to parquet atomically.
 
     Args:

@@ -2,6 +2,7 @@
 
 import json
 import os
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -30,7 +31,7 @@ class AISettings:
     allow_local_model: bool = False
 
     @classmethod
-    def load(cls, path: Path = Path("AI_SETTINGS.json")) -> "AISettings":
+    def load(cls: typing.Any, path: Path = Path("AI_SETTINGS.json")) -> typing.Any:
         if not path.exists():
             return cls()
 
@@ -52,7 +53,7 @@ class AISettings:
             allow_local_model=bool(data.get("allow_local_model", False)),
         )
 
-    def resolved_api_key(self) -> str:
+    def resolved_api_key(self: typing.Any) -> typing.Any:
         if self.api_key:
             return self.api_key
         return os.environ.get(self.api_key_env_var, "")

@@ -1,13 +1,14 @@
 """Technical observation engine — generates obs_card items."""
 
 import re
+import typing
 from collections import Counter as _Ctr
 
 from pbip_documenter.config import C
 
 
-def generate_observations(sm, rpt):
-    obs = []
+def generate_observations(sm: typing.Any, rpt: typing.Any) -> typing.Any:
+    obs: list[typing.Any] = []
     seen = set()
     tables = sm.get("tables", [])
     rels = sm.get("relationships", [])
@@ -28,7 +29,7 @@ def generate_observations(sm, rpt):
         )
     }
 
-    def _o(title, detail, color, cat):
+    def _o(title: typing.Any, detail: typing.Any, color: typing.Any, cat: typing.Any) -> typing.Any:
         key = (title, detail)
         if key not in seen:
             seen.add(key)
@@ -91,9 +92,9 @@ def generate_observations(sm, rpt):
     # Column checks
     # ------------------------------------------------------------------
     likely_date_dim = False
-    visible_key_cols = []
-    month_without_sort = []
-    uncategorized_semantic_cols = []
+    visible_key_cols: list[typing.Any] = []
+    month_without_sort: list[typing.Any] = []
+    uncategorized_semantic_cols: list[typing.Any] = []
     for t in tables:
         tname = t.get("name") or "?"
         if t.get("data_category") == "Time" or any(x in tname.lower() for x in ("date", "calendar")):
@@ -208,12 +209,12 @@ def generate_observations(sm, rpt):
             "Info",
         )
 
-    divide_ops = []
-    filter_antipatterns = []
-    count_antipatterns = []
-    selectedvalue_legacy = []
-    blank_to_zero = []
-    no_var_complex = []
+    divide_ops: list[typing.Any] = []
+    filter_antipatterns: list[typing.Any] = []
+    count_antipatterns: list[typing.Any] = []
+    selectedvalue_legacy: list[typing.Any] = []
+    blank_to_zero: list[typing.Any] = []
+    no_var_complex: list[typing.Any] = []
     for m in all_m:
         expr = m.get("expression", "") or ""
         upper = expr.upper()
@@ -336,8 +337,8 @@ def generate_observations(sm, rpt):
     # ------------------------------------------------------------------
     roles = sm.get("roles", []) or []
     if roles:
-        fact_rls = []
-        true_false_roles = []
+        fact_rls: list[typing.Any] = []
+        true_false_roles: list[typing.Any] = []
         dynamic_roles = 0
         for role in roles:
             perms = role.get("table_permissions", []) or []
@@ -375,9 +376,9 @@ def generate_observations(sm, rpt):
     # ------------------------------------------------------------------
     # Metadata-driven model curation / usage checks
     # ------------------------------------------------------------------
-    measure_index = {}
-    visible_column_index = {}
-    all_column_index = {}
+    measure_index: dict[typing.Any, typing.Any] = {}
+    visible_column_index: dict[typing.Any, typing.Any] = {}
+    all_column_index: dict[typing.Any, typing.Any] = {}
     for t in tables:
         tname = t.get("name") or "?"
         for m in t.get("measures", []):
@@ -390,11 +391,11 @@ def generate_observations(sm, rpt):
 
     used_measure_refs = set()
     used_column_refs = set()
-    page_binding_mix = {}
-    visual_type_counter = _Ctr()
-    custom_visuals = []
-    generic_page_names = []
-    core_visual_types = {
+    page_binding_mix: dict[typing.Any, typing.Any] = {}
+    visual_type_counter: _Ctr[str] = _Ctr()
+    custom_visuals: list[typing.Any] = []
+    generic_page_names: list[typing.Any] = []
+    core_visual_types: set[typing.Any] = {
         "barChart",
         "clusteredBarChart",
         "stackedBarChart",
@@ -482,7 +483,7 @@ def generate_observations(sm, rpt):
             "Warnings",
         )
 
-    unused_visible_columns = []
+    unused_visible_columns: list[typing.Any] = []
     for (tbl, col), meta in visible_column_index.items():
         cl = (col or "").lower()
         if (tbl, col) in used_column_refs:
@@ -500,7 +501,7 @@ def generate_observations(sm, rpt):
             "Info",
         )
 
-    unused_tables = []
+    unused_tables: list[typing.Any] = []
     for t in tables:
         tname = t.get("name") or "?"
         if t.get("is_hidden"):
@@ -575,7 +576,7 @@ def generate_observations(sm, rpt):
         if len(one_off_folders) >= 4:
             _o(
                 "Fragmented display-folder structure",
-                f"{len(one_off_folders)} display folder(s) contain only one measure (e.g. {', '.join(one_off_folders[:4])}). Review whether folder structure is too granular.",
+                f"{len(one_off_folders)} display folder(s) contain only one measure (e.g. {', '.join(str(folder) for folder in one_off_folders[:4])}). Review whether folder structure is too granular.",
                 C.SKY,
                 "Info",
             )
@@ -632,7 +633,7 @@ def generate_observations(sm, rpt):
     # ------------------------------------------------------------------
     # Interactive features: visual links, bookmarks, custom visuals
     # ------------------------------------------------------------------
-    action_types = _Ctr()
+    action_types: _Ctr[str] = _Ctr()
     for pg in pages:
         for v in pg.get("visuals", []):
             act = v.get("action")

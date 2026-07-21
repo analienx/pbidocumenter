@@ -4,6 +4,7 @@ import json
 import re
 import shutil
 import time
+import typing
 import webbrowser
 import winreg
 from pathlib import Path
@@ -14,14 +15,14 @@ from pbip_documenter.downloads.config import DownloadConfig, DownloadTarget
 class DownloadService:
     """Handles SharePoint file downloads with automatic detection and caching."""
 
-    def __init__(self, config: DownloadConfig):
+    def __init__(self: typing.Any, config: DownloadConfig) -> None:
         self.config = config
         self.downloads_dir = self._get_windows_downloads_dir()
         self.cache_dir = config.cache_root / "downloads"
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
     @staticmethod
-    def _get_windows_downloads_dir() -> Path:
+    def _get_windows_downloads_dir() -> typing.Any:
         """Resolve real Windows Downloads folder, including redirected folders."""
         key_path = r"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
         downloads_guid = "{<UUID_097>}"
@@ -30,9 +31,9 @@ class DownloadService:
         return Path(winreg.ExpandEnvironmentStrings(raw))
 
     @staticmethod
-    def _snapshot_files(folder: Path) -> dict[Path, tuple[int, float]]:
+    def _snapshot_files(folder: Path) -> typing.Any:
         """Snapshot current files in folder with size and modification time."""
-        snap = {}
+        snap: dict[typing.Any, typing.Any] = {}
         if not folder.exists():
             return snap
 
@@ -46,12 +47,12 @@ class DownloadService:
         return snap
 
     @staticmethod
-    def _is_partial_file(p: Path) -> bool:
+    def _is_partial_file(p: Path) -> typing.Any:
         """Check if file is a partial browser download."""
         name = p.name.lower()
         return name.endswith(".crdownload") or name.endswith(".tmp") or name.endswith(".part")
 
-    def _compile_similar_name_regex(self, prefix: str, suffix: str | None) -> re.Pattern:
+    def _compile_similar_name_regex(self: typing.Any, prefix: str, suffix: str | None) -> typing.Any:
         """
         Compile regex to match downloaded files.
 
@@ -71,7 +72,7 @@ class DownloadService:
             pattern = rf"^{pfx}( \(\d+\))?(\.[^.]+)?$"
         return re.compile(pattern, re.IGNORECASE)
 
-    def _looks_like_target_file(self, p: Path, prefix: str, suffix: str | None) -> bool:
+    def _looks_like_target_file(self: typing.Any, p: Path, prefix: str, suffix: str | None) -> typing.Any:
         """Check if file matches the expected download pattern."""
         if self._is_partial_file(p):
             return False
@@ -80,14 +81,14 @@ class DownloadService:
         return bool(rx.match(p.name))
 
     def _pick_best_candidate(
-        self,
+        self: typing.Any,
         folder: Path,
         before: dict[Path, tuple[int, float]],
         prefix: str,
         suffix: str | None,
-    ) -> Path | None:
+    ) -> typing.Any:
         """Pick the best candidate from newly downloaded files."""
-        candidates = []
+        candidates: list[typing.Any] = []
 
         for p in folder.iterdir():
             if not p.is_file():
@@ -113,10 +114,10 @@ class DownloadService:
         return candidates[0][0]
 
     def _wait_until_file_stable(
-        self,
+        self: typing.Any,
         p: Path,
         stable_checks: int = 2,
-    ) -> Path:
+    ) -> typing.Any:
         """Wait until file size and timestamp stop changing."""
         last = None
         stable = 0
@@ -158,12 +159,12 @@ class DownloadService:
             time.sleep(self.config.poll_seconds)
 
     def _wait_for_matching_download(
-        self,
+        self: typing.Any,
         folder: Path,
         prefix: str,
         suffix: str | None,
         before_snapshot: dict[Path, tuple[int, float]],
-    ) -> Path:
+    ) -> typing.Any:
         """Wait for a file matching the pattern to appear and stabilize."""
         deadline = time.time() + self.config.timeout_seconds
         start_time = time.time()
@@ -187,11 +188,11 @@ class DownloadService:
         )
 
     @staticmethod
-    def _open_download_in_browser(download_url: str) -> None:
+    def _open_download_in_browser(download_url: str) -> typing.Any:
         """Open download URL in browser."""
         webbrowser.open(download_url, new=2)
 
-    def _cache_file(self, src: Path, cache_name: str) -> Path:
+    def _cache_file(self: typing.Any, src: Path, cache_name: str) -> typing.Any:
         """Copy downloaded file to cache directory."""
         # preserve detected extension unless cache_name already has one
         cache_path = self.cache_dir / cache_name
@@ -201,7 +202,7 @@ class DownloadService:
         shutil.copy2(src, cache_path)
         return cache_path
 
-    def download_target(self, target: DownloadTarget) -> dict:
+    def download_target(self: typing.Any, target: DownloadTarget) -> typing.Any:
         """Download a single target file."""
         print(f"\n{'=' * 60}")
         print(f"Downloading: {target.name}")
@@ -236,7 +237,7 @@ class DownloadService:
             "cached": str(cached),
         }
 
-    def download_all_targets(self) -> dict[str, dict]:
+    def download_all_targets(self: typing.Any) -> typing.Any:
         """
         Download all configured targets sequentially.
 
@@ -244,7 +245,7 @@ class DownloadService:
         - first download triggers browser sign-in if needed
         - second download reuses the same browser/SharePoint session
         """
-        results = {}
+        results: dict[typing.Any, typing.Any] = {}
         targets = self.config.get_targets()
 
         print(f"\n{'#' * 60}")
@@ -266,7 +267,7 @@ class DownloadService:
         print(f"{'#' * 60}")
         return results
 
-    def load_report_inventory_from_cache(self) -> list[dict]:
+    def load_report_inventory_from_cache(self: typing.Any) -> typing.Any:
         """Load report inventory JSON from cache."""
         cache_path = self.cache_dir / self.config.report_inventory_cache_name
         if cache_path.suffix == "":

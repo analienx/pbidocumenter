@@ -5,8 +5,10 @@ This module provides lightweight analysis of DAX measures and M code
 to identify common patterns for summary documentation.
 """
 
+import typing
+
 # Transform keywords for summarizing M code operations
-_TRANSFORM_KEYWORDS = [
+_TRANSFORM_KEYWORDS: list[typing.Any] = [
     ("NestedJoin", "merge"),
     ("Pivot", "pivot"),
     ("ExpandListColumn", "expand"),
@@ -19,7 +21,7 @@ _TRANSFORM_KEYWORDS = [
 ]
 
 # DAX function patterns for categorizing measures
-_DAX_KEYWORDS = [
+_DAX_KEYWORDS: list[typing.Any] = [
     ("CALCULATE", "CALCULATE"),
     ("DATEADD", "Time Intel"),
     ("DIVIDE", "DIVIDE"),
@@ -32,7 +34,7 @@ _DAX_KEYWORDS = [
 ]
 
 
-def _transforms(m_code: str | None) -> str:
+def _transforms(m_code: str | None) -> typing.Any:
     """
     Summarize M code transforms into a comma-separated list.
 
@@ -59,7 +61,7 @@ def _transforms(m_code: str | None) -> str:
     return ", ".join(detected)[:50] or "\u2014"
 
 
-def _dax_pattern(dax_expr: str | None) -> str:
+def _dax_pattern(dax_expr: str | None) -> typing.Any:
     """
     Classify DAX expression by its primary pattern category.
 

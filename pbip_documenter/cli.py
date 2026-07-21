@@ -9,6 +9,7 @@ import argparse
 import os
 import re
 import sys
+import typing
 from collections.abc import Sequence
 from pathlib import Path
 
@@ -17,7 +18,7 @@ from pbip_documenter.dependencies import augmentation_enabled
 from pbip_documenter.services.document_service import build_doc
 
 
-def _get_bundle_dir() -> Path:
+def _get_bundle_dir() -> typing.Any:
     if hasattr(sys, "_MEIPASS"):
         return Path(sys._MEIPASS)
     if getattr(sys, "frozen", False):
@@ -25,7 +26,7 @@ def _get_bundle_dir() -> Path:
     return Path(__file__).resolve().parent.parent
 
 
-def _get_exe_dir() -> Path:
+def _get_exe_dir() -> typing.Any:
     if getattr(sys, "frozen", False):
         return Path(sys.argv[0]).resolve().parent
     return Path(__file__).resolve().parent.parent
@@ -35,7 +36,7 @@ BUNDLE_DIR = _get_bundle_dir()
 EXE_DIR = _get_exe_dir()
 
 
-def _print_banner() -> None:
+def _print_banner() -> typing.Any:
     ver = VERSION
     banner = rf"""
      ██████╗ ██████╗ ██╗██████╗
@@ -61,7 +62,7 @@ except ImportError:
     sys.exit(1)
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def main(argv: Sequence[str] | None = None) -> typing.Any:
     """
     Main entry point for the CLI.
 
@@ -123,7 +124,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"ERROR: Reports folder not found at {REPORTS_DIR}")
         return 2
 
-    def _is_component_folder(d: Path) -> bool:
+    def _is_component_folder(d: Path) -> typing.Any:
         """Check if folder is a component of a parent PBIP project (.Report or .SemanticModel)."""
         name = d.name
         if name.endswith(".Report") or name.endswith(".SemanticModel"):
@@ -163,7 +164,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"  Completeness: {summary.get('completeness', {}).get('score', '?')}")
         print(f"  Building {args.mode} document...")
 
-        doc = build_doc(summary, args.mode, args.logo, template_path, augmentation=augmentation)  # type: ignore[no-untyped-call]
+        doc = build_doc(summary, args.mode, args.logo, template_path, augmentation=augmentation)
 
         # Determine output path
         if args.output:

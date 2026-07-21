@@ -3,6 +3,7 @@
 import base64
 import logging
 import time
+import typing
 from typing import Any
 
 import requests
@@ -18,16 +19,16 @@ class JiraClient:
     DEFAULT_PAGE_SIZE = 100
 
     def __init__(
-        self,
-        auth,
+        self: typing.Any,
+        auth: typing.Any,
         page_size: int = DEFAULT_PAGE_SIZE,
         project_key: str = "<JIRA_PROJECT_KEY>",
-    ):
+    ) -> None:
         self.auth = auth
         self.page_size = page_size
         self.project_key = project_key
 
-    def _get_headers(self) -> dict[str, str]:
+    def _get_headers(self: typing.Any) -> typing.Any:
         """Get request headers with authorization."""
         email, token = self.auth.get_auth_tuple()
         credentials = base64.b64encode(f"{email}:{token}".encode()).decode()
@@ -37,7 +38,7 @@ class JiraClient:
             "Accept": "application/json",
         }
 
-    def _handle_throttle(self, response: requests.Response, attempt: int) -> bool:
+    def _handle_throttle(self: typing.Any, response: requests.Response, attempt: int) -> typing.Any:
         """
         Handle throttling by checking for 429 status.
         Returns True if should retry.
@@ -49,7 +50,7 @@ class JiraClient:
             return True
         return False
 
-    def _handle_error(self, response: requests.Response, attempt: int) -> bool:
+    def _handle_error(self: typing.Any, response: requests.Response, attempt: int) -> typing.Any:
         """
         Handle other errors with exponential backoff.
         Returns True if should retry.
@@ -62,11 +63,11 @@ class JiraClient:
         return False
 
     def _make_request(
-        self,
+        self: typing.Any,
         url: str,
         params: dict[str, Any] | None = None,
         attempt: int = 0,
-    ) -> requests.Response:
+    ) -> typing.Any:
         """Make HTTP request with retry logic."""
         try:
             response = requests.get(
@@ -94,11 +95,11 @@ class JiraClient:
         return response
 
     def search_issues(
-        self,
+        self: typing.Any,
         jql: str | None = None,
         fields: list[str] | None = None,
         expand: list[str] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> typing.Any:
         """
         Search issues using JQL with nextPageToken pagination.
 
@@ -116,7 +117,7 @@ class JiraClient:
         logger.info(f"Searching Jira issues with JQL: {jql}")
 
         url = f"{self.auth.base_url}/rest/api/3/search/jql"
-        results = []
+        results: list[typing.Any] = []
         next_page_token: str | None = None
         page = 0
 
@@ -153,7 +154,7 @@ class JiraClient:
         logger.info(f"Completed pagination: {len(results)} total issues from Jira")
         return results
 
-    def get_issue(self, issue_key: str, fields: list[str] | None = None) -> dict[str, Any]:
+    def get_issue(self: typing.Any, issue_key: str, fields: list[str] | None = None) -> typing.Any:
         """Get a single issue by key."""
         url = f"{self.auth.base_url}/rest/api/3/issue/{issue_key}"
         params: dict[str, Any] = {}

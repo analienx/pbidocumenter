@@ -1,6 +1,7 @@
 """Manifest tracking for inventory cache."""
 
 import json
+import typing
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
@@ -24,20 +25,20 @@ class ManifestEntry:
     """Single entry in the manifest."""
 
     def __init__(
-        self,
+        self: typing.Any,
         key: str,
         status: ManifestStatus,
         created_at: datetime | None = None,
         updated_at: datetime | None = None,
         metadata: dict[str, Any] | None = None,
-    ):
+    ) -> None:
         self.key = key
         self.status = status
         self.created_at = created_at or datetime.now(timezone.utc)
         self.updated_at = updated_at or datetime.now(timezone.utc)
         self.metadata = metadata or {}
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self: typing.Any) -> typing.Any:
         """Convert entry to dictionary."""
         return {
             "key": self.key,
@@ -48,7 +49,7 @@ class ManifestEntry:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "ManifestEntry":
+    def from_dict(cls: typing.Any, data: dict[str, Any]) -> typing.Any:
         """Create entry from dictionary."""
         return cls(
             key=data["key"],
@@ -63,7 +64,7 @@ class Manifest:
     """Manifest for tracking cached inventory data."""
 
     def __init__(
-        self,
+        self: typing.Any,
         path: Path | None = None,
         *,
         source: str | None = None,
@@ -92,7 +93,7 @@ class Manifest:
         self.error_summary = error_summary
         self._load()
 
-    def _load(self) -> None:
+    def _load(self: typing.Any) -> typing.Any:
         """Load manifest from disk."""
         if self.path.exists():
             try:
@@ -112,7 +113,7 @@ class Manifest:
                 # Reset if corrupted
                 self.entries = {}
 
-    def save(self, path: Path | None = None) -> None:
+    def save(self: typing.Any, path: Path | None = None) -> typing.Any:
         """Save manifest to disk."""
         if path is not None:
             self.path = path
@@ -137,20 +138,20 @@ class Manifest:
         atomic_write_json(self.path, data)
 
     @classmethod
-    def load(cls, path: Path) -> "Manifest | None":
+    def load(cls: typing.Any, path: Path) -> typing.Any:
         """Load a source manifest when it exists."""
         return cls(path) if path.exists() else None
 
-    def get(self, key: str) -> ManifestEntry | None:
+    def get(self: typing.Any, key: str) -> typing.Any:
         """Get entry by key."""
         return self.entries.get(key)
 
     def set(
-        self,
+        self: typing.Any,
         key: str,
         status: ManifestStatus,
         metadata: dict[str, Any] | None = None,
-    ) -> ManifestEntry:
+    ) -> typing.Any:
         """Set entry status."""
         now = datetime.now(timezone.utc)
         if key in self.entries:
@@ -170,7 +171,7 @@ class Manifest:
             self.entries[key] = entry
         return entry
 
-    def is_fresh(self, key: str | None = None, max_age_hours: int = 24) -> bool:
+    def is_fresh(self: typing.Any, key: str | None = None, max_age_hours: int = 24) -> typing.Any:
         """Check if entry exists and is fresh."""
         if key is None and self.source:
             if self.status != ManifestStatus.SUCCESS or self.last_success_at is None:
@@ -184,16 +185,16 @@ class Manifest:
         age = datetime.now(timezone.utc).replace(tzinfo=None) - entry.updated_at.replace(tzinfo=None)
         return age.total_seconds() < (max_age_hours * 3600)
 
-    def list_by_status(self, status: ManifestStatus) -> list[ManifestEntry]:
+    def list_by_status(self: typing.Any, status: ManifestStatus) -> typing.Any:
         """List all entries with given status."""
         return [e for e in self.entries.values() if e.status == status]
 
-    def clear(self) -> None:
+    def clear(self: typing.Any) -> typing.Any:
         """Clear all entries."""
         self.entries = {}
         if self.path.exists():
             self.path.unlink()
 
 
-def _parse_datetime(value: str | None) -> datetime | None:
+def _parse_datetime(value: str | None) -> typing.Any:
     return datetime.fromisoformat(value) if value else None

@@ -8,11 +8,12 @@ This module parses M code expressions to identify:
 """
 
 import re as _re
+import typing
 
 from pbip_documenter.analysis.registries import _NON_CONN, _NS_CAT, CONNECTOR_MAP
 
 
-def _is_conn(fn: str) -> bool:
+def _is_conn(fn: str) -> typing.Any:
     """
     Check if a function name represents a data connector (vs. transform).
 
@@ -25,7 +26,7 @@ def _is_conn(fn: str) -> bool:
     return not any(fn.startswith(p) for p in _NON_CONN)
 
 
-def _label_from_fn(fn: str) -> tuple[str, str]:
+def _label_from_fn(fn: str) -> typing.Any:
     """
     Get friendly label and category for a connector function.
 
@@ -41,7 +42,7 @@ def _label_from_fn(fn: str) -> tuple[str, str]:
     return (fn, _NS_CAT.get(ns, "Other"))
 
 
-def _scan_all_sources(exprs: list[dict], tables: list[dict]) -> list[dict]:
+def _scan_all_sources(exprs: list[dict], tables: list[dict]) -> typing.Any:
     """
     Scan all M code to identify data sources and their usage.
 
@@ -104,9 +105,17 @@ def _scan_all_sources(exprs: list[dict], tables: list[dict]) -> list[dict]:
             sources.setdefault((fn, first), set()).add(src_name)
 
     # Sort by category priority, then alphabetically by label
-    cat_order = {"SharePoint": 0, "SQL": 1, "Azure": 2, "Cloud": 3, "Web": 4, "File": 5, "Other": 6}
+    cat_order: dict[typing.Any, typing.Any] = {
+        "SharePoint": 0,
+        "SQL": 1,
+        "Azure": 2,
+        "Cloud": 3,
+        "Web": 4,
+        "File": 5,
+        "Other": 6,
+    }
 
-    result = []
+    result: list[typing.Any] = []
     for (fn, server), users in sources.items():
         label, cat = _label_from_fn(fn)
         result.append(
@@ -124,7 +133,7 @@ def _scan_all_sources(exprs: list[dict], tables: list[dict]) -> list[dict]:
     return result
 
 
-def _detect_connectors(exprs: list[dict], tables: list[dict]) -> set[tuple[str, str, str]]:
+def _detect_connectors(exprs: list[dict], tables: list[dict]) -> typing.Any:
     """
     Quick scan for connector presence (lightweight check).
 

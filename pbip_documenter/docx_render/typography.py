@@ -1,6 +1,7 @@
 """Typography: headings, body text, callouts, page breaks."""
 
 import re
+import typing
 from io import BytesIO
 
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -11,7 +12,15 @@ from docx.shared import Inches, Pt
 from pbip_documenter.config import BEAUTIFY, FONT, C
 
 
-def _run(p, text, font=FONT, size=9, bold=False, italic=False, color=None):
+def _run(
+    p: typing.Any,
+    text: typing.Any,
+    font: typing.Any = FONT,
+    size: typing.Any = 9,
+    bold: typing.Any = False,
+    italic: typing.Any = False,
+    color: typing.Any = None,
+) -> typing.Any:
     r = p.add_run(text)
     r.font.name = font
     r.font.size = Pt(size)
@@ -22,7 +31,7 @@ def _run(p, text, font=FONT, size=9, bold=False, italic=False, color=None):
     return r
 
 
-def _hr(p, text, size, color, bold=True):
+def _hr(p: typing.Any, text: typing.Any, size: typing.Any, color: typing.Any, bold: typing.Any = True) -> typing.Any:
     """Add a styled heading run."""
     r = p.add_run(text)
     r.font.name = FONT
@@ -33,12 +42,12 @@ def _hr(p, text, size, color, bold=True):
     return r
 
 
-def _split_num(text):
+def _split_num(text: typing.Any) -> typing.Any:
     m = re.match(r"^(\d[\d.]*)\s+(.+)", str(text))
     return (m.group(1), m.group(2)) if m else ("", text)
 
 
-def h1(doc, text):
+def h1(doc: typing.Any, text: typing.Any) -> typing.Any:
     p = doc.add_heading("", level=1)
     p.paragraph_format.space_before = Pt(16)
     p.paragraph_format.space_after = Pt(4)
@@ -57,7 +66,7 @@ def h1(doc, text):
     return p
 
 
-def h2(doc, text):
+def h2(doc: typing.Any, text: typing.Any) -> typing.Any:
     p = doc.add_heading("", level=2)
     p.paragraph_format.space_before = Pt(12)
     p.paragraph_format.space_after = Pt(4)
@@ -68,7 +77,7 @@ def h2(doc, text):
     return p
 
 
-def h3(doc, text):
+def h3(doc: typing.Any, text: typing.Any) -> typing.Any:
     p = doc.add_heading("", level=3)
     p.paragraph_format.space_before = Pt(10)
     p.paragraph_format.space_after = Pt(3)
@@ -79,7 +88,7 @@ def h3(doc, text):
     return p
 
 
-def h4(doc, text):
+def h4(doc: typing.Any, text: typing.Any) -> typing.Any:
     p = doc.add_paragraph()
     p.paragraph_format.space_before = Pt(8)
     p.paragraph_format.space_after = Pt(1)
@@ -95,7 +104,9 @@ def h4(doc, text):
     return p
 
 
-def body(doc, text, bold=False, italic=False, color=None):
+def body(
+    doc: typing.Any, text: typing.Any, bold: typing.Any = False, italic: typing.Any = False, color: typing.Any = None
+) -> typing.Any:
     p = doc.add_paragraph()
     p.paragraph_format.space_after = Pt(2)
     p.paragraph_format.space_before = Pt(0)
@@ -103,14 +114,14 @@ def body(doc, text, bold=False, italic=False, color=None):
     return p
 
 
-def bullet_item(doc, text):
+def bullet_item(doc: typing.Any, text: typing.Any) -> typing.Any:
     p = doc.add_paragraph(style="List Bullet")
     p.clear()
     _run(p, text, color=C.CHARCOAL)
     return p
 
 
-def _tagged_para(doc, tag, text, style=None):
+def _tagged_para(doc: typing.Any, tag: typing.Any, text: typing.Any, style: typing.Any = None) -> typing.Any:
     """[TAG] italic-gray text paragraph."""
     p = doc.add_paragraph(style=style) if style else doc.add_paragraph()
     if style:
@@ -120,19 +131,19 @@ def _tagged_para(doc, tag, text, style=None):
     return p
 
 
-def suggested(doc, text):
+def suggested(doc: typing.Any, text: typing.Any) -> typing.Any:
     return _tagged_para(doc, "[SUGGESTED]", text)
 
 
-def suggested_bullet(doc, text):
+def suggested_bullet(doc: typing.Any, text: typing.Any) -> typing.Any:
     return _tagged_para(doc, "[SUGGESTED]", text, style="List Bullet")
 
 
-def placeholder(doc, text):
+def placeholder(doc: typing.Any, text: typing.Any) -> typing.Any:
     return _tagged_para(doc, "[To be confirmed]", text)
 
 
-def page_break(doc):
+def page_break(doc: typing.Any) -> typing.Any:
     p = doc.add_paragraph()
     r = OxmlElement("w:r")
     br = OxmlElement("w:br")
@@ -141,7 +152,7 @@ def page_break(doc):
     p._p.append(r)
 
 
-def _is_page_break_paragraph(p):
+def _is_page_break_paragraph(p: typing.Any) -> typing.Any:
     """Check if paragraph contains only a page break."""
     for r in p._element.iter(qn("w:r")):
         for br in r.iter(qn("w:br")):
@@ -152,7 +163,7 @@ def _is_page_break_paragraph(p):
     return False
 
 
-def _remove_unnecessary_breaks(doc):
+def _remove_unnecessary_breaks(doc: typing.Any) -> typing.Any:
     """Smart removal of blank-page-creating breaks."""
     paras = list(doc.paragraphs)
     to_remove = set()
@@ -186,7 +197,7 @@ def _remove_unnecessary_breaks(doc):
         p.getparent().remove(p)
 
 
-def callout(doc, text, kind="info"):
+def callout(doc: typing.Any, text: typing.Any, kind: typing.Any = "info") -> typing.Any:
     bc = C.SKY if kind == "info" else C.MARIGOLD
     bg = C.CALLOUT if kind == "info" else C.WARN_BG
     p = doc.add_paragraph()
@@ -197,7 +208,9 @@ def callout(doc, text, kind="info"):
     _run(p, text, size=9, color=C.CHARCOAL)
 
 
-def add_image(doc, png_bytes, width_inches=5.5, caption_text=None):
+def add_image(
+    doc: typing.Any, png_bytes: typing.Any, width_inches: typing.Any = 5.5, caption_text: typing.Any = None
+) -> typing.Any:
     doc.add_picture(BytesIO(png_bytes), width=Inches(width_inches))
     doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
     if caption_text:

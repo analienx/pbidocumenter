@@ -1,6 +1,7 @@
 """DrawingML shape primitives for native Word diagrams."""
 
 import html
+import typing
 
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt
@@ -8,7 +9,7 @@ from lxml import etree
 
 from pbip_documenter.config import C
 
-DML_NS = {
+DML_NS: dict[typing.Any, typing.Any] = {
     "w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
     "wp": "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing",
     "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
@@ -18,18 +19,18 @@ DML_NS = {
 }
 
 
-def _dns(p, l):
+def _dns(p: typing.Any, l: typing.Any) -> typing.Any:
     return f"{{{DML_NS[p]}}}{l}"
 
 
-def _dsub(parent, p, l, **a):
+def _dsub(parent: typing.Any, p: typing.Any, l: typing.Any, **a: typing.Any) -> typing.Any:
     e = etree.SubElement(parent, _dns(p, l))
     for k, v in a.items():
         e.set(k, str(v))
     return e
 
 
-def _emu(inches):
+def _emu(inches: typing.Any) -> typing.Any:
     return int(inches * 914400)
 
 
@@ -38,25 +39,25 @@ def _emu(inches):
 # Shape IDs are used by boxes; connector IDs are used by relationship lines;
 # diagram canvas docPr IDs are used by Word for each inline drawing.
 # Duplicate IDs can make snapping metadata work only for the first diagram.
-_AUTO_SHAPE_REGISTRY = []
+_AUTO_SHAPE_REGISTRY: list[typing.Any] = []
 _AUTO_SHAPE_ID = 50000
 _AUTO_CONNECTOR_ID = 80000
 _AUTO_DIAGRAM_ID = 90000
 
 
-def _next_auto_shape_id():
+def _next_auto_shape_id() -> typing.Any:
     global _AUTO_SHAPE_ID
     _AUTO_SHAPE_ID += 1
     return _AUTO_SHAPE_ID
 
 
-def _next_auto_connector_id():
+def _next_auto_connector_id() -> typing.Any:
     global _AUTO_CONNECTOR_ID
     _AUTO_CONNECTOR_ID += 1
     return _AUTO_CONNECTOR_ID
 
 
-def _next_auto_diagram_id():
+def _next_auto_diagram_id() -> typing.Any:
     global _AUTO_DIAGRAM_ID
     _AUTO_DIAGRAM_ID += 1
     return _AUTO_DIAGRAM_ID
@@ -66,7 +67,7 @@ def _next_auto_diagram_id():
 # When a caller does not pass explicit start/end shape IDs, this function chooses the
 # closest registered shape and connection side. Schema diagrams pass explicit IDs, but
 # lineage-style diagrams can use this fallback.
-def _nearest_shape_id(x, y):
+def _nearest_shape_id(x: typing.Any, y: typing.Any) -> typing.Any:
     if not _AUTO_SHAPE_REGISTRY:
         return None, None
     best = min(_AUTO_SHAPE_REGISTRY, key=lambda it: (it["x"] + it["w"] / 2 - x) ** 2 + (it["y"] + it["h"] / 2 - y) ** 2)
@@ -78,7 +79,7 @@ def _nearest_shape_id(x, y):
     return best["id"], idx
 
 
-def _escape_dml(s):
+def _escape_dml(s: typing.Any) -> typing.Any:
     return (
         html.unescape(str(s or ""))
         .replace("&", "&amp;")
@@ -88,11 +89,13 @@ def _escape_dml(s):
     )
 
 
-def _box_edge_point(cx, cy, hw, hh, tx, ty):
+def _box_edge_point(
+    cx: typing.Any, cy: typing.Any, hw: typing.Any, hh: typing.Any, tx: typing.Any, ty: typing.Any
+) -> typing.Any:
     dx, dy = tx - cx, ty - cy
     if dx == 0 and dy == 0:
         return cx, cy
-    tc = []
+    tc: list[typing.Any] = []
     if dx:
         tc.append(hw / abs(dx))
     if dy:
@@ -102,26 +105,26 @@ def _box_edge_point(cx, cy, hw, hh, tx, ty):
 
 
 def _dml_shape(
-    x,
-    y,
-    w,
-    h,
-    fill,
-    lines,
-    border_color=None,
-    border_w="0",
-    geom="roundRect",
-    adj="9000",
-    lIns="24000",
-    rIns="24000",
-    tIns="11000",
-    bIns="11000",
-    anchor="ctr",
-    autofit=False,
-    alpha_pct=None,
-    shape_id=None,
-    shape_name=None,
-):
+    x: typing.Any,
+    y: typing.Any,
+    w: typing.Any,
+    h: typing.Any,
+    fill: typing.Any,
+    lines: typing.Any,
+    border_color: typing.Any = None,
+    border_w: typing.Any = "0",
+    geom: typing.Any = "roundRect",
+    adj: typing.Any = "9000",
+    lIns: typing.Any = "24000",
+    rIns: typing.Any = "24000",
+    tIns: typing.Any = "11000",
+    bIns: typing.Any = "11000",
+    anchor: typing.Any = "ctr",
+    autofit: typing.Any = False,
+    alpha_pct: typing.Any = None,
+    shape_id: typing.Any = None,
+    shape_name: typing.Any = None,
+) -> typing.Any:
     sp = etree.Element(_dns("wps", "wsp"))
     # Keep the original WordprocessingShape model, with optional IDs for connector references.
     if shape_id is None:
@@ -180,7 +183,7 @@ def _dml_shape(
     return sp
 
 
-def _dml_join_label(x, y, w, h, text):
+def _dml_join_label(x: typing.Any, y: typing.Any, w: typing.Any, h: typing.Any, text: typing.Any) -> typing.Any:
     sp = etree.Element(_dns("wps", "wsp"))
     _dsub(sp, "wps", "cNvSpPr", txBox="1")
     spPr = _dsub(sp, "wps", "spPr")
@@ -208,7 +211,9 @@ def _dml_join_label(x, y, w, h, text):
     return sp
 
 
-def _dml_header_label(x, y, w, h, text, color):
+def _dml_header_label(
+    x: typing.Any, y: typing.Any, w: typing.Any, h: typing.Any, text: typing.Any, color: typing.Any
+) -> typing.Any:
     sp = etree.Element(_dns("wps", "wsp"))
     _dsub(sp, "wps", "cNvSpPr", txBox="1")
     spPr = _dsub(sp, "wps", "spPr")
@@ -237,22 +242,22 @@ def _dml_header_label(x, y, w, h, text, color):
 
 
 def _dml_connector(
-    x1,
-    y1,
-    x2,
-    y2,
-    color="888888",
-    dashed=False,
-    parallel_index=0,
-    start_arrow=False,
-    end_arrow=True,
-    route="straight",
-    connector_id=None,
-    start_shape_id=None,
-    end_shape_id=None,
-    start_idx="3",
-    end_idx="1",
-):
+    x1: typing.Any,
+    y1: typing.Any,
+    x2: typing.Any,
+    y2: typing.Any,
+    color: typing.Any = "888888",
+    dashed: typing.Any = False,
+    parallel_index: typing.Any = 0,
+    start_arrow: typing.Any = False,
+    end_arrow: typing.Any = True,
+    route: typing.Any = "straight",
+    connector_id: typing.Any = None,
+    start_shape_id: typing.Any = None,
+    end_shape_id: typing.Any = None,
+    start_idx: typing.Any = "3",
+    end_idx: typing.Any = "1",
+) -> typing.Any:
     dx, dy = x2 - x1, y2 - y1
     if parallel_index:
         mag = max((dx * dx + dy * dy) ** 0.5, 1)
@@ -305,7 +310,9 @@ def _dml_connector(
 # `w` and `h` are DrawingML canvas dimensions in EMUs.
 # Schema canvas height is intentionally kept below the physical page budget in schema.py.
 # Increasing the canvas too much can create blank/orphan pages even when XML compiles.
-def _insert_diagram(doc, shapes, w, h, caption=None):
+def _insert_diagram(
+    doc: typing.Any, shapes: typing.Any, w: typing.Any, h: typing.Any, caption: typing.Any = None
+) -> typing.Any:
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_before = Pt(0)
@@ -351,7 +358,7 @@ def _insert_diagram(doc, shapes, w, h, caption=None):
         cr.font.color.rgb = C.rgb(C.DGRAY)
 
 
-def _diagram_legend(doc, items):
+def _diagram_legend(doc: typing.Any, items: typing.Any) -> typing.Any:
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     for label, color in items:
@@ -361,7 +368,9 @@ def _diagram_legend(doc, items):
         r.font.color.rgb = C.rgb(color)
 
 
-def _min_text_height(lines, tIns=9000, bIns=9000, gap=1.25):
+def _min_text_height(
+    lines: typing.Any, tIns: typing.Any = 9000, bIns: typing.Any = 9000, gap: typing.Any = 1.25
+) -> typing.Any:
     total = tIns + bIns
     for line in lines or []:
         total += int((line.get("sz", 16) / 2.0) * 12700 * gap)

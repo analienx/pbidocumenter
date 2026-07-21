@@ -1,6 +1,7 @@
 """Public operational commands for inventory refresh and status."""
 
 import logging
+import typing
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -40,7 +41,7 @@ class CombinedStatus:
     overall_ready: bool
 
 
-def _get_source_status(cache_paths: CachePaths, source: str) -> SourceStatus:
+def _get_source_status(cache_paths: CachePaths, source: str) -> typing.Any:
     """Get status for a single source from its manifest."""
     manifest_path = cache_paths.get_manifest_path(source)
     manifest = Manifest.load(manifest_path)
@@ -69,7 +70,7 @@ def _get_source_status(cache_paths: CachePaths, source: str) -> SourceStatus:
     )
 
 
-def status(config: InventoryConfig | None = None) -> CombinedStatus:
+def status(config: InventoryConfig | None = None) -> typing.Any:
     """
     Get combined status of all inventory sources.
 
@@ -84,7 +85,7 @@ def status(config: InventoryConfig | None = None) -> CombinedStatus:
 
     cache_paths = CachePaths(config.cache_root)
 
-    sources = [
+    sources: list[typing.Any] = [
         _get_source_status(cache_paths, "powerbi"),
         _get_source_status(cache_paths, "jira"),
     ]
@@ -98,7 +99,7 @@ def status(config: InventoryConfig | None = None) -> CombinedStatus:
     )
 
 
-def _format_status_result(result: dict[str, Any]) -> dict[str, Any]:
+def _format_status_result(result: dict[str, Any]) -> typing.Any:
     """Normalize refresh result for consistent output."""
     return {
         "source": result.get("source", "unknown"),
@@ -113,7 +114,7 @@ def _format_status_result(result: dict[str, Any]) -> dict[str, Any]:
 def refreshPbi(
     force: bool = False,
     config: InventoryConfig | None = None,
-) -> dict[str, Any]:
+) -> typing.Any:
     """
     Refresh Power BI inventory cache.
 
@@ -149,7 +150,7 @@ def refreshPbi(
 def refreshJira(
     force: bool = False,
     config: InventoryConfig | None = None,
-) -> dict[str, Any]:
+) -> typing.Any:
     """
     Refresh Jira inventory cache.
 
@@ -192,7 +193,7 @@ def refreshJira(
 def refreshAll(
     force: bool = False,
     config: InventoryConfig | None = None,
-) -> dict[str, Any]:
+) -> typing.Any:
     """
     Refresh all inventory sources (Power BI and Jira).
 
@@ -208,7 +209,7 @@ def refreshAll(
     if config is None:
         config = InventoryConfig.from_env()
 
-    results = {
+    results: dict[typing.Any, typing.Any] = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "force": force,
         "powerbi": None,
@@ -248,7 +249,7 @@ def refreshAll(
     return results
 
 
-def status_report(config: InventoryConfig | None = None) -> str:
+def status_report(config: InventoryConfig | None = None) -> typing.Any:
     """
     Generate a human-readable status report.
 
@@ -262,7 +263,7 @@ def status_report(config: InventoryConfig | None = None) -> str:
         config = InventoryConfig.from_env()
 
     combined = status(config)
-    lines = [
+    lines: list[typing.Any] = [
         "=" * 50,
         "Inventory Cache Status Report",
         f"Generated: {combined.timestamp.isoformat()}",

@@ -1,6 +1,7 @@
 """Power BI authentication using Azure Key Vault and MSAL."""
 
 import logging
+import typing
 
 import msal
 from azure.identity import DefaultAzureCredential
@@ -16,12 +17,12 @@ class PowerBIAuth:
     POWER_BI_RESOURCE = "https://analysis.windows.net/powerbi/api"
 
     def __init__(
-        self,
+        self: typing.Any,
         key_vault_url: str,
         tenant_id: str,
         client_id: str,
         secret_name: str,
-    ):
+    ) -> None:
         self.key_vault_url = key_vault_url
         self.tenant_id = tenant_id
         self.client_id = client_id
@@ -31,10 +32,10 @@ class PowerBIAuth:
         self._kv_client: SecretClient | None = None
 
     @property
-    def authority(self) -> str:
+    def authority(self: typing.Any) -> typing.Any:
         return f"{self.AUTHORITY_BASE}{self.tenant_id}"
 
-    def _get_key_vault_client(self) -> SecretClient:
+    def _get_key_vault_client(self: typing.Any) -> typing.Any:
         """Get or create Key Vault client."""
         if self._kv_client is None:
             credential = DefaultAzureCredential()
@@ -44,14 +45,14 @@ class PowerBIAuth:
             )
         return self._kv_client
 
-    def _get_client_secret(self) -> str:
+    def _get_client_secret(self: typing.Any) -> typing.Any:
         """Retrieve client secret from Key Vault."""
         client = self._get_key_vault_client()
         secret = client.get_secret(self.secret_name)
         logger.info(f"Retrieved secret '{self.secret_name}' from Key Vault")
         return secret.value
 
-    def _get_app(self) -> msal.ConfidentialClientApplication:
+    def _get_app(self: typing.Any) -> typing.Any:
         """Get or create MSAL confidential client application."""
         if self._app is None:
             client_secret = self._get_client_secret()
@@ -62,7 +63,7 @@ class PowerBIAuth:
             )
         return self._app
 
-    def acquire_token(self) -> str:
+    def acquire_token(self: typing.Any) -> typing.Any:
         """Acquire access token for Power BI API."""
         app = self._get_app()
 
@@ -91,7 +92,7 @@ class PowerBIAuth:
         logger.info("Successfully acquired new token")
         return self._token
 
-    def get_token(self) -> str:
+    def get_token(self: typing.Any) -> typing.Any:
         """Get valid token, acquiring if necessary."""
         if self._token is None:
             return self.acquire_token()

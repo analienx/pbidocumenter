@@ -1,6 +1,7 @@
 """Orchestrate preparation of all cache sources (inventory + downloads)."""
 
 import logging
+import typing
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
@@ -27,7 +28,7 @@ class PrepareResult:
 def prepare_inventory(
     force: bool = False,
     config: InventoryConfig | None = None,
-) -> dict[str, Any]:
+) -> typing.Any:
     """
     Prepare inventory caches (Power BI + Jira from APIs).
 
@@ -46,7 +47,7 @@ def prepare_inventory(
 
 def prepare_downloads(
     config: DownloadConfig | None = None,
-) -> dict[str, dict[str, Any]]:
+) -> typing.Any:
     """
     Prepare download caches (SharePoint files).
 
@@ -76,7 +77,7 @@ def prepare_all(
     force_inventory: bool = False,
     inventory_config: InventoryConfig | None = None,
     download_config: DownloadConfig | None = None,
-) -> PrepareResult:
+) -> typing.Any:
     """
     Prepare all caches: inventory (API) + downloads (SharePoint).
 
@@ -139,7 +140,7 @@ def prepare_all(
 
 def prepare_status(
     inventory_config: InventoryConfig | None = None,
-) -> str:
+) -> typing.Any:
     """
     Generate human-readable status report for all caches.
 
@@ -159,7 +160,7 @@ def prepare_status(
     downloads_cache = inventory_config.cache_root / "downloads"
     downloads_available = downloads_cache.exists() and any(downloads_cache.iterdir())
 
-    lines = [
+    lines: list[typing.Any] = [
         "=" * 60,
         "Combined Cache Status Report",
         f"Generated: {datetime.now(timezone.utc).isoformat()}",

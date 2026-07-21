@@ -1,6 +1,7 @@
 """Document builder — assembles the full specification document."""
 
 import os
+import typing
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -64,13 +65,13 @@ from pbip_documenter.docx_render.wireframe import insert_page_layout
 _SCHEMA_PORTRAIT_HEADER_FOOTER_REFS = None
 
 
-def _clear_hdrftr(hdrftr):
+def _clear_hdrftr(hdrftr: typing.Any) -> typing.Any:
     for child in list(hdrftr._element):
         hdrftr._element.remove(child)
 
 
-def _capture_hdrftr_refs(section):
-    refs = []
+def _capture_hdrftr_refs(section: typing.Any) -> typing.Any:
+    refs: list[typing.Any] = []
     sect_pr = section._sectPr
     for tag in ("headerReference", "footerReference"):
         for node in sect_pr.findall(qn(f"w:{tag}")):
@@ -78,7 +79,7 @@ def _capture_hdrftr_refs(section):
     return refs
 
 
-def _restore_hdrftr_refs(section, refs):
+def _restore_hdrftr_refs(section: typing.Any, refs: typing.Any) -> typing.Any:
     sect_pr = section._sectPr
     for tag in ("headerReference", "footerReference"):
         for node in list(sect_pr.findall(qn(f"w:{tag}"))):
@@ -89,7 +90,7 @@ def _restore_hdrftr_refs(section, refs):
         sect_pr.insert(0, deepcopy(ref))
 
 
-def _add_page_number(paragraph):
+def _add_page_number(paragraph: typing.Any) -> typing.Any:
     run = paragraph.add_run("Page ")
     fld_begin = OxmlElement("w:fldChar")
     fld_begin.set(qn("w:fldCharType"), "begin")
@@ -112,7 +113,7 @@ def _add_page_number(paragraph):
     run.font.color.rgb = C.rgb(C.DGRAY)
 
 
-def _set_landscape_page_number_header(section):
+def _set_landscape_page_number_header(section: typing.Any) -> typing.Any:
     section.header.is_linked_to_previous = False
     section.footer.is_linked_to_previous = False
     _clear_hdrftr(section.header)
@@ -124,7 +125,7 @@ def _set_landscape_page_number_header(section):
     _add_page_number(p)
 
 
-def _set_section_landscape(section, margin_cm=_SCHEMA_LANDSCAPE_MARGIN_CM):
+def _set_section_landscape(section: typing.Any, margin_cm: typing.Any = _SCHEMA_LANDSCAPE_MARGIN_CM) -> typing.Any:
     section.orientation = WD_ORIENT.LANDSCAPE
     if section.page_width < section.page_height:
         section.page_width, section.page_height = section.page_height, section.page_width
@@ -136,7 +137,7 @@ def _set_section_landscape(section, margin_cm=_SCHEMA_LANDSCAPE_MARGIN_CM):
     return section
 
 
-def _set_section_portrait(section):
+def _set_section_portrait(section: typing.Any) -> typing.Any:
     section.orientation = WD_ORIENT.PORTRAIT
     if section.page_width > section.page_height:
         section.page_width, section.page_height = section.page_height, section.page_width
@@ -152,18 +153,18 @@ def _set_section_portrait(section):
     return section
 
 
-def _begin_schema_landscape_section(doc):
+def _begin_schema_landscape_section(doc: typing.Any) -> typing.Any:
     global _SCHEMA_PORTRAIT_HEADER_FOOTER_REFS
     if _SCHEMA_PORTRAIT_HEADER_FOOTER_REFS is None:
         _SCHEMA_PORTRAIT_HEADER_FOOTER_REFS = _capture_hdrftr_refs(doc.sections[0])
     return _set_section_landscape(doc.add_section(WD_SECTION.NEW_PAGE))
 
 
-def _end_schema_portrait_section(doc):
+def _end_schema_portrait_section(doc: typing.Any) -> typing.Any:
     return _set_section_portrait(doc.add_section(WD_SECTION.NEW_PAGE))
 
 
-def _schema_has_relationship_diagrams(summary):
+def _schema_has_relationship_diagrams(summary: typing.Any) -> typing.Any:
     sm = summary.get("semantic_model") or {}
     tables = {t.get("name") for t in (sm.get("tables", []) or []) if t.get("name")}
     return any(
@@ -174,9 +175,9 @@ def _schema_has_relationship_diagrams(summary):
 # TWEAK: naming convention observation rules
 # Flags low-signal object names for the Technical observations section.
 # Add or remove terms in `exact` if local naming standards differ.
-def _is_generic_name(name, kind="object"):
+def _is_generic_name(name: typing.Any, kind: typing.Any = "object") -> typing.Any:
     norm = " ".join(str(name or "").strip().lower().replace("_", " ").replace("-", " ").split())
-    exact = {
+    exact: set[typing.Any] = {
         "table",
         "table1",
         "table 1",
@@ -208,14 +209,14 @@ def _is_generic_name(name, kind="object"):
     return bool(kind in ("column", "measure") and norm.startswith(("column ", "field ", "measure ")))
 
 
-def _naming_convention_observations(sm):
+def _naming_convention_observations(sm: typing.Any) -> typing.Any:
     tables = sm.get("tables", []) or []
-    observations = []
+    observations: list[typing.Any] = []
     generic_tables = [t.get("name", "") for t in tables if _is_generic_name(t.get("name"), "table")]
-    generic_columns = []
-    generic_measures = []
-    table_prefixes = {"fact": 0, "dim": 0, "other": 0}
-    inconsistent_examples = []
+    generic_columns: list[typing.Any] = []
+    generic_measures: list[typing.Any] = []
+    table_prefixes: dict[typing.Any, typing.Any] = {"fact": 0, "dim": 0, "other": 0}
+    inconsistent_examples: list[typing.Any] = []
     for t in tables:
         tname = str(t.get("name", "") or "")
         low = tname.lower().strip()
@@ -290,7 +291,7 @@ def _naming_convention_observations(sm):
     return observations
 
 
-def _render_generated_section(doc, title, section):
+def _render_generated_section(doc: typing.Any, title: typing.Any, section: typing.Any) -> typing.Any:
     h2(doc, title)
     if not section:
         suggested(doc, "No generated content available.")
@@ -312,16 +313,16 @@ def _render_generated_section(doc, title, section):
     callout(doc, f"Generated source: {section.source}")
 
 
-def _join_list(values, empty="—"):
+def _join_list(values: typing.Any, empty: typing.Any = "—") -> typing.Any:
     vals = [str(v) for v in (values or []) if v not in (None, "", "(not found)")]
     return ", ".join(vals) if vals else empty
 
 
-def _render_semantic_model_notes(doc, sm):
+def _render_semantic_model_notes(doc: typing.Any, sm: typing.Any) -> typing.Any:
     """Render concise semantic-model metadata for richer full-mode output."""
     parser_warnings = sm.get("parser_warnings") or sm.get("warnings") or []
     model = sm.get("model") or {}
-    rows = [
+    rows: list[typing.Any] = [
         ("Parser confidence", sm.get("parser_confidence", "unknown")),
         ("Warnings detected", str(len(parser_warnings))),
         ("Has RLS", "Yes" if sm.get("has_rls") else "No"),
@@ -364,7 +365,7 @@ def _render_semantic_model_notes(doc, sm):
         )
 
 
-def _render_hierarchies_and_calc_groups(doc, tables):
+def _render_hierarchies_and_calc_groups(doc: typing.Any, tables: typing.Any) -> typing.Any:
     rich_tables = [
         t for t in tables if t.get("hierarchies") or t.get("calculation_items") or t.get("is_calculation_group")
     ]
@@ -378,7 +379,7 @@ def _render_hierarchies_and_calc_groups(doc, tables):
 
         if t.get("hierarchies"):
             h4(doc, "Hierarchies")
-            rows = []
+            rows: list[typing.Any] = []
             for h in t.get("hierarchies", []):
                 levels = h.get("levels", []) or []
                 level_names = [lvl.get("name", "?") for lvl in levels if lvl.get("name")]
@@ -401,7 +402,7 @@ def _render_hierarchies_and_calc_groups(doc, tables):
             )
 
 
-def _render_relationship_details(doc, rels):
+def _render_relationship_details(doc: typing.Any, rels: typing.Any) -> typing.Any:
     if not rels:
         return
     has_cardinality = any((r.get("cardinality") or "").strip() not in ("", "—") for r in rels)
@@ -411,8 +412,8 @@ def _render_relationship_details(doc, rels):
     if not any([has_cardinality, has_cross, has_security, has_join]):
         return
 
-    headers = ["Relationship"]
-    widths = [4200]
+    headers: list[typing.Any] = ["Relationship"]
+    widths: list[typing.Any] = [4200]
     if has_cardinality:
         headers.append("Cardinality")
         widths.append(1200)
@@ -428,9 +429,9 @@ def _render_relationship_details(doc, rels):
     headers.append("Active")
     widths.append(800)
 
-    rows = []
+    rows: list[typing.Any] = []
     for r in rels:
-        row = [
+        row: list[typing.Any] = [
             f"{r.get('from_table', '?')}.{r.get('from_field', '?')} → {r.get('to_table', '?')}.{r.get('to_field', '?')}"
         ]
         if has_cardinality:
@@ -448,7 +449,7 @@ def _render_relationship_details(doc, rels):
     data_table(doc, headers, rows, widths, compact=True, repeat_header=True)
 
 
-def _render_rls_details(doc, roles):
+def _render_rls_details(doc: typing.Any, roles: typing.Any) -> typing.Any:
     if not roles:
         return
 
@@ -472,7 +473,7 @@ def _render_rls_details(doc, roles):
 
         perms = role.get("table_permissions", []) or []
         if perms:
-            preview_rows = []
+            preview_rows: list[typing.Any] = []
             for tp in perms:
                 expr_preview = (tp.get("expression", "—") or "—").replace("\n", " ")
                 if len(expr_preview) > 120:
@@ -486,11 +487,11 @@ def _render_rls_details(doc, roles):
             body(doc, "No table-level filters defined for this role.")
 
 
-def _render_user_defined_functions(doc, functions, mode):
+def _render_user_defined_functions(doc: typing.Any, functions: typing.Any, mode: typing.Any) -> typing.Any:
     if not functions:
         return
     h3(doc, "User-defined DAX functions")
-    func_rows = []
+    func_rows: list[typing.Any] = []
     for f in functions:
         func_rows.append(
             [
@@ -521,13 +522,15 @@ def _render_user_defined_functions(doc, functions, mode):
         callout(doc, f"Full DAX for all {len(functions)} user-defined functions available in Full mode.")
 
 
-def _render_visual_actions(doc, visuals, pages_map, bookmarks_map, mode):
+def _render_visual_actions(
+    doc: typing.Any, visuals: typing.Any, pages_map: typing.Any, bookmarks_map: typing.Any, mode: typing.Any
+) -> typing.Any:
     """Render visual actions / links for a single page."""
     actions = [v for v in visuals if v.get("action")]
     if not actions:
         return
 
-    rows = []
+    rows: list[typing.Any] = []
     for v in actions:
         act = v["action"]
         act_type = act.get("type", "?")
@@ -576,7 +579,7 @@ def _render_visual_actions(doc, visuals, pages_map, bookmarks_map, mode):
                 fn = act.get("function_name", "?")
                 p_h4_df = h4(doc, f"[DataFunction] {fn}")
                 p_h4_df.paragraph_format.keep_with_next = True
-                param_rows = []
+                param_rows: list[typing.Any] = []
                 for p in act["parameters"]:
                     param_rows.append(
                         [
@@ -595,7 +598,13 @@ def _render_visual_actions(doc, visuals, pages_map, bookmarks_map, mode):
                 )
 
 
-def _render_bookmarks_section(doc, bookmarks, mode, pages_map=None, visuals_map=None):
+def _render_bookmarks_section(
+    doc: typing.Any,
+    bookmarks: typing.Any,
+    mode: typing.Any,
+    pages_map: typing.Any = None,
+    visuals_map: typing.Any = None,
+) -> typing.Any:
     """Render dedicated bookmarks section."""
     if not bookmarks:
         return
@@ -607,7 +616,7 @@ def _render_bookmarks_section(doc, bookmarks, mode, pages_map=None, visuals_map=
             doc,
             f"{len(bookmarks)} bookmark(s) configured. The table below provides an overview of each bookmark's target visuals, filters, and triggers.",
         )
-        rows = []
+        rows: list[typing.Any] = []
         has_groups = any(bm.get("group") for bm in bookmarks)
         for bm in bookmarks:
             name = bm.get("display_name", bm.get("id", "?"))
@@ -642,6 +651,8 @@ def _render_bookmarks_section(doc, bookmarks, mode, pages_map=None, visuals_map=
             )
             rows.append(row)
 
+        headers: list[typing.Any]
+        widths: list[typing.Any]
         if has_groups:
             headers = ["Bookmark", "Group", "Target Visuals", "Filter Entities", "Triggered By"]
             widths = [2000, 1600, 2400, 2000, 2034]
@@ -660,7 +671,7 @@ def _render_bookmarks_section(doc, bookmarks, mode, pages_map=None, visuals_map=
         p_h3.paragraph_format.keep_with_next = True
 
         # Metadata
-        details = []
+        details: list[typing.Any] = []
         if bm.get("active_section"):
             active_id = bm["active_section"]
             active_name = pages_map.get(active_id, active_id) if pages_map else active_id
@@ -683,8 +694,8 @@ def _render_bookmarks_section(doc, bookmarks, mode, pages_map=None, visuals_map=
         # Target visuals
         tv = bm.get("target_visuals", [])
         if tv:
-            counts = Counter()
-            named = []
+            counts: Counter[str] = Counter()
+            named: list[typing.Any] = []
             ids_by_type = defaultdict(list)
             for v_id in tv:
                 vis_info = visuals_map.get(v_id) if visuals_map else None
@@ -703,7 +714,7 @@ def _render_bookmarks_section(doc, bookmarks, mode, pages_map=None, visuals_map=
             p_h4_targets.paragraph_format.keep_with_next = True
 
             if counts:
-                summary_rows = []
+                summary_rows: list[typing.Any] = []
                 for vtype, cnt in counts.most_common():
                     ids_str = ", ".join(ids_by_type[vtype])
                     summary_rows.append([vtype, str(cnt), ids_str])
@@ -724,7 +735,7 @@ def _render_bookmarks_section(doc, bookmarks, mode, pages_map=None, visuals_map=
         body(doc, "")
 
 
-def _render_custom_visuals_section(doc, custom_visuals):
+def _render_custom_visuals_section(doc: typing.Any, custom_visuals: typing.Any) -> typing.Any:
     """Render dedicated custom visuals section."""
     if not custom_visuals:
         return
@@ -745,11 +756,11 @@ def _render_custom_visuals_section(doc, custom_visuals):
         bullet_item(doc, name)
 
 
-def _collect_data_functions(pages):
+def _collect_data_functions(pages: typing.Any) -> typing.Any:
     """Aggregate all DataFunction actions across report pages."""
     from collections import defaultdict
 
-    func_map = defaultdict(
+    func_map: defaultdict[str, dict[str, typing.Any]] = defaultdict(
         lambda: {
             "function_name": "",
             "auto_refresh": False,
@@ -785,7 +796,7 @@ def _collect_data_functions(pages):
             if not entry["parameters"] and act.get("parameters"):
                 entry["parameters"] = act["parameters"]
 
-    result = []
+    result: list[typing.Any] = []
     for fn in sorted(func_map.keys()):
         entry = func_map[fn]
         entry["pages"] = sorted(entry["pages"])
@@ -793,7 +804,7 @@ def _collect_data_functions(pages):
     return result
 
 
-def _render_data_functions_section(doc, data_functions, mode):
+def _render_data_functions_section(doc: typing.Any, data_functions: typing.Any, mode: typing.Any) -> typing.Any:
     """Render dedicated Data Functions section."""
     if not data_functions:
         return
@@ -804,7 +815,7 @@ def _render_data_functions_section(doc, data_functions, mode):
         "The following data functions are invoked by report visuals. These functions typically perform write-back, alerting, or other interactive operations against the data source.",
     )
 
-    rows = []
+    rows: list[typing.Any] = []
     for df in data_functions:
         rows.append(
             [
@@ -848,7 +859,7 @@ def _render_data_functions_section(doc, data_functions, mode):
             )
 
             if df["parameters"]:
-                param_rows = []
+                param_rows: list[typing.Any] = []
                 for p in df["parameters"]:
                     param_rows.append(
                         [
@@ -869,7 +880,7 @@ def _render_data_functions_section(doc, data_functions, mode):
             else:
                 body(doc, "No parameters defined.")
 
-            usage_rows = []
+            usage_rows: list[typing.Any] = []
             for v in df["visuals"]:
                 usage_rows.append(
                     [
@@ -889,7 +900,13 @@ def _render_data_functions_section(doc, data_functions, mode):
             )
 
 
-def build_doc(summary, mode="default", logo_path=None, template_path=None, augmentation=None):
+def build_doc(
+    summary: typing.Any,
+    mode: typing.Any = "default",
+    logo_path: typing.Any = None,
+    template_path: typing.Any = None,
+    augmentation: typing.Any = None,
+) -> typing.Any:
     LOCAL_ONLY = os.environ.get("PBIP_DOCUMENTER_LOCAL_ONLY", "1").lower() not in ("0", "false", "no")
     if LOCAL_ONLY:
         augmentation = None
@@ -990,9 +1007,9 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
     h1(doc, "2. Solution and operations summary")
     h2(doc, "2.1 Delivered artifacts")
     # Use augmentation data if available, otherwise fall back to placeholders
-    workspace_display = "[To be confirmed]"
-    app_display = report_name
-    jira_links = []
+    workspace_display: typing.Any = "[To be confirmed]"
+    app_display: typing.Any = report_name
+    jira_links: list[typing.Any] = []
 
     if augmentation and augmentation.report_context:
         ctx = augmentation.report_context
@@ -1033,7 +1050,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
                     jira_links.append(f"{issue_key}: {jira_summary}" if jira_summary else issue_key)
 
     # Build artifacts table rows
-    artifact_rows = [
+    artifact_rows: list[typing.Any] = [
         ("Workspace(s)", workspace_display),
         ("App / Report(s)", app_display),
         ("Semantic model(s)", sm.get("display_name", "\u2014")),
@@ -1139,7 +1156,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
         _render_semantic_model_notes(doc, sm)
 
     h3(doc, "3.1.1 Table inventory")
-    trows = []
+    trows: list[typing.Any] = []
     for t in tables:
         n = t.get("name") or "?"
         role = (
@@ -1259,7 +1276,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
         shared_exprs = [e for e in exprs if e.get("name")]
         if shared_exprs:
             h3(doc, "Shared expressions and parameters")
-            erows = []
+            erows: list[typing.Any] = []
             for e in shared_exprs:
                 preview = (e.get("expression", "") or "—").replace("\n", " ")
                 if len(preview) > 90:
@@ -1329,7 +1346,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
     _render_user_defined_functions(doc, functions, mode)
 
     h2(doc, "3.4 Report structure")
-    pgrows = []
+    pgrows: list[typing.Any] = []
     for pg in pages:
         vts = pg.get("visual_type_summary", {})
         tot = pg.get("visual_count", len(pg.get("visuals", [])))
@@ -1351,7 +1368,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
     # Build lookup maps for action resolution
     pages_map = {pg.get("id", ""): pg.get("display_name", pg.get("id", "")) for pg in pages}
     bookmarks_map = {bm.get("id", ""): bm.get("display_name", bm.get("id", "")) for bm in rpt.get("bookmarks", [])}
-    visuals_map = {}
+    visuals_map: dict[typing.Any, typing.Any] = {}
     for pg in pages:
         p_name = pg.get("display_name", pg.get("id", ""))
         p_id = pg.get("id", "")
@@ -1374,7 +1391,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
     _prev_compact = False
     _COMPACT_VC = 4
 
-    def _is_compact(pg):
+    def _is_compact(pg: typing.Any) -> typing.Any:
         return pg.get("visual_count", len(pg.get("visuals", []))) <= _COMPACT_VC or (
             pg.get("type", "") or ""
         ).lower() in ("tooltip",)
@@ -1443,7 +1460,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
         fig_num += 1
 
         if slicers:
-            frows = []
+            frows: list[typing.Any] = []
             for s in slicers:
                 parts = [
                     f.get("property", "")
@@ -1466,7 +1483,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
             _y += tbl_h
 
         if dvis:
-            dvr = []
+            dvr: list[typing.Any] = []
             for v in dvis:
                 vtype = v.get("visual_type", "?")
                 if not vtype or vtype == "(not found)" or len(vtype) > 40:
@@ -1489,7 +1506,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
 
         vi = pg.get("visual_interactions", [])
         if vi:
-            vs = {}
+            vs: dict[typing.Any, typing.Any] = {}
             for r in vi:
                 vs[r.get("type", "?")] = vs.get(r.get("type", "?"), 0) + 1
             callout(
@@ -1552,7 +1569,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
                 kind="warn",
             )
 
-        rows = []
+        rows: list[typing.Any] = []
         for idx, role in enumerate(roles, start=1):
             role_name = (
                 (role.get("name") or "").strip() or Path(role.get("file", "")).stem.replace("_", " ") or f"Role {idx}"
@@ -1585,10 +1602,15 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
     obs_list.extend(_naming_convention_observations(sm))
     limit = len(obs_list) if mode == "full" else min(12, len(obs_list))
     _OBS_CARD_COUNTER[0] = 0
-    cats = {}
+    cats: dict[typing.Any, typing.Any] = {}
     for title, detail, accent, cat in obs_list[:limit]:
         cats.setdefault(cat, []).append((title, detail, accent))
-    cat_colors = {"Risks": C.RUBINE, "Warnings": C.MARIGOLD, "Info": C.SKY, "Good Practices": C.EVERGREEN}
+    cat_colors: dict[typing.Any, typing.Any] = {
+        "Risks": C.RUBINE,
+        "Warnings": C.MARIGOLD,
+        "Info": C.SKY,
+        "Good Practices": C.EVERGREEN,
+    }
     for cat_name, items in cats.items():
         p_obs_h3 = h3(doc, cat_name)
         p_obs_h3.paragraph_format.keep_with_next = True
@@ -1625,7 +1647,7 @@ def build_doc(summary, mode="default", logo_path=None, template_path=None, augme
     fns = {fn for fn, _, _ in dc}
     cats_set = {cat for _, _, cat in dc}
     srcs = set(sm.get("data_sources", []))
-    SCENARIOS = [
+    SCENARIOS: list[typing.Any] = [
         (
             "SharePoint" in cats_set or any("sharepoint" in s.lower() for s in srcs),
             [

@@ -1,11 +1,12 @@
 """Tests for persisted source-cache metadata."""
 
+import typing
 from datetime import datetime, timezone
 
 from pbip_documenter.cache.manifest import Manifest, ManifestStatus
 
 
-def test_source_manifest_round_trip(tmp_path) -> None:
+def test_source_manifest_round_trip(tmp_path: typing.Any) -> typing.Any:
     path = tmp_path / "manifest.json"
     now = datetime.now(timezone.utc)
     manifest = Manifest(

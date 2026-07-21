@@ -1,5 +1,6 @@
 """Tests for Jira normalization and deduplication."""
 
+import typing
 from datetime import datetime
 
 import pandas as pd
@@ -12,12 +13,12 @@ class TestJiraNormalizer:
     """Test cases for JiraNormalizer."""
 
     @pytest.fixture
-    def normalizer(self):
+    def normalizer(self: typing.Any) -> typing.Any:
         """Create a JiraNormalizer instance."""
         return JiraNormalizer()
 
     @pytest.fixture
-    def sample_issue(self):
+    def sample_issue(self: typing.Any) -> typing.Any:
         """Create a sample Jira issue."""
         return {
             "id": "10001",
@@ -42,9 +43,9 @@ class TestJiraNormalizer:
             },
         }
 
-    def test_normalize_single_issue(self, normalizer, sample_issue):
+    def test_normalize_single_issue(self: typing.Any, normalizer: typing.Any, sample_issue: typing.Any) -> typing.Any:
         """Test normalizing a single issue."""
-        seen_ids = set()
+        seen_ids: set[str] = set()
         result = normalizer._normalize_single_issue(sample_issue, seen_ids)
 
         assert result is not None
@@ -64,9 +65,9 @@ class TestJiraNormalizer:
         assert "Test issue summary" in result.searchable_text
         assert "Test description" in result.searchable_text
 
-    def test_deduplication(self, normalizer, sample_issue):
+    def test_deduplication(self: typing.Any, normalizer: typing.Any, sample_issue: typing.Any) -> typing.Any:
         """Test that duplicate issues are deduplicated."""
-        seen_ids = set()
+        seen_ids: set[str] = set()
 
         # First issue should be normalized
         result1 = normalizer._normalize_single_issue(sample_issue, seen_ids)
@@ -76,13 +77,15 @@ class TestJiraNormalizer:
         result2 = normalizer._normalize_single_issue(sample_issue, seen_ids)
         assert result2 is None
 
-    def test_normalize_issues_empty_list(self, normalizer):
+    def test_normalize_issues_empty_list(self: typing.Any, normalizer: typing.Any) -> typing.Any:
         """Test normalizing an empty list."""
         df = normalizer.normalize_issues([])
         assert isinstance(df, pd.DataFrame)
         assert len(df) == 0
 
-    def test_normalize_issues_with_data(self, normalizer, sample_issue):
+    def test_normalize_issues_with_data(
+        self: typing.Any, normalizer: typing.Any, sample_issue: typing.Any
+    ) -> typing.Any:
         """Test normalizing a list with issues."""
         df = normalizer.normalize_issues([sample_issue])
 
@@ -90,7 +93,7 @@ class TestJiraNormalizer:
         assert len(df) == 1
         assert df.iloc[0]["issue_key"] == "<JIRA_PROJECT_KEY>-123"
 
-    def test_parse_datetime(self, normalizer):
+    def test_parse_datetime(self: typing.Any, normalizer: typing.Any) -> typing.Any:
         """Test datetime parsing."""
         # Standard Jira format
         dt = normalizer._parse_datetime("2024-01-15T10:30:00.000+0000")
@@ -109,9 +112,9 @@ class TestJiraNormalizer:
         # Invalid input
         assert normalizer._parse_datetime("invalid") is None
 
-    def test_extract_description_adf(self, normalizer):
+    def test_extract_description_adf(self: typing.Any, normalizer: typing.Any) -> typing.Any:
         """Test extracting description from ADF format."""
-        adf = {
+        adf: dict[typing.Any, typing.Any] = {
             "type": "doc",
             "version": 1,
             "content": [
@@ -134,17 +137,17 @@ class TestJiraNormalizer:
         assert "Line 1" in result
         assert "Line 2" in result
 
-    def test_extract_description_string(self, normalizer):
+    def test_extract_description_string(self: typing.Any, normalizer: typing.Any) -> typing.Any:
         """Test extracting description from string."""
         result = normalizer._extract_description("Plain text description")
         assert result == "Plain text description"
 
-    def test_extract_description_none(self, normalizer):
+    def test_extract_description_none(self: typing.Any, normalizer: typing.Any) -> typing.Any:
         """Test extracting description from None."""
         result = normalizer._extract_description(None)
         assert result is None
 
-    def test_build_searchable_text(self, normalizer):
+    def test_build_searchable_text(self: typing.Any, normalizer: typing.Any) -> typing.Any:
         """Test building searchable text."""
         text = normalizer._build_searchable_text(
             summary="Report Issue",
@@ -157,9 +160,9 @@ class TestJiraNormalizer:
         assert "sales" in text
         assert "Reports" in text
 
-    def test_custom_field_extraction(self, normalizer):
+    def test_custom_field_extraction(self: typing.Any, normalizer: typing.Any) -> typing.Any:
         """Test custom field extraction."""
-        fields = {
+        fields: dict[typing.Any, typing.Any] = {
             "customfield_10016": 5.0,  # Story points
             "customfield_10014": "<JIRA_PROJECT_KEY>-100",  # Epic link
             "customfield_10015": "Epic Name",  # Epic name
@@ -174,9 +177,9 @@ class TestJiraNormalizer:
         epic_name = normalizer._extract_custom_field_str(fields, "epic_name")
         assert epic_name == "Epic Name"
 
-    def test_custom_field_not_found(self, normalizer):
+    def test_custom_field_not_found(self: typing.Any, normalizer: typing.Any) -> typing.Any:
         """Test custom field extraction when field not present."""
-        fields = {}
+        fields: dict[typing.Any, typing.Any] = {}
 
         story_points = normalizer._extract_custom_field_float(fields, "story_points")
         assert story_points is None
@@ -184,23 +187,23 @@ class TestJiraNormalizer:
         epic_link = normalizer._extract_custom_field_str(fields, "epic_link")
         assert epic_link is None
 
-    def test_custom_field_mappings_override(self):
+    def test_custom_field_mappings_override(self: typing.Any) -> typing.Any:
         """Test custom field mappings can be overridden."""
-        custom_mappings = {
+        custom_mappings: dict[typing.Any, typing.Any] = {
             "story_points": ["customfield_99999"],
         }
         normalizer = JiraNormalizer(custom_field_mappings=custom_mappings)
 
-        fields = {
+        fields: dict[typing.Any, typing.Any] = {
             "customfield_99999": 8.0,
         }
 
         story_points = normalizer._extract_custom_field_float(fields, "story_points")
         assert story_points == 8.0
 
-    def test_issue_without_assignee(self, normalizer):
+    def test_issue_without_assignee(self: typing.Any, normalizer: typing.Any) -> typing.Any:
         """Test normalizing issue without assignee."""
-        issue = {
+        issue: dict[typing.Any, typing.Any] = {
             "id": "10002",
             "key": "<JIRA_PROJECT_KEY>-124",
             "fields": {
@@ -217,7 +220,7 @@ class TestJiraNormalizer:
             },
         }
 
-        seen_ids = set()
+        seen_ids: set[str] = set()
         result = normalizer._normalize_single_issue(issue, seen_ids)
 
         assert result is not None

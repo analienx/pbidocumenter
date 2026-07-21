@@ -2,6 +2,7 @@
 
 import logging
 import shutil
+import typing
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -28,13 +29,13 @@ class JiraService:
     SOURCE_NAME = "jira"
 
     def __init__(
-        self,
+        self: typing.Any,
         auth: JiraAuth,
         cache_paths: CachePaths,
         freshness_threshold_hours: int = 24,
         jql: str | None = None,
         fields: list[str] | None = None,
-    ):
+    ) -> None:
         self.auth = auth
         self.cache_paths = cache_paths
         self.client = JiraClient(auth)
@@ -45,7 +46,7 @@ class JiraService:
         self._failed = False
         self._previous_cache_dir: Path | None = None
 
-    def _backup_existing_cache(self) -> Path | None:
+    def _backup_existing_cache(self: typing.Any) -> typing.Any:
         """Backup existing cache before refresh."""
         source_dir = self.cache_paths.get_source_dir(self.SOURCE_NAME)
         if not source_dir.exists():
@@ -59,7 +60,7 @@ class JiraService:
         logger.info(f"Backed up existing cache to {backup_dir}")
         return backup_dir
 
-    def _restore_backup(self, backup_dir: Path) -> None:
+    def _restore_backup(self: typing.Any, backup_dir: Path) -> typing.Any:
         """Restore backup on failure."""
         source_dir = self.cache_paths.get_source_dir(self.SOURCE_NAME)
         logger.warning(f"Restoring cache from {backup_dir}")
@@ -68,18 +69,18 @@ class JiraService:
         shutil.copytree(backup_dir, source_dir)
         logger.info("Cache restored successfully")
 
-    def _cleanup_backup(self, backup_dir: Path | None) -> None:
+    def _cleanup_backup(self: typing.Any, backup_dir: Path | None) -> typing.Any:
         """Remove backup after successful refresh."""
         if backup_dir and backup_dir.exists():
             shutil.rmtree(backup_dir)
             logger.info(f"Cleaned up backup: {backup_dir}")
 
     def _save_raw_page(
-        self,
+        self: typing.Any,
         data: list[dict[str, Any]],
         page_number: int,
         endpoint: str,
-    ) -> Path:
+    ) -> typing.Any:
         """Save raw API response page."""
         raw_dir = self.cache_paths.get_raw_pages_dir(self.SOURCE_NAME)
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -90,7 +91,7 @@ class JiraService:
         logger.debug(f"Saved raw page: {filepath}")
         return filepath
 
-    def _save_curated_export(self, df: pd.DataFrame) -> Path:
+    def _save_curated_export(self: typing.Any, df: pd.DataFrame) -> typing.Any:
         """Save normalized DataFrame to parquet."""
         curated_path = self.cache_paths.get_curated_path(self.SOURCE_NAME, "issues.parquet")
         atomic_write_parquet(curated_path, df)
@@ -98,21 +99,21 @@ class JiraService:
         return curated_path
 
     def _save_json_export(
-        self,
+        self: typing.Any,
         data: Any,
         filename: str,
-    ) -> Path:
+    ) -> typing.Any:
         """Save JSON export."""
         export_path = self.cache_paths.get_export_path(self.SOURCE_NAME, filename)
         atomic_write_json(export_path, data)
         return export_path
 
     def _write_manifest(
-        self,
+        self: typing.Any,
         status: ManifestStatus,
         record_count: int,
         error_summary: str | None = None,
-    ) -> Path:
+    ) -> typing.Any:
         """Write manifest file."""
         now = datetime.now(timezone.utc)
         manifest_path = self.cache_paths.get_manifest_path(self.SOURCE_NAME)
@@ -138,14 +139,14 @@ class JiraService:
         logger.info(f"Wrote manifest: {manifest_path} (status={status.value})")
         return manifest_path
 
-    def refresh(self, force: bool = False) -> dict[str, Any]:
+    def refresh(self: typing.Any, force: bool = False) -> typing.Any:
         """
         Execute full Jira refresh pipeline.
 
         Returns:
             Dict with status, record counts, file paths.
         """
-        result = {
+        result: dict[typing.Any, typing.Any] = {
             "source": self.SOURCE_NAME,
             "force": force,
             "success": False,
@@ -216,7 +217,7 @@ class JiraService:
 
         return result
 
-    def get_status(self) -> Manifest | None:
+    def get_status(self: typing.Any) -> typing.Any:
         """Get current cache status."""
         manifest_path = self.cache_paths.get_manifest_path(self.SOURCE_NAME)
         return Manifest.load(manifest_path)

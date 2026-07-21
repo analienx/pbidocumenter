@@ -3,6 +3,7 @@
 import os
 import shutil
 import tempfile
+import typing
 import zipfile
 from datetime import datetime
 
@@ -20,7 +21,7 @@ MSIP_CUSTOM_XML = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </Properties>"""
 
 
-def inject_msip_label(docx_path):
+def inject_msip_label(docx_path: typing.Any) -> typing.Any:
     tmp = tempfile.mkdtemp()
     try:
         with zipfile.ZipFile(docx_path, "r") as z:

@@ -7,6 +7,7 @@ import importlib.util
 import os
 import subprocess
 import sys
+import typing
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 
@@ -41,7 +42,7 @@ class DependencyInstallationError(RuntimeError):
     """Raised when required packages cannot be installed or imported."""
 
 
-def augmentation_enabled(environ: Mapping[str, str] | None = None) -> bool:
+def augmentation_enabled(environ: Mapping[str, str] | None = None) -> typing.Any:
     """Return whether cache-backed augmentation is explicitly enabled."""
     if getattr(sys, "frozen", False):
         return False
@@ -49,15 +50,15 @@ def augmentation_enabled(environ: Mapping[str, str] | None = None) -> bool:
     return values.get("PBIP_DOCUMENTER_LOCAL_ONLY", "1").lower() in {"0", "false", "no"}
 
 
-def startup_profiles(environ: Mapping[str, str] | None = None) -> tuple[str, ...]:
+def startup_profiles(environ: Mapping[str, str] | None = None) -> typing.Any:
     """Select dependency profiles needed for normal document generation."""
-    profiles = ["core"]
+    profiles: list[typing.Any] = ["core"]
     if augmentation_enabled(environ):
         profiles.append("augmentation")
     return tuple(profiles)
 
 
-def _dependencies_for(profiles: Iterable[str]) -> tuple[Dependency, ...]:
+def _dependencies_for(profiles: Iterable[str]) -> typing.Any:
     dependencies: list[Dependency] = []
     seen: set[str] = set()
     for profile in profiles:
@@ -72,23 +73,23 @@ def _dependencies_for(profiles: Iterable[str]) -> tuple[Dependency, ...]:
     return tuple(dependencies)
 
 
-def _module_available(import_name: str) -> bool:
+def _module_available(import_name: str) -> typing.Any:
     try:
         return importlib.util.find_spec(import_name) is not None
     except (ImportError, ModuleNotFoundError, ValueError):
         return False
 
 
-def _missing_dependencies(dependencies: Iterable[Dependency]) -> list[Dependency]:
+def _missing_dependencies(dependencies: Iterable[Dependency]) -> typing.Any:
     return [dependency for dependency in dependencies if not _module_available(dependency.import_name)]
 
 
-def _manual_command(missing: Sequence[Dependency]) -> str:
+def _manual_command(missing: Sequence[Dependency]) -> typing.Any:
     packages = " ".join(f'"{dependency.package}"' for dependency in missing)
     return f'"{sys.executable}" -m pip install {packages}'
 
 
-def check_dependencies(profiles: Iterable[str] = ("core",)) -> None:
+def check_dependencies(profiles: Iterable[str] = ("core",)) -> typing.Any:
     """Install and verify dependencies for the requested feature profiles.
 
     Frozen applications must already contain their dependencies and never invoke
@@ -114,7 +115,13 @@ def check_dependencies(profiles: Iterable[str] = ("core",)) -> None:
             "Automatic dependency installation is disabled. Run:\n  " + _manual_command(missing)
         )
 
-    command = [sys.executable, "-m", "pip", "install", *(dependency.package for dependency in missing)]
+    command: list[typing.Any] = [
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        *(dependency.package for dependency in missing),
+    ]
     print(f"[deps] Installing with: {_manual_command(missing)}")
     try:
         subprocess.check_call(command)

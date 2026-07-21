@@ -20,6 +20,7 @@ import json
 import os
 import re
 import sys
+import typing
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -28,7 +29,7 @@ from typing import Any
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-def _get_script_dir() -> Path:
+def _get_script_dir() -> typing.Any:
     if getattr(sys, "frozen", False):
         return Path(sys.argv[0]).resolve().parent
     return Path(__file__).resolve().parent
@@ -37,7 +38,7 @@ def _get_script_dir() -> Path:
 SCRIPT_DIR = _get_script_dir()
 
 
-def _resolve_reports_dir(cli_arg: str | None = None) -> Path:
+def _resolve_reports_dir(cli_arg: str | None = None) -> typing.Any:
     """Resolve the reports directory from (in priority order):
     1. CLI argument / explicit path passed in
     2. PBIP_REPORTS env variable
@@ -54,7 +55,7 @@ def _resolve_reports_dir(cli_arg: str | None = None) -> Path:
 REPORTS_DIR = _resolve_reports_dir()  # default; overridden by main() after arg parse
 
 
-def _get_exe_dir() -> Path:
+def _get_exe_dir() -> typing.Any:
     if getattr(sys, "frozen", False):
         return Path(sys.argv[0]).resolve().parent
     return SCRIPT_DIR
@@ -63,7 +64,7 @@ def _get_exe_dir() -> Path:
 EXE_DIR = _get_exe_dir()
 
 
-def _resolve_export_root(cli_arg: str | None = None) -> Path:
+def _resolve_export_root(cli_arg: str | None = None) -> typing.Any:
     """Resolve export root in repository root (next to the EXE/script)."""
     if cli_arg:
         return Path(cli_arg).expanduser().resolve()
@@ -81,7 +82,7 @@ EMIT_MANIFEST = False  # Set True to also write manifest.json
 # ---------------------------------------------------------------------------
 
 
-def safe_read_json(path: Path) -> dict | None:
+def safe_read_json(path: Path) -> typing.Any:
     """Read a JSON file, return None on any failure."""
     try:
         with open(path, encoding="utf-8-sig") as f:
@@ -90,7 +91,7 @@ def safe_read_json(path: Path) -> dict | None:
         return None
 
 
-def safe_read_text(path: Path) -> str | None:
+def safe_read_text(path: Path) -> typing.Any:
     """Read a text file, return None on any failure."""
     try:
         with open(path, encoding="utf-8-sig") as f:
@@ -99,7 +100,7 @@ def safe_read_text(path: Path) -> str | None:
         return None
 
 
-def file_hash(path: Path) -> str | None:
+def file_hash(path: Path) -> typing.Any:
     """SHA-256 of a file for manifest integrity tracking."""
     try:
         h = hashlib.sha256()
@@ -111,23 +112,23 @@ def file_hash(path: Path) -> str | None:
         return None
 
 
-def timestamp_iso() -> str:
+def timestamp_iso() -> typing.Any:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def write_json(path: Path, data: Any) -> None:
+def write_json(path: Path, data: Any) -> typing.Any:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
 
-def write_text(path: Path, text: str) -> None:
+def write_text(path: Path, text: str) -> typing.Any:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(text)
 
 
-def rel(path: Path, base: Path = SCRIPT_DIR) -> str:
+def rel(path: Path, base: Path = SCRIPT_DIR) -> typing.Any:
     """Return a portable relative-to-script-dir path string (always forward slashes)."""
     try:
         return path.resolve().relative_to(base.resolve()).as_posix()
@@ -252,7 +253,7 @@ COMMON_FIRST_NAMES = frozenset(
 )
 
 
-def looks_like_personal_name(name: str) -> bool:
+def looks_like_personal_name(name: str) -> typing.Any:
     """Heuristic to detect if a role name looks like a personal name rather than a functional role.
 
     Returns True if the name appears to be a person's name (e.g., '<PERSON_NAME_003>', '<PERSON_NAME_004>')
@@ -293,7 +294,7 @@ def looks_like_personal_name(name: str) -> bool:
     return (has_multiple_caps or has_first_name) and not_uppercase and not_acronym_style
 
 
-def estimate_parser_confidence(sm: dict) -> str:
+def estimate_parser_confidence(sm: dict) -> typing.Any:
     """Best-effort confidence label for semantic-model extraction coverage."""
     if not sm:
         return "low"
@@ -328,9 +329,9 @@ class TmdlParser:
     """Lightweight parser for TMDL (Tabular Model Definition Language) files."""
 
     @staticmethod
-    def parse_table(text: str) -> dict:
+    def parse_table(text: str) -> typing.Any:
         """Extract table name, columns, measures, partitions, hierarchies and calc-group hints."""
-        result = {
+        result: dict[typing.Any, typing.Any] = {
             "columns": [],
             "measures": [],
             "partitions": [],
@@ -370,7 +371,7 @@ class TmdlParser:
         ):
             col_name = cm.group(1) or cm.group(2)
             col_body = cm.group(3)
-            col = {"name": col_name}
+            col: dict[typing.Any, typing.Any] = {"name": col_name}
             dt = re.search(r"dataType:\s*(\S+)", col_body)
             if dt:
                 col["data_type"] = dt.group(1)
@@ -402,8 +403,8 @@ class TmdlParser:
         ):
             meas_name = mm.group(1) or mm.group(2)
             meas_body_raw = mm.group(3)
-            meas = {"name": meas_name}
-            dax_lines = []
+            meas: dict[typing.Any, typing.Any] = {"name": meas_name}
+            dax_lines: list[typing.Any] = []
             for line in meas_body_raw.split("\n"):
                 stripped = line.strip()
                 if (
@@ -434,7 +435,7 @@ class TmdlParser:
             part_name = pm.group(1) or pm.group(2)
             part_mode_type = pm.group(3)
             part_body = pm.group(4)
-            part = {"name": part_name, "type": part_mode_type}
+            part: dict[typing.Any, typing.Any] = {"name": part_name, "type": part_mode_type}
             if part_mode_type == "calculated":
                 src_match2 = re.search(r"source\s*=\s*\n?([\s\S]*)", pm.group(4))
                 if src_match2:
@@ -454,7 +455,7 @@ class TmdlParser:
             start = hm.end()
             end = hierarchy_headers[i + 1].start() if i + 1 < len(hierarchy_headers) else len(text)
             hbody = text[start:end]
-            hierarchy = {"name": hname, "levels": []}
+            hierarchy: dict[typing.Any, typing.Any] = {"name": hname, "levels": []}
             current_level = None
             for line in hbody.splitlines():
                 lm = re.match(r"^\t\tlevel\s+(?:'([^']+)'|(\S+))\s*$", line)
@@ -463,9 +464,9 @@ class TmdlParser:
                     hierarchy["levels"].append(current_level)
                     continue
                 if current_level:
-                    cm = re.match(r"^\t\t\tcolumn:\s*(.+)$", line)
-                    if cm:
-                        current_level["column"] = cm.group(1).strip()
+                    column_match = re.match(r"^\t\t\tcolumn:\s*(.+)$", line)
+                    if column_match:
+                        current_level["column"] = column_match.group(1).strip()
             result["hierarchies"].append(hierarchy)
 
         for cim in re.finditer(
@@ -475,8 +476,8 @@ class TmdlParser:
         ):
             iname = cim.group(1) or cim.group(2)
             ibody = cim.group(3)
-            item = {"name": iname}
-            expr_lines = []
+            item: dict[typing.Any, typing.Any] = {"name": iname}
+            expr_lines: list[typing.Any] = []
             for line in ibody.split("\n"):
                 stripped = line.strip()
                 if stripped.startswith("formatStringDefinition:") or stripped.startswith("annotation "):
@@ -495,15 +496,15 @@ class TmdlParser:
         return result
 
     @staticmethod
-    def parse_relationships(text: str) -> list:
+    def parse_relationships(text: str) -> typing.Any:
         """Extract relationships from relationships.tmdl."""
-        rels = []
+        rels: list[typing.Any] = []
         if not text:
             return rels
         for rm in re.finditer(r"^relationship\s+(\S+)\s*\n((?:\t.+\n)*)", text, re.MULTILINE):
             rel_id = rm.group(1)
             body = rm.group(2)
-            rel = {"id": rel_id}
+            rel: dict[typing.Any, typing.Any] = {"id": rel_id}
             fc = re.search(r"fromColumn:\s*(.+)", body)
             tc = re.search(r"toColumn:\s*(.+)", body)
             if fc:
@@ -539,9 +540,9 @@ class TmdlParser:
         return rels
 
     @staticmethod
-    def parse_expressions(text: str) -> list:
+    def parse_expressions(text: str) -> typing.Any:
         """Extract named expressions from expressions.tmdl."""
-        exprs = []
+        exprs: list[typing.Any] = []
         if not text:
             return exprs
         for em in re.finditer(
@@ -549,7 +550,7 @@ class TmdlParser:
         ):
             name = em.group(1) or em.group(2)
             body = em.group(3)
-            expr = {"name": name}
+            expr: dict[typing.Any, typing.Any] = {"name": name}
             lt = re.search(r"lineageTag:\s*(\S+)", body)
             if lt:
                 expr["lineage_tag"] = lt.group(1)
@@ -562,7 +563,7 @@ class TmdlParser:
             urls = re.findall(r'https?://[^\s"\')\]]+', body)
             if urls:
                 expr["data_sources"] = list(set(urls))
-            expr_lines = []
+            expr_lines: list[typing.Any] = []
             for line in body.split("\n"):
                 s = line.strip()
                 if s.startswith("lineageTag:") or s.startswith("queryGroup:") or s.startswith("annotation "):
@@ -574,9 +575,15 @@ class TmdlParser:
         return exprs
 
     @staticmethod
-    def parse_model(text: str) -> dict:
+    def parse_model(text: str) -> typing.Any:
         """Extract model-level metadata from model.tmdl."""
-        info = {"culture": None, "table_refs": [], "annotations": {}, "query_groups": [], "data_source_version": None}
+        info: dict[typing.Any, typing.Any] = {
+            "culture": None,
+            "table_refs": [],
+            "annotations": {},
+            "query_groups": [],
+            "data_source_version": None,
+        }
         if not text:
             return info
         cm = re.search(r"culture:\s*(\S+)", text)
@@ -595,7 +602,7 @@ class TmdlParser:
         return info
 
     @staticmethod
-    def parse_role(text: str) -> dict:
+    def parse_role(text: str) -> typing.Any:
         """Extract role definition with model and table permissions.
 
         Handles role definitions from TMDL files in /definition/roles/ directory.
@@ -604,7 +611,7 @@ class TmdlParser:
         - Single-line and multi-line DAX expressions
         - Table permissions with VAR/RETURN patterns
         """
-        result = {
+        result: dict[typing.Any, typing.Any] = {
             "name": None,
             "model_permission": None,
             "table_permissions": [],
@@ -643,7 +650,7 @@ class TmdlParser:
                 table_name = tp_match.group(2) or tp_match.group(3)
                 indent = tp_match.group(1)
                 remaining = tp_match.group(4).strip() if tp_match.group(4) else None
-                expr_parts = []
+                expr_parts: list[typing.Any] = []
 
                 # If there's content after '=' on the same line, include it
                 if remaining:
@@ -736,7 +743,7 @@ class TmdlParser:
         return result
 
     @staticmethod
-    def parse_functions(text: str) -> list:
+    def parse_functions(text: str) -> typing.Any:
         """Extract user-defined DAX functions from functions.tmdl.
 
         Handles function definitions written as:
@@ -751,7 +758,7 @@ class TmdlParser:
             - documentation : list of comment lines
             - body          : cleaned DAX body
         """
-        funcs = []
+        funcs: list[typing.Any] = []
         if not text:
             return funcs
         # Match createOrReplace function blocks (case-insensitive)
@@ -766,10 +773,10 @@ class TmdlParser:
             start = m.end()
             # Find the end of the block (next createOrReplace or EOF)
             next_match = re.search(r"createOrReplace\s+function", text[start:], re.IGNORECASE)
-            block = text[start:start + next_match.start()] if next_match else text[start:]
+            block = text[start : start + next_match.start()] if next_match else text[start:]
             # Extract documentation comments and body
-            doc = []
-            body_lines = []
+            doc: list[typing.Any] = []
+            body_lines: list[typing.Any] = []
             for line in block.splitlines():
                 s = line.strip()
                 if s.startswith("//"):
@@ -788,7 +795,7 @@ class TmdlParser:
         return funcs
 
     @staticmethod
-    def parse_functions_from_json(data: dict) -> list:
+    def parse_functions_from_json(data: dict) -> typing.Any:
         """Extract user-defined DAX functions from a JSON structure.
 
         Looks for common patterns:
@@ -797,11 +804,11 @@ class TmdlParser:
             - data["model"]["functions"] list
             - Any list of dicts with name/params/returnType/body keys
         """
-        funcs = []
+        funcs: list[typing.Any] = []
         if not isinstance(data, dict):
             return funcs
 
-        candidates = []
+        candidates: list[typing.Any] = []
         # Direct keys
         for key in ("functions", "userDefinedFunctions", "udf", "userDefined"):
             if key in data and isinstance(data[key], list):
@@ -845,7 +852,7 @@ class TmdlParser:
         return funcs
 
     @staticmethod
-    def parse_functions_from_md(text: str) -> list:
+    def parse_functions_from_md(text: str) -> typing.Any:
         """Extract user-defined DAX functions from a Markdown file.
 
         Looks for:
@@ -903,7 +910,7 @@ class PbipProject:
     Both PBIR and legacy report formats are detected and handled transparently.
     """
 
-    def __init__(self, project_dir: Path):
+    def __init__(self: typing.Any, project_dir: Path) -> None:
         self.project_dir = project_dir
         self.name = project_dir.name
         self.pbip_file: Path | None = None
@@ -916,7 +923,7 @@ class PbipProject:
         self.warnings: list[str] = []
         self._detect_structure()
 
-    def _detect_structure(self):
+    def _detect_structure(self: typing.Any) -> typing.Any:
         """Walk the project directory and locate PBIP/PBIR artifacts."""
 
         # ── Layout B: this folder itself IS a .Report ──────────────────────
@@ -952,7 +959,7 @@ class PbipProject:
         else:
             self.warnings.append("No .SemanticModel folder found")
 
-    def _detect_report_format(self):
+    def _detect_report_format(self: typing.Any) -> typing.Any:
         """Determine whether the .Report uses PBIR (per-file) or legacy (monolithic) format.
 
         PBIR format:  definition/pages/<PageName>/page.json exists
@@ -993,7 +1000,7 @@ class PbipProject:
             self.warnings.append("Could not determine report format (no page subfolders or report.json sections)")
 
     @property
-    def is_valid(self) -> bool:
+    def is_valid(self: typing.Any) -> typing.Any:
         """A project is valid if it has at least a .pbip/.pbir or .Report or .SemanticModel."""
         return bool(self.pbip_file or self.pbir_file or self.report_dir or self.semantic_model_dir)
 
@@ -1011,7 +1018,7 @@ class ReportExtractor:
     - Legacy PBIP format: single monolithic definition/report.json with sections[]
     """
 
-    def __init__(self, report_dir: Path, report_format: str = "pbir"):
+    def __init__(self: typing.Any, report_dir: Path, report_format: str = "pbir") -> None:
         self.report_dir = report_dir
         self.report_format = report_format
         self.platform: dict | None = None
@@ -1022,7 +1029,7 @@ class ReportExtractor:
         self.pages: list[dict] = []
         self.warnings: list[str] = []
 
-    def extract(self) -> dict:
+    def extract(self: typing.Any) -> typing.Any:
         """Run full extraction, return structured dict."""
         self.platform = safe_read_json(self.report_dir / ".platform")
         self.pbir = safe_read_json(self.report_dir / "definition.pbir")
@@ -1031,7 +1038,7 @@ class ReportExtractor:
         self.version_json = safe_read_json(defn / "version.json")
         self.pages_meta = safe_read_json(defn / "pages" / "pages.json")
 
-        result = {}
+        result: dict[typing.Any, typing.Any] = {}
 
         # Platform info
         if self.platform:
@@ -1124,7 +1131,7 @@ class ReportExtractor:
 
         return result
 
-    def _cross_reference_bookmarks(self, bookmarks: list, pages: list):
+    def _cross_reference_bookmarks(self: typing.Any, bookmarks: list, pages: list) -> typing.Any:
         """Add triggered_by to each bookmark based on visual actions."""
         if not bookmarks:
             return
@@ -1139,7 +1146,7 @@ class ReportExtractor:
                 if action.get("type") == "Bookmark":
                     bm_id = action.get("target_bookmark_id", "")
                     if bm_id and bm_id in bm_map:
-                        trigger = {
+                        trigger: dict[typing.Any, typing.Any] = {
                             "visual_id": visual.get("id", ""),
                             "visual_type": visual.get("visual_type", ""),
                             "page_id": page_id,
@@ -1153,12 +1160,12 @@ class ReportExtractor:
 
     # ── PBIR format: per-page folders ──────────────────────────────────────
 
-    def _extract_pages_pbir(self, pages_dir: Path):
+    def _extract_pages_pbir(self: typing.Any, pages_dir: Path) -> typing.Any:
         """Extract pages from PBIR-style per-folder structure."""
         if not pages_dir.is_dir():
             self.warnings.append("pages directory not found")
             return
-        page_order = []
+        page_order: list[typing.Any] = []
         if self.pages_meta:
             page_order = self.pages_meta.get("pageOrder", [])
         page_folders = [d for d in pages_dir.iterdir() if d.is_dir()]
@@ -1170,7 +1177,7 @@ class ReportExtractor:
             if not page_json:
                 self.warnings.append(f"Could not read page.json in {pf.name}")
                 continue
-            page = {
+            page: dict[typing.Any, typing.Any] = {
                 "id": page_json.get("name", pf.name),
                 "display_name": page_json.get("displayName", UNKNOWN),
                 "type": page_json.get("type", "Standard"),
@@ -1187,7 +1194,7 @@ class ReportExtractor:
                 page["page_binding_type"] = pb.get("type", UNKNOWN)
             page["visuals"] = self._extract_visuals_pbir(pf / "visuals")
             page["visual_count"] = len(page["visuals"])
-            type_counts = {}
+            type_counts: dict[typing.Any, typing.Any] = {}
             for v in page["visuals"]:
                 vt = v.get("visual_type", "unknown")
                 type_counts[vt] = type_counts.get(vt, 0) + 1
@@ -1195,14 +1202,14 @@ class ReportExtractor:
             vi_raw = page_json.get("visualInteractions", [])
             if vi_raw:
                 page["visual_interactions"] = vi_raw
-                vi_types = {}
+                vi_types: dict[typing.Any, typing.Any] = {}
                 for vi in vi_raw:
                     vt = vi.get("type", "unknown")
                     vi_types[vt] = vi_types.get(vt, 0) + 1
                 page["visual_interaction_summary"] = vi_types
             self.pages.append(page)
 
-    def _extract_visual_link(self, vis: dict) -> dict | None:
+    def _extract_visual_link(self: typing.Any, vis: dict) -> typing.Any:
         """Extract visual link / action from visualContainerObjects.visualLink."""
         vco = vis.get("visualContainerObjects", {})
         vlinks = vco.get("visualLink", [])
@@ -1218,7 +1225,7 @@ class ReportExtractor:
         if show_val.strip("'\"") != "true":
             return None
 
-        action = {}
+        action: dict[typing.Any, typing.Any] = {}
 
         # Action type
         try:
@@ -1262,9 +1269,9 @@ class ReportExtractor:
                 df_meta = props.get("dataFunction", {}).get("metadata", {}).get("dataFunction", {})
                 action["function_name"] = df_meta.get("name", "")
                 action["auto_refresh"] = df_meta.get("autoRefresh", False)
-                params = []
+                params: list[typing.Any] = []
                 for p in df_meta.get("parameters", []):
-                    param = {
+                    param: dict[typing.Any, typing.Any] = {
                         "name": p.get("name", ""),
                         "data_type": p.get("dataType", ""),
                         "is_optional": p.get("isOptional", False),
@@ -1293,7 +1300,7 @@ class ReportExtractor:
 
         return action
 
-    def _extract_button_text(self, vis: dict) -> str:
+    def _extract_button_text(self: typing.Any, vis: dict) -> typing.Any:
         """Extract button text label from visual.objects.text[]."""
         try:
             text_objs = vis.get("objects", {}).get("text", [])
@@ -1305,9 +1312,9 @@ class ReportExtractor:
             pass
         return ""
 
-    def _extract_visuals_pbir(self, visuals_dir: Path) -> list:
+    def _extract_visuals_pbir(self: typing.Any, visuals_dir: Path) -> typing.Any:
         """Extract visuals from PBIR-style per-folder structure."""
-        visuals = []
+        visuals: list[typing.Any] = []
         if not visuals_dir.is_dir():
             return visuals
         for vf in sorted(visuals_dir.iterdir()):
@@ -1317,7 +1324,7 @@ class ReportExtractor:
             if not vj:
                 continue
             vis = vj.get("visual", {})
-            visual = {
+            visual: dict[typing.Any, typing.Any] = {
                 "id": vj.get("name", vf.name),
                 "visual_type": vis.get("visualType", UNKNOWN),
             }
@@ -1331,13 +1338,17 @@ class ReportExtractor:
                 }
             query = vis.get("query", {})
             qs = query.get("queryState", {})
-            fields_used = []
+            fields_used: list[typing.Any] = []
             for role_name, role_data in qs.items():
                 projections = role_data.get("projections", [])
                 for proj in projections:
                     field = proj.get("field", {})
                     qref = proj.get("queryRef", "")
-                    field_info = {"role": role_name, "query_ref": qref, "native_ref": proj.get("nativeQueryRef", "")}
+                    field_info: dict[typing.Any, typing.Any] = {
+                        "role": role_name,
+                        "query_ref": qref,
+                        "native_ref": proj.get("nativeQueryRef", ""),
+                    }
                     for ftype in ("Column", "Measure"):
                         if ftype in field:
                             expr = field[ftype].get("Expression", {})
@@ -1382,7 +1393,7 @@ class ReportExtractor:
                     cid = child.get("name", "")
                     if not cid:
                         continue
-                    child_vis = {
+                    child_vis: dict[typing.Any, typing.Any] = {
                         "id": cid,
                         "visual_type": child.get("visualType", UNKNOWN),
                     }
@@ -1395,7 +1406,7 @@ class ReportExtractor:
 
     # ── Legacy format: monolithic report.json with sections[] ──────────────
 
-    def _extract_pages_legacy(self, report_json: dict):
+    def _extract_pages_legacy(self: typing.Any, report_json: dict) -> typing.Any:
         """Extract pages and visuals from old-style monolithic report.json.
 
         In the legacy format all pages live in report_json["sections"] and
@@ -1405,7 +1416,7 @@ class ReportExtractor:
         """
         sections = report_json.get("sections", [])
         for sec in sections:
-            page = {
+            page: dict[typing.Any, typing.Any] = {
                 "id": sec.get("name", UNKNOWN),
                 "display_name": sec.get("displayName", UNKNOWN),
                 "type": sec.get("displayOption", "Standard"),
@@ -1423,7 +1434,7 @@ class ReportExtractor:
             except Exception:
                 pass
 
-            visuals = []
+            visuals: list[typing.Any] = []
             for vc in sec.get("visualContainers", []):
                 visual = self._parse_legacy_visual_container(vc)
                 if visual:
@@ -1431,7 +1442,7 @@ class ReportExtractor:
 
             page["visuals"] = visuals
             page["visual_count"] = len(visuals)
-            type_counts = {}
+            type_counts: dict[typing.Any, typing.Any] = {}
             for v in visuals:
                 vt = v.get("visual_type", "unknown")
                 type_counts[vt] = type_counts.get(vt, 0) + 1
@@ -1443,7 +1454,7 @@ class ReportExtractor:
                 vi_list = json.loads(raw_vi) if isinstance(raw_vi, str) else raw_vi
                 if vi_list:
                     page["visual_interactions"] = vi_list
-                    vi_types = {}
+                    vi_types: dict[typing.Any, typing.Any] = {}
                     for vi in vi_list:
                         vt = vi.get("type", "unknown")
                         vi_types[vt] = vi_types.get(vt, 0) + 1
@@ -1453,7 +1464,7 @@ class ReportExtractor:
 
             self.pages.append(page)
 
-    def _parse_legacy_visual_container(self, vc: dict) -> dict | None:
+    def _parse_legacy_visual_container(self: typing.Any, vc: dict) -> typing.Any:
         """Parse one visualContainer from legacy report.json.
 
         The config, query, and dataTransforms fields are JSON-encoded strings.
@@ -1474,7 +1485,7 @@ class ReportExtractor:
             visual_type = sv.get("visualType", UNKNOWN)
         visual_id = config.get("name", vc.get("id", UNKNOWN))
 
-        visual = {
+        visual: dict[typing.Any, typing.Any] = {
             "id": visual_id,
             "visual_type": visual_type,
             "position": {
@@ -1492,7 +1503,7 @@ class ReportExtractor:
         except Exception:
             query_obj = {}
 
-        fields_used = []
+        fields_used: list[typing.Any] = []
         qs = query_obj.get("Commands", [])
         # Also try the queryState path used by some legacy versions
         for cmd in qs:
@@ -1556,7 +1567,7 @@ class ReportExtractor:
                 props = vl.get("properties", {})
                 show_val = props.get("show", {}).get("expr", {}).get("Literal", {}).get("Value", "")
                 if show_val.strip("'\"") == "true":
-                    action = {
+                    action: dict[typing.Any, typing.Any] = {
                         "type": props.get("type", {}).get("expr", {}).get("Literal", {}).get("Value", "").strip("'\"")
                     }
                     if action["type"] == "PageNavigation":
@@ -1577,9 +1588,9 @@ class ReportExtractor:
                         df_meta = props.get("dataFunction", {}).get("metadata", {}).get("dataFunction", {})
                         action["function_name"] = df_meta.get("name", "")
                         action["auto_refresh"] = df_meta.get("autoRefresh", False)
-                        params = []
+                        params: list[typing.Any] = []
                         for p in df_meta.get("parameters", []):
-                            param = {
+                            param: dict[typing.Any, typing.Any] = {
                                 "name": p.get("name", ""),
                                 "data_type": p.get("dataType", ""),
                                 "is_optional": p.get("isOptional", False),
@@ -1620,13 +1631,13 @@ class ReportExtractor:
 
         return visual
 
-    def _summarize_filters_legacy(self, filters: list) -> list:
+    def _summarize_filters_legacy(self: typing.Any, filters: list) -> typing.Any:
         """Summarise filters from legacy JSON-in-JSON format."""
-        summaries = []
+        summaries: list[typing.Any] = []
         for f in filters:
             # Legacy filters have "expression" as a nested object
             expr = f.get("expression", {})
-            s = {"type": f.get("howCreated", f.get("type", UNKNOWN))}
+            s: dict[typing.Any, typing.Any] = {"type": f.get("howCreated", f.get("type", UNKNOWN))}
             for ftype in ("Column", "Measure"):
                 if ftype in expr:
                     src = expr[ftype].get("Expression", {}).get("SourceRef", {})
@@ -1639,11 +1650,11 @@ class ReportExtractor:
 
     # ── Shared helpers ──────────────────────────────────────────────────────
 
-    def _summarize_filters(self, filters: list) -> list:
+    def _summarize_filters(self: typing.Any, filters: list) -> typing.Any:
         """Summarise filters from PBIR format."""
-        summaries = []
+        summaries: list[typing.Any] = []
         for f in filters:
-            s = {"type": f.get("type", UNKNOWN)}
+            s: dict[typing.Any, typing.Any] = {"type": f.get("type", UNKNOWN)}
             field = f.get("field", {})
             for ftype in ("Column", "Measure"):
                 if ftype in field:
@@ -1660,15 +1671,15 @@ class ReportExtractor:
             summaries.append(s)
         return summaries
 
-    def _extract_bookmarks(self, bookmarks_dir: Path) -> list:
-        bookmarks = []
+    def _extract_bookmarks(self: typing.Any, bookmarks_dir: Path) -> typing.Any:
+        bookmarks: list[typing.Any] = []
         if not bookmarks_dir.is_dir():
             return bookmarks
         meta = safe_read_json(bookmarks_dir / "bookmarks.json")
 
         # Build group lookup from metadata
-        group_map = {}  # bookmark_id -> group_name
-        child_to_parent = {}  # child_id -> parent_id
+        group_map: dict[typing.Any, typing.Any] = {}  # bookmark_id -> group_name
+        child_to_parent: dict[typing.Any, typing.Any] = {}  # child_id -> parent_id
 
         if meta:
             for group in meta.get("groups", []):
@@ -1683,7 +1694,7 @@ class ReportExtractor:
             bdata = safe_read_json(bf)
             if not bdata:
                 continue
-            bm = {
+            bm: dict[typing.Any, typing.Any] = {
                 "id": bdata.get("name", bf.stem),
                 "display_name": bdata.get("displayName", UNKNOWN),
             }
@@ -1717,13 +1728,13 @@ class ReportExtractor:
             bookmarks.append(bm)
         return bookmarks
 
-    def _extract_dax_queries(self, dax_dir: Path) -> list:
-        queries = []
+    def _extract_dax_queries(self: typing.Any, dax_dir: Path) -> typing.Any:
+        queries: list[typing.Any] = []
         if not dax_dir.is_dir():
             return queries
         for df in sorted(dax_dir.glob("*.dax")):
             content = safe_read_text(df)
-            q = {"name": df.stem, "file": df.name}
+            q: dict[typing.Any, typing.Any] = {"name": df.stem, "file": df.name}
             if content:
                 lines = [l for l in content.strip().split("\n") if not l.strip().startswith("//")]
                 q["expression"] = "\n".join(lines).strip()
@@ -1731,9 +1742,9 @@ class ReportExtractor:
             queries.append(q)
         return queries
 
-    def _extract_themes(self) -> dict:
+    def _extract_themes(self: typing.Any) -> typing.Any:
         tc = self.report_json.get("themeCollection", {})
-        themes = {}
+        themes: dict[typing.Any, typing.Any] = {}
         bt = tc.get("baseTheme", {})
         if bt:
             themes["base_theme"] = bt.get("name", UNKNOWN)
@@ -1742,16 +1753,16 @@ class ReportExtractor:
             themes["custom_theme"] = ct.get("name", UNKNOWN)
         return themes
 
-    def _extract_report_filters(self) -> list:
+    def _extract_report_filters(self: typing.Any) -> typing.Any:
         fc = self.report_json.get("filterConfig", {})
         return self._summarize_filters(fc.get("filters", []))
 
-    def _extract_resource_packages(self) -> list:
+    def _extract_resource_packages(self: typing.Any) -> typing.Any:
         rps = self.report_json.get("resourcePackages", [])
-        summaries = []
+        summaries: list[typing.Any] = []
         for rp in rps:
-            pkg = {"name": rp.get("name"), "type": rp.get("type")}
-            items = []
+            pkg: dict[typing.Any, typing.Any] = {"name": rp.get("name"), "type": rp.get("type")}
+            items: list[typing.Any] = []
             for item in rp.get("items", []):
                 items.append({"name": item.get("name"), "type": item.get("type")})
             pkg["items"] = items
@@ -1767,12 +1778,12 @@ class ReportExtractor:
 class SemanticModelExtractor:
     """Extracts metadata from a .SemanticModel folder."""
 
-    def __init__(self, sm_dir: Path):
+    def __init__(self: typing.Any, sm_dir: Path) -> None:
         self.sm_dir = sm_dir
         self.warnings: list[str] = []
 
-    def extract(self) -> dict:
-        result = {}
+    def extract(self: typing.Any) -> typing.Any:
+        result: dict[typing.Any, typing.Any] = {}
 
         platform = safe_read_json(self.sm_dir / ".platform")
         if platform:
@@ -1835,7 +1846,7 @@ class SemanticModelExtractor:
 
         # Deduplicate by name
         seen = set()
-        deduped = []
+        deduped: list[typing.Any] = []
         for f in funcs:
             if f["name"] not in seen:
                 seen.add(f["name"])
@@ -1891,7 +1902,7 @@ class SemanticModelExtractor:
 
         diagram = safe_read_json(self.sm_dir / "diagramLayout.json")
         if diagram:
-            nodes = []
+            nodes: list[typing.Any] = []
             for d in diagram.get("diagrams", []):
                 for n in d.get("nodes", []):
                     nodes.append(n.get("nodeIndex", UNKNOWN))
@@ -1906,9 +1917,9 @@ class SemanticModelExtractor:
 # ---------------------------------------------------------------------------
 
 
-def build_project_summary(project: PbipProject) -> dict:
+def build_project_summary(project: PbipProject) -> typing.Any:
     """Build the full project-summary structure."""
-    summary = {
+    summary: dict[typing.Any, typing.Any] = {
         "_generator": "copiloter.py",
         "_version": VERSION,
         "_generated_at": timestamp_iso(),
@@ -1926,7 +1937,7 @@ def build_project_summary(project: PbipProject) -> dict:
             summary["pbip_settings"] = settings
 
     if project.report_dir:
-        extractor = ReportExtractor(project.report_dir, project.report_format)
+        extractor: typing.Any = ReportExtractor(project.report_dir, project.report_format)
         summary["report"] = extractor.extract()
     else:
         summary["report"] = None
@@ -1964,8 +1975,8 @@ def build_project_summary(project: PbipProject) -> dict:
     return summary
 
 
-def assess_completeness(summary: dict) -> dict:
-    checks = {}
+def assess_completeness(summary: dict) -> typing.Any:
+    checks: dict[typing.Any, typing.Any] = {}
     rpt = summary.get("report")
     sm = summary.get("semantic_model")
     dataset_mode = (rpt or {}).get("dataset_mode", "unknown")
@@ -2006,12 +2017,12 @@ def assess_completeness(summary: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 
-def generate_copilot_input_md(summary: dict) -> str:
+def generate_copilot_input_md(summary: dict) -> typing.Any:
     """Generate copilot-input.md — optimized for AI/Copilot consumption."""
     rpt = summary.get("report") or {}
     sm = summary.get("semantic_model") or {}
 
-    lines = []
+    lines: list[typing.Any] = []
     lines.append(f"# {summary['project_name']}")
     lines.append("")
     lines.append(f"Generated by copiloter.py v{VERSION} on {summary['_generated_at']}")
@@ -2114,7 +2125,7 @@ def generate_copilot_input_md(summary: dict) -> str:
             else:
                 others.append(t)
 
-        def _render_table_block(tables, label):
+        def _render_table_block(tables: typing.Any, label: typing.Any) -> typing.Any:
             lines.append(f"### {label}")
             lines.append("")
             for t in tables:
@@ -2187,7 +2198,7 @@ def generate_copilot_input_md(summary: dict) -> str:
             lines.append(f"- {fr} -> {to}")
         lines.append("")
 
-    all_measures = []
+    all_measures: list[typing.Any] = []
     for t in sm.get("tables", []):
         for m_item in t.get("measures", []):
             all_measures.append({**m_item, "table": t.get("name", "?")})
@@ -2247,7 +2258,7 @@ def generate_copilot_input_md(summary: dict) -> str:
                 if pos and pos.get("x") is not None:
                     pos_str = f" @ ({pos.get('x', 0):.0f},{pos.get('y', 0):.0f} {pos.get('width', 0):.0f}x{pos.get('height', 0):.0f})"
                 if vis.get("fields"):
-                    field_strs = []
+                    field_strs: list[typing.Any] = []
                     for f in vis["fields"]:
                         entity = f.get("entity", "")
                         prop = f.get("property", "")
@@ -2340,8 +2351,8 @@ def generate_copilot_input_md(summary: dict) -> str:
     return "\n".join(lines)
 
 
-def generate_manifest(project_name: str, output_dir: Path, files_written: list) -> dict:
-    manifest = {
+def generate_manifest(project_name: str, output_dir: Path, files_written: list) -> typing.Any:
+    manifest: dict[typing.Any, typing.Any] = {
         "_generator": "copiloter.py",
         "_version": VERSION,
         "_generated_at": timestamp_iso(),
@@ -2351,7 +2362,7 @@ def generate_manifest(project_name: str, output_dir: Path, files_written: list) 
     }
     for fpath in files_written:
         p = Path(fpath)
-        entry = {
+        entry: dict[typing.Any, typing.Any] = {
             "filename": p.name,
             "path": rel(p),
             "size_bytes": p.stat().st_size if p.exists() else 0,
@@ -2366,7 +2377,7 @@ def generate_manifest(project_name: str, output_dir: Path, files_written: list) 
 # ---------------------------------------------------------------------------
 
 
-def process_project(project_dir: Path, emit_files: bool = False, export_root: Path | None = None) -> dict:
+def process_project(project_dir: Path, emit_files: bool = False, export_root: Path | None = None) -> typing.Any:
     """Process a single PBIP/PBIR project folder.
 
     Default behavior is metadata-only (no sidecar files written).
@@ -2382,7 +2393,7 @@ def process_project(project_dir: Path, emit_files: bool = False, export_root: Pa
     print(f"  Processing: {project.name}{fmt}")
 
     summary = build_project_summary(project)
-    files_written = []
+    files_written: list[typing.Any] = []
     output_dir = None
 
     if emit_files:
@@ -2424,7 +2435,7 @@ def process_project(project_dir: Path, emit_files: bool = False, export_root: Pa
     }
 
 
-def main():
+def main() -> typing.Any:
     import argparse as _ap
 
     parser = _ap.ArgumentParser(description="PBIP/PBIR metadata extractor")
@@ -2465,7 +2476,7 @@ def main():
         print("  3. Place projects in:      ./Reports/ next to this script")
         sys.exit(1)
 
-    def _is_component_folder(d: Path) -> bool:
+    def _is_component_folder(d: Path) -> typing.Any:
         name = d.name
         if name.endswith(".Report") or name.endswith(".SemanticModel"):
             base_name = name.replace(".Report", "").replace(".SemanticModel", "")
@@ -2482,7 +2493,7 @@ def main():
     print(f"Found {len(project_dirs)} folder(s) to scan:")
     print()
 
-    results = []
+    results: list[typing.Any] = []
     for pd in project_dirs:
         result = process_project(pd, emit_files=args.emit_files, export_root=export_root)
         results.append(result)

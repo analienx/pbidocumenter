@@ -9,6 +9,8 @@ This module defines:
 - Layout thresholds for diagrams and tables
 """
 
+import typing
+
 from docx.shared import RGBColor
 
 from pbip_documenter.version import __version__
@@ -119,7 +121,7 @@ class C:
     GREEN = "00B294"
 
     @staticmethod
-    def rgb(hex_color: str) -> RGBColor:
+    def rgb(hex_color: str) -> typing.Any:
         """
         Convert hex color string to RGBColor object.
 

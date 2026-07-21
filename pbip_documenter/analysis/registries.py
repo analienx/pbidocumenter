@@ -7,13 +7,15 @@ This module centralizes all static lookup data including:
 - Namespace-to-category fallbacks
 """
 
+import typing
+
 from pbip_documenter.config import C
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Connector Registry
 # Maps Power Query function names to (friendly_label, category)
 # ═══════════════════════════════════════════════════════════════════════════
-CONNECTOR_MAP = {
+CONNECTOR_MAP: dict[typing.Any, typing.Any] = {
     # SharePoint connectors
     "SharePoint.Tables": ("SharePoint Lists", "SharePoint"),
     "SharePoint.Files": ("SharePoint Files", "SharePoint"),
@@ -102,7 +104,7 @@ _NON_CONN = (
 )
 
 # Namespace to category fallback mapping
-_NS_CAT = {
+_NS_CAT: dict[typing.Any, typing.Any] = {
     # SQL family
     "Sql": "SQL",
     "AzureSQL": "Azure",
@@ -150,7 +152,7 @@ _NS_CAT = {
 # ═══════════════════════════════════════════════════════════════════════════
 
 # Short abbreviations for narrow wireframe boxes
-_TYPE_ABBREV = {
+_TYPE_ABBREV: dict[typing.Any, typing.Any] = {
     # Charts
     "Slicer": "Slicer",
     "Bar Chart": "Bar",
@@ -187,7 +189,7 @@ _TYPE_ABBREV = {
 }
 
 # Visual registry: type_key -> (friendly_name, border_color, fill_color)
-_VD = {
+_VD: dict[typing.Any, typing.Any] = {
     # Slicers
     "slicer": ("Slicer", C.RUBINE, "FCEEF5"),
     "advancedSlicerVisual": ("Slicer", C.RUBINE, "FCEEF5"),
@@ -247,8 +249,18 @@ _VD = {
 }
 
 # Visual type sets for classification
-_DECO_VTS = {"shape", "basicShape", "image", "textbox", "text", "rectangle", "line", "group", "groupContainer"}
+_DECO_VTS: set[typing.Any] = {
+    "shape",
+    "basicShape",
+    "image",
+    "textbox",
+    "text",
+    "rectangle",
+    "line",
+    "group",
+    "groupContainer",
+}
 
-_SLICER_VTS = {"slicer", "advancedSlicerVisual", "listSlicer"}
-_BTN_VTS = {"actionButton", "button"}
-_UNKNOWN = {"", "unknown", "(not found)", "null", "none"}
+_SLICER_VTS: set[typing.Any] = {"slicer", "advancedSlicerVisual", "listSlicer"}
+_BTN_VTS: set[typing.Any] = {"actionButton", "button"}
+_UNKNOWN: set[typing.Any] = {"", "unknown", "(not found)", "null", "none"}

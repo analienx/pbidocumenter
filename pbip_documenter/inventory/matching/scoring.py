@@ -1,5 +1,6 @@
 """Scoring helpers for explainable report-to-Jira matching."""
 
+import typing
 from dataclasses import dataclass
 
 from pbip_documenter.inventory.matching.text import (
@@ -32,7 +33,7 @@ def score_match(
     candidate_tokens: list[str],
     query_name: str = "",
     candidate_name: str = "",
-) -> ScoreDetail:
+) -> typing.Any:
     """Score a potential match and return explainable evidence."""
     # Traditional token-based scores
     token_overlap = calculate_token_overlap(query_tokens, candidate_tokens)
@@ -94,7 +95,7 @@ def score_match(
     )
 
 
-def _classify_confidence(score: float) -> str:
+def _classify_confidence(score: float) -> typing.Any:
     """Convert numeric score to confidence label."""
     if score >= 0.75:
         return "high"
@@ -111,7 +112,7 @@ def _build_evidence(
     name_similarity: float,
     rarity_weighted: float,
     exact_name_match: bool,
-) -> list[str]:
+) -> typing.Any:
     """Build human-readable evidence for the score."""
     evidence: list[str] = []
 

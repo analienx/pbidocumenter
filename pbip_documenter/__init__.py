@@ -6,10 +6,10 @@ imports. Historical convenience exports are resolved lazily for compatibility.
 
 from __future__ import annotations
 
+import typing
 from importlib import import_module
-from typing import Any
 
-_EXPORT_GROUPS = {
+_EXPORT_GROUPS: dict[typing.Any, typing.Any] = {
     "pbip_documenter.config": ("VERSION", "C", "FONT", "FONT_CODE", "CW", "BEAUTIFY", "WIREFRAME_V2"),
     "pbip_documenter.services.document_service": ("build_doc",),
     "pbip_documenter.docx_render.typography": (
@@ -96,7 +96,7 @@ _EXPORTS = {name: (module_name, name) for module_name, names in _EXPORT_GROUPS.i
 __all__ = tuple(_EXPORTS)
 
 
-def __getattr__(name: str) -> Any:
+def __getattr__(name: str) -> typing.Any:
     """Resolve legacy package-level exports only when they are requested."""
     try:
         module_name, attribute_name = _EXPORTS[name]
@@ -107,5 +107,5 @@ def __getattr__(name: str) -> Any:
     return value
 
 
-def __dir__() -> list[str]:
+def __dir__() -> typing.Any:
     return sorted((*globals(), *__all__))

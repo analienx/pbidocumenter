@@ -1,9 +1,11 @@
 """Tests for inventory cache path construction."""
 
+import typing
+
 from pbip_documenter.cache.paths import CachePaths
 
 
-def test_source_cache_paths_are_created_under_inventory(tmp_path) -> None:
+def test_source_cache_paths_are_created_under_inventory(tmp_path: typing.Any) -> typing.Any:
     paths = CachePaths(tmp_path)
 
     assert paths.get_raw_pages_dir("powerbi") == tmp_path / "inventory" / "powerbi" / "raw"

@@ -1,5 +1,7 @@
 """Tests for combined cache preparation."""
 
+import typing
+from datetime import datetime, timezone
 from unittest.mock import Mock, patch
 
 from pbip_documenter.inventory.config import InventoryConfig
@@ -16,7 +18,7 @@ class TestPrepareInventory:
     """Tests for prepare_inventory function."""
 
     @patch("pbip_documenter.prepare.refreshAll")
-    def test_calls_refresh_all(self, mock_refresh_all, tmp_path):
+    def test_calls_refresh_all(self: typing.Any, mock_refresh_all: typing.Any, tmp_path: typing.Any) -> typing.Any:
         mock_refresh_all.return_value = {
             "overall_success": True,
             "powerbi": {"success": True},
@@ -45,7 +47,9 @@ class TestPrepareDownloads:
 
     @patch("pbip_documenter.prepare.DownloadService")
     @patch("pbip_documenter.prepare.DownloadConfig")
-    def test_downloads_files(self, mock_config_class, mock_service_class):
+    def test_downloads_files(
+        self: typing.Any, mock_config_class: typing.Any, mock_service_class: typing.Any
+    ) -> typing.Any:
         mock_config = Mock()
         mock_config_class.from_env.return_value = mock_config
 
@@ -64,7 +68,7 @@ class TestPrepareDownloads:
         mock_service.download_all_targets.assert_called_once()
 
     @patch("pbip_documenter.prepare.DownloadConfig")
-    def test_returns_empty_dict_when_config_missing(self, mock_config_class):
+    def test_returns_empty_dict_when_config_missing(self: typing.Any, mock_config_class: typing.Any) -> typing.Any:
         mock_config_class.from_env.side_effect = KeyError("SHAREPOINT_SITE_URL")
 
         result = prepare_downloads()
@@ -77,7 +81,9 @@ class TestPrepareAll:
 
     @patch("pbip_documenter.prepare.prepare_downloads")
     @patch("pbip_documenter.prepare.prepare_inventory")
-    def test_runs_both_preparations(self, mock_prep_inv, mock_prep_dl, tmp_path):
+    def test_runs_both_preparations(
+        self: typing.Any, mock_prep_inv: typing.Any, mock_prep_dl: typing.Any, tmp_path: typing.Any
+    ) -> typing.Any:
         mock_prep_inv.return_value = {
             "overall_success": True,
             "powerbi": {"success": True},
@@ -110,7 +116,9 @@ class TestPrepareAll:
 
     @patch("pbip_documenter.prepare.prepare_downloads")
     @patch("pbip_documenter.prepare.prepare_inventory")
-    def test_continues_after_inventory_failure(self, mock_prep_inv, mock_prep_dl, tmp_path):
+    def test_continues_after_inventory_failure(
+        self: typing.Any, mock_prep_inv: typing.Any, mock_prep_dl: typing.Any, tmp_path: typing.Any
+    ) -> typing.Any:
         """Downloads should still run even if inventory fails."""
         mock_prep_inv.return_value = {
             "overall_success": False,
@@ -140,7 +148,9 @@ class TestPrepareAll:
 
     @patch("pbip_documenter.prepare.prepare_downloads")
     @patch("pbip_documenter.prepare.prepare_inventory")
-    def test_handles_inventory_exception(self, mock_prep_inv, mock_prep_dl, tmp_path):
+    def test_handles_inventory_exception(
+        self: typing.Any, mock_prep_inv: typing.Any, mock_prep_dl: typing.Any, tmp_path: typing.Any
+    ) -> typing.Any:
         mock_prep_inv.side_effect = Exception("Connection timeout")
         mock_prep_dl.return_value = {}
 
@@ -163,7 +173,9 @@ class TestPrepareAll:
 
     @patch("pbip_documenter.prepare.prepare_downloads")
     @patch("pbip_documenter.prepare.prepare_inventory")
-    def test_handles_downloads_exception(self, mock_prep_inv, mock_prep_dl, tmp_path):
+    def test_handles_downloads_exception(
+        self: typing.Any, mock_prep_inv: typing.Any, mock_prep_dl: typing.Any, tmp_path: typing.Any
+    ) -> typing.Any:
         mock_prep_inv.return_value = {"overall_success": True}
         mock_prep_dl.side_effect = Exception("SharePoint unavailable")
 
@@ -189,7 +201,7 @@ class TestPrepareStatus:
     """Tests for prepare_status reporting."""
 
     @patch("pbip_documenter.prepare.status")
-    def test_generates_combined_report(self, mock_status, tmp_path):
+    def test_generates_combined_report(self: typing.Any, mock_status: typing.Any, tmp_path: typing.Any) -> typing.Any:
         from datetime import datetime, timezone
 
         from pbip_documenter.inventory.commands import CombinedStatus, SourceStatus
@@ -248,11 +260,11 @@ class TestPrepareStatus:
         assert "Overall ready: True" in report
 
     @patch("pbip_documenter.prepare.status")
-    def test_shows_downloads_unavailable(self, mock_status, tmp_path):
+    def test_shows_downloads_unavailable(self: typing.Any, mock_status: typing.Any, tmp_path: typing.Any) -> typing.Any:
         from pbip_documenter.inventory.commands import CombinedStatus
 
         mock_status.return_value = CombinedStatus(
-            timestamp=None,
+            timestamp=datetime.now(timezone.utc),
             sources=[],
             overall_ready=True,
         )

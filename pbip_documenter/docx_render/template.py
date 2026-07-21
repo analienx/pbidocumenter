@@ -1,5 +1,7 @@
 """Template loading and header manipulation."""
 
+import typing
+
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.shared import Pt
@@ -7,7 +9,7 @@ from docx.shared import Pt
 from pbip_documenter.config import C
 
 
-def _clear_template_body(doc):
+def _clear_template_body(doc: typing.Any) -> typing.Any:
     """Remove all body content from the template while preserving headers/footers intact."""
     body = doc.element.body
     for child in list(body):
@@ -20,7 +22,9 @@ def _clear_template_body(doc):
     return doc
 
 
-def _update_template_header(doc, report_name, doc_id="", cmdb_id=""):
+def _update_template_header(
+    doc: typing.Any, report_name: typing.Any, doc_id: typing.Any = "", cmdb_id: typing.Any = ""
+) -> typing.Any:
     for sec in doc.sections:
         hdr = sec.header
         if not hdr.tables:

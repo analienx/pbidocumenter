@@ -1,6 +1,7 @@
 """Normalization and deduplication for Power BI data."""
 
 import logging
+import typing
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Any
@@ -34,18 +35,18 @@ class NormalizedReport:
 class PowerBINormalizer:
     """Normalizes and deduplicates Power BI admin API responses."""
 
-    REPORT_TYPE_MAPPINGS = {
+    REPORT_TYPE_MAPPINGS: dict[typing.Any, typing.Any] = {
         "PaginatedReport": "paginated",
         "PowerBIReport": "powerbi",
         "": None,
     }
 
     def normalize_reports(
-        self,
+        self: typing.Any,
         reports: list[dict[str, Any]],
         groups: list[dict[str, Any]],
         apps: list[dict[str, Any]],
-    ) -> pd.DataFrame:
+    ) -> typing.Any:
         """
         Normalize reports and join with workspace/app context.
 
@@ -74,12 +75,12 @@ class PowerBINormalizer:
         return self._to_dataframe(normalized)
 
     def _normalize_single_report(
-        self,
+        self: typing.Any,
         report: dict[str, Any],
         group_map: dict[str, str],
         app_map: dict[str, str],
         seen_ids: set[str],
-    ) -> NormalizedReport | None:
+    ) -> typing.Any:
         """Normalize a single report record."""
         report_id = report.get("id")
         if not report_id:
@@ -123,7 +124,7 @@ class PowerBINormalizer:
             static_source=self._is_static_report(report),
         )
 
-    def _parse_datetime(self, value: str | None) -> datetime | None:
+    def _parse_datetime(self: typing.Any, value: str | None) -> typing.Any:
         """Parse ISO datetime string."""
         if not value:
             return None
@@ -135,12 +136,12 @@ class PowerBINormalizer:
             logger.warning(f"Failed to parse datetime: {value}, error: {e}")
             return None
 
-    def _is_static_report(self, report: dict[str, Any]) -> bool:
+    def _is_static_report(self: typing.Any, report: dict[str, Any]) -> typing.Any:
         """Determine if this is a static/Paginated report."""
         report_type = report.get("reportType", "")
         return report_type == "PaginatedReport"
 
-    def _to_dataframe(self, records: list[NormalizedReport]) -> pd.DataFrame:
+    def _to_dataframe(self: typing.Any, records: list[NormalizedReport]) -> typing.Any:
         """Convert normalized records to DataFrame."""
         if not records:
             return pd.DataFrame(
@@ -181,7 +182,7 @@ class PowerBINormalizer:
                 df[col] = df[col].astype("string")
 
         # Reorder columns for readability
-        column_order = [
+        column_order: list[typing.Any] = [
             "report_id",
             "name",
             "workspace_name",

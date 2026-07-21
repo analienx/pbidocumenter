@@ -61,6 +61,7 @@ inventory = [
 ]
 dev = [
     "build>=1.2.0",
+    "lxml-stubs>=0.5.0",
     "pandas-stubs>=2.0.0",
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
@@ -68,6 +69,8 @@ dev = [
     "mypy>=1.0.0",
 ]
 all = [
+    "lxml-stubs>=0.5.0",
+    "pandas-stubs>=2.0.0",
     "requests>=2.28.0",
     "msal>=1.20.0",
     "pandas>=1.5.0",

@@ -1,5 +1,6 @@
 """Tests for Power BI normalization."""
 
+import typing
 from datetime import datetime
 
 import pandas as pd
@@ -10,12 +11,12 @@ from pbip_documenter.inventory.powerbi.normalize import PowerBINormalizer
 class TestPowerBINormalizer:
     """Tests for PowerBI normalization logic."""
 
-    def setup_method(self):
+    def setup_method(self: typing.Any) -> typing.Any:
         self.normalizer = PowerBINormalizer()
 
-    def test_normalize_single_report_basic(self):
+    def test_normalize_single_report_basic(self: typing.Any) -> typing.Any:
         """Test basic report normalization."""
-        report = {
+        report: dict[typing.Any, typing.Any] = {
             "id": "report-123",
             "name": "Sales Dashboard",
             "webUrl": "https://app.powerbi.com/reports/123",
@@ -26,8 +27,8 @@ class TestPowerBINormalizer:
             "createdDateTime": "2024-01-15T10:30:00Z",
             "modifiedDateTime": "2024-01-20T14:00:00Z",
         }
-        groups = [{"id": "ws-789", "name": "Finance Workspace"}]
-        apps = []
+        groups: list[typing.Any] = [{"id": "ws-789", "name": "Finance Workspace"}]
+        apps: list[typing.Any] = []
 
         df = self.normalizer.normalize_reports([report], groups, apps)
 
@@ -41,17 +42,17 @@ class TestPowerBINormalizer:
         assert pd.notna(df.iloc[0]["created_at"])
         assert pd.notna(df.iloc[0]["modified_at"])
 
-    def test_normalize_paginated_report(self):
+    def test_normalize_paginated_report(self: typing.Any) -> typing.Any:
         """Test that PaginatedReport is marked as static_source."""
-        report = {
+        report: dict[typing.Any, typing.Any] = {
             "id": "report-456",
             "name": "Financial Report",
             "webUrl": "https://app.powerbi.com/reports/456",
             "workspaceId": "ws-123",
             "reportType": "PaginatedReport",
         }
-        groups = [{"id": "ws-123", "name": "Reports Workspace"}]
-        apps = []
+        groups: list[typing.Any] = [{"id": "ws-123", "name": "Reports Workspace"}]
+        apps: list[typing.Any] = []
 
         df = self.normalizer.normalize_reports([report], groups, apps)
 
@@ -59,38 +60,38 @@ class TestPowerBINormalizer:
         assert df.iloc[0]["report_type"] == "paginated"
         assert df.iloc[0]["static_source"]
 
-    def test_normalize_report_with_missing_workspace(self):
+    def test_normalize_report_with_missing_workspace(self: typing.Any) -> typing.Any:
         """Test handling of report with unknown workspace."""
-        report = {
+        report: dict[typing.Any, typing.Any] = {
             "id": "report-999",
             "name": "Orphan Report",
             "workspaceId": "ws-unknown",
         }
-        groups = [{"id": "ws-other", "name": "Other Workspace"}]
-        apps = []
+        groups: list[typing.Any] = [{"id": "ws-other", "name": "Other Workspace"}]
+        apps: list[typing.Any] = []
 
         df = self.normalizer.normalize_reports([report], groups, apps)
 
         assert len(df) == 1
         assert df.iloc[0]["workspace_name"] == "Unknown"
 
-    def test_deduplication_same_report_in_multiple_workspaces(self):
+    def test_deduplication_same_report_in_multiple_workspaces(self: typing.Any) -> typing.Any:
         """Test that duplicate reports across workspaces are tracked correctly."""
-        report1 = {
+        report1: dict[typing.Any, typing.Any] = {
             "id": "report-dup",
             "name": "Duplicate Report",
             "workspaceId": "ws-a",
         }
-        report2 = {
+        report2: dict[typing.Any, typing.Any] = {
             "id": "report-dup",
             "name": "Duplicate Report",
             "workspaceId": "ws-b",
         }
-        groups = [
+        groups: list[typing.Any] = [
             {"id": "ws-a", "name": "Workspace A"},
             {"id": "ws-b", "name": "Workspace B"},
         ]
-        apps = []
+        apps: list[typing.Any] = []
 
         df = self.normalizer.normalize_reports([report1, report2], groups, apps)
 
@@ -100,16 +101,16 @@ class TestPowerBINormalizer:
         assert df.iloc[0]["is_original_report"]
         assert not df.iloc[1]["is_original_report"]
 
-    def test_report_with_app_reference(self):
+    def test_report_with_app_reference(self: typing.Any) -> typing.Any:
         """Test report with app attribution."""
-        report = {
+        report: dict[typing.Any, typing.Any] = {
             "id": "report-app",
             "name": "App Report",
             "workspaceId": "ws-1",
             "appId": "app-1",
         }
-        groups = [{"id": "ws-1", "name": "Work Space"}]
-        apps = [{"id": "app-1", "name": "Sales App"}]
+        groups: list[typing.Any] = [{"id": "ws-1", "name": "Work Space"}]
+        apps: list[typing.Any] = [{"id": "app-1", "name": "Sales App"}]
 
         df = self.normalizer.normalize_reports([report], groups, apps)
 
@@ -117,7 +118,7 @@ class TestPowerBINormalizer:
         assert df.iloc[0]["app_id"] == "app-1"
         assert df.iloc[0]["app_name"] == "Sales App"
 
-    def test_normalize_empty_lists(self):
+    def test_normalize_empty_lists(self: typing.Any) -> typing.Any:
         """Test normalization with empty input."""
         df = self.normalizer.normalize_reports([], [], [])
 
@@ -125,19 +126,19 @@ class TestPowerBINormalizer:
         assert "report_id" in df.columns
         assert "name" in df.columns
 
-    def test_parse_datetime_various_formats(self):
+    def test_parse_datetime_various_formats(self: typing.Any) -> typing.Any:
         """Test parsing of various datetime formats."""
-        report_with_z = {
+        report_with_z: dict[typing.Any, typing.Any] = {
             "id": "r1",
             "name": "Report Z",
             "createdDateTime": "2024-01-15T10:30:00Z",
         }
-        report_with_offset = {
+        report_with_offset: dict[typing.Any, typing.Any] = {
             "id": "r2",
             "name": "Report Offset",
             "createdDateTime": "2024-01-15T10:30:00+00:00",
         }
-        report_no_timezone = {
+        report_no_timezone: dict[typing.Any, typing.Any] = {
             "id": "r3",
             "name": "Report No TZ",
             "createdDateTime": "2024-01-15T10:30:00",
@@ -151,16 +152,16 @@ class TestPowerBINormalizer:
             if pd.notna(df.iloc[i]["created_at"]):
                 assert isinstance(df.iloc[i]["created_at"], datetime)
 
-    def test_current_report_attribution(self):
+    def test_current_report_attribution(self: typing.Any) -> typing.Any:
         """Test originalReportId is preserved when present."""
-        report = {
+        report: dict[typing.Any, typing.Any] = {
             "id": "report-copy",
             "name": "Copy Report",
             "workspaceId": "ws-copy",
             "originalReportId": "report-original",
         }
-        groups = [{"id": "ws-copy", "name": "Copy Workspace"}]
-        apps = []
+        groups: list[typing.Any] = [{"id": "ws-copy", "name": "Copy Workspace"}]
+        apps: list[typing.Any] = []
 
         df = self.normalizer.normalize_reports([report], groups, apps)
 
@@ -168,15 +169,15 @@ class TestPowerBINormalizer:
         assert df.iloc[0]["is_original_report"]
         assert df.iloc[0]["original_report_id"] is None
 
-    def test_strip_report_names(self):
+    def test_strip_report_names(self: typing.Any) -> typing.Any:
         """Test that report names are trimmed."""
-        report = {
+        report: dict[typing.Any, typing.Any] = {
             "id": "report-trim",
             "name": "  Trimmed Report  ",
             "workspaceId": "ws-1",
         }
-        groups = [{"id": "ws-1", "name": "Ws"}]
-        apps = []
+        groups: list[typing.Any] = [{"id": "ws-1", "name": "Ws"}]
+        apps: list[typing.Any] = []
 
         df = self.normalizer.normalize_reports([report], groups, apps)
 

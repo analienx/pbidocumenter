@@ -2,6 +2,7 @@
 
 import json
 import os
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -10,7 +11,7 @@ class DownloadConfigError(ValueError):
     """Raised when download configuration is missing or invalid."""
 
 
-def _load_settings_json(settings_path: Path = Path("inventory.settings.json")) -> dict:
+def _load_settings_json(settings_path: Path = Path("inventory.settings.json")) -> typing.Any:
     """Load settings from JSON file if present."""
     if not settings_path.exists():
         return {}
@@ -52,7 +53,7 @@ class DownloadConfig:
     cache_root: Path = Path("cache")
 
     @classmethod
-    def from_env(cls, settings_path: Path = Path("inventory.settings.json")) -> "DownloadConfig":
+    def from_env(cls: typing.Any, settings_path: Path = Path("inventory.settings.json")) -> typing.Any:
         """
         Create config from settings file and environment variables.
 
@@ -69,7 +70,7 @@ class DownloadConfig:
         settings = _load_settings_json(settings_path)
 
         # Environment variables override file values
-        def get_value(key: str, default=None):
+        def get_value(key: str, default: typing.Any = None) -> typing.Any:
             return os.environ.get(key, settings.get(key, default))
 
         missing = [
@@ -99,7 +100,7 @@ class DownloadConfig:
             cache_root=Path(get_value("CACHE_ROOT", "cache")),
         )
 
-    def get_targets(self) -> list[DownloadTarget]:
+    def get_targets(self: typing.Any) -> typing.Any:
         """Build download targets from configuration."""
         return [
             DownloadTarget(
@@ -118,12 +119,12 @@ class DownloadConfig:
             ),
         ]
 
-    def build_download_url(self, file_id: str) -> str:
+    def build_download_url(self: typing.Any, file_id: str) -> typing.Any:
         """Build SharePoint download URL from file ID."""
         base_url = self.sharepoint_site_url.rstrip("/")
         return f"{base_url}/_layouts/15/download.aspx?UniqueId={file_id}"
 
-    def __post_init__(self):
+    def __post_init__(self: typing.Any) -> typing.Any:
         """Convert cache_root to Path if it's a string."""
         if isinstance(self.cache_root, str):
             self.cache_root = Path(self.cache_root)

@@ -1,16 +1,20 @@
 """Low-level Word XML cell/table styling helpers."""
 
+import typing
+
 from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls, qn
 
 from pbip_documenter.config import C
 
 
-def _shading(cell, color):
+def _shading(cell: typing.Any, color: typing.Any) -> typing.Any:
     cell._tc.get_or_add_tcPr().append(parse_xml(f'<w:shd {nsdecls("w")} w:fill="{color}" w:val="clear"/>'))
 
 
-def _margins(cell, t=40, b=40, l=80, r=80):
+def _margins(
+    cell: typing.Any, t: typing.Any = 40, b: typing.Any = 40, l: typing.Any = 80, r: typing.Any = 80
+) -> typing.Any:
     pr = cell._tc.get_or_add_tcPr()
     old = pr.find(qn("w:tcMar"))
     if old is not None:
@@ -25,7 +29,7 @@ def _margins(cell, t=40, b=40, l=80, r=80):
     )
 
 
-def _set_w(cell, w):
+def _set_w(cell: typing.Any, w: typing.Any) -> typing.Any:
     pr = cell._tc.get_or_add_tcPr()
     old = pr.find(qn("w:tcW"))
     if old is not None:
@@ -33,7 +37,7 @@ def _set_w(cell, w):
     pr.append(parse_xml(f'<w:tcW {nsdecls("w")} w:w="{w}" w:type="dxa"/>'))
 
 
-def _no_borders(cell):
+def _no_borders(cell: typing.Any) -> typing.Any:
     pr = cell._tc.get_or_add_tcPr()
     old = pr.find(qn("w:tcBorders"))
     if old is not None:
@@ -50,10 +54,16 @@ def _no_borders(cell):
     )
 
 
-def _set_borders(cell, top=None, left=None, bottom=None, right=None):
+def _set_borders(
+    cell: typing.Any,
+    top: typing.Any = None,
+    left: typing.Any = None,
+    bottom: typing.Any = None,
+    right: typing.Any = None,
+) -> typing.Any:
     """Set individual cell borders. Each param: (val, sz, color) or None=none."""
 
-    def _edge(name, spec):
+    def _edge(name: typing.Any, spec: typing.Any) -> typing.Any:
         if spec is None:
             return f'<w:{["top", "left", "bottom", "right"][["top", "left", "bottom", "right"].index(name)]} w:val="none" w:sz="0" w:space="0" w:color="auto"/>'
         v, s, c = spec
@@ -72,7 +82,7 @@ def _set_borders(cell, top=None, left=None, bottom=None, right=None):
     )
 
 
-def _set_table_borders(table, color=None):
+def _set_table_borders(table: typing.Any, color: typing.Any = None) -> typing.Any:
     c = color or C.BORDER
     tbl = table._tbl
     tpr = tbl.tblPr if tbl.tblPr is not None else parse_xml(f"<w:tblPr {nsdecls('w')}/>")

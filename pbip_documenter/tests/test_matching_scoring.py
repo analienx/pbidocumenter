@@ -1,5 +1,7 @@
 """Tests for matching scoring and service behavior."""
 
+import typing
+
 import pandas as pd
 
 from pbip_documenter.inventory.matching.scoring import score_match
@@ -7,7 +9,7 @@ from pbip_documenter.inventory.matching.service import MatchingService
 
 
 class TestMatchingScoring:
-    def test_score_match_exact_name_gives_high_confidence(self):
+    def test_score_match_exact_name_gives_high_confidence(self: typing.Any) -> typing.Any:
         detail = score_match(
             query_tokens=["sales", "pipeline"],
             candidate_tokens=["sales", "pipeline", "weekly"],
@@ -20,7 +22,7 @@ class TestMatchingScoring:
         assert detail.confidence == "high"
         assert any("Exact name match" in item for item in detail.evidence)
 
-    def test_score_match_no_overlap_gives_low_confidence(self):
+    def test_score_match_no_overlap_gives_low_confidence(self: typing.Any) -> typing.Any:
         detail = score_match(
             query_tokens=["sales"],
             candidate_tokens=["finance"],
@@ -33,7 +35,7 @@ class TestMatchingScoring:
 
 
 class TestMatchingService:
-    def test_match_report_returns_ranked_results(self):
+    def test_match_report_returns_ranked_results(self: typing.Any) -> typing.Any:
         powerbi_reports = pd.DataFrame(
             [
                 {
@@ -67,7 +69,7 @@ class TestMatchingService:
         assert results[0].workspace_name == "Commercial Workspace"
         assert any("Workspace: Commercial Workspace" in item for item in results[0].evidence)
 
-    def test_match_report_dedupes_same_issue_across_multiple_report_rows(self):
+    def test_match_report_dedupes_same_issue_across_multiple_report_rows(self: typing.Any) -> typing.Any:
         powerbi_reports = pd.DataFrame(
             [
                 {
@@ -98,7 +100,7 @@ class TestMatchingService:
         assert len(results) == 1
         assert results[0].jira_issue_key == "<JIRA_PROJECT_KEY>-1"
 
-    def test_match_report_fuzzy_matches_workspace_name(self):
+    def test_match_report_fuzzy_matches_workspace_name(self: typing.Any) -> typing.Any:
         """Test that matching works when query matches workspace name."""
         powerbi_reports = pd.DataFrame(
             [
@@ -129,7 +131,7 @@ class TestMatchingService:
         assert results[0].workspace_name == "Finance Workspace"
         assert results[0].app_name == "Finance App"
 
-    def test_match_report_fuzzy_matches_app_name(self):
+    def test_match_report_fuzzy_matches_app_name(self: typing.Any) -> typing.Any:
         """Test that matching works when query matches app name."""
         powerbi_reports = pd.DataFrame(
             [
@@ -159,7 +161,7 @@ class TestMatchingService:
         assert results[0].jira_issue_key == "EXEC-1"
         assert results[0].app_name == "Executive Dashboard App"
 
-    def test_match_report_fuzzy_partial_match(self):
+    def test_match_report_fuzzy_partial_match(self: typing.Any) -> typing.Any:
         """Test fuzzy matching with partial token overlap."""
         powerbi_reports = pd.DataFrame(
             [
@@ -194,7 +196,7 @@ class TestMatchingService:
         # Should match the sales report, not marketing
         assert results[0].workspace_name == "Commercial Team"
 
-    def test_match_report_returns_best_match_across_all_fields(self):
+    def test_match_report_returns_best_match_across_all_fields(self: typing.Any) -> typing.Any:
         """Test that best match is selected across report, workspace, and app names."""
         powerbi_reports = pd.DataFrame(
             [
@@ -229,7 +231,7 @@ class TestMatchingService:
         # First report should win due to name match having higher weight
         assert results[0].workspace_name == "Supply Chain Workspace"
 
-    def test_match_report_handles_nan_values_gracefully(self):
+    def test_match_report_handles_nan_values_gracefully(self: typing.Any) -> typing.Any:
         """Test that NaN values in DataFrame don't propagate as 'nan' strings."""
         import math
 

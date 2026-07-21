@@ -1,6 +1,7 @@
 """Cached-artifact matching service for Power BI and Jira outputs."""
 
 import logging
+import typing
 from dataclasses import dataclass
 from typing import Any
 
@@ -18,7 +19,7 @@ from pbip_documenter.inventory.matching.text import (
 logger = logging.getLogger(__name__)
 
 
-def _safe_get(series, key, default=""):
+def _safe_get(series: typing.Any, key: typing.Any, default: typing.Any = "") -> typing.Any:
     """Safely get a value from a pandas Series, handling pd.NA values.
 
     Unlike .get() with `or` which fails on pd.NA (boolean value of NA is ambiguous),
@@ -62,21 +63,21 @@ class MatchingService:
     DEFAULT_JIRA_BASE_URL = ""
 
     def __init__(
-        self,
+        self: typing.Any,
         powerbi_reports: pd.DataFrame,
         jira_issues: pd.DataFrame,
         jira_base_url: str | None = None,
-    ):
+    ) -> None:
         self.powerbi_reports = powerbi_reports.copy()
         self.jira_issues = jira_issues.copy()
         self.jira_base_url = (jira_base_url or self.DEFAULT_JIRA_BASE_URL).rstrip("/")
 
     def _build_powerbi_url(
-        self,
+        self: typing.Any,
         workspace_id: str | None,
         report_id: str | None,
         existing_url: str | None,
-    ) -> str | None:
+    ) -> typing.Any:
         """Construct Power BI report URL from IDs or return existing URL."""
         # Use existing URL if available
         if existing_url and existing_url.startswith("http"):
@@ -88,25 +89,25 @@ class MatchingService:
 
         return None
 
-    def _build_workspace_url(self, workspace_id: str | None) -> str | None:
+    def _build_workspace_url(self: typing.Any, workspace_id: str | None) -> typing.Any:
         """Construct Power BI workspace URL from ID."""
         if workspace_id:
             return f"{self.POWER_BI_BASE_URL}/groups/{workspace_id}"
         return None
 
-    def _build_app_url(self, app_id: str | None) -> str | None:
+    def _build_app_url(self: typing.Any, app_id: str | None) -> typing.Any:
         """Construct Power BI app URL from ID."""
         if app_id:
             return f"{self.POWER_BI_BASE_URL}/apps/{app_id}"
         return None
 
-    def _build_jira_url(self, issue_key: str | None) -> str | None:
+    def _build_jira_url(self: typing.Any, issue_key: str | None) -> typing.Any:
         """Construct Jira issue URL from issue key."""
         if issue_key and self.jira_base_url:
             return f"{self.jira_base_url}/browse/{issue_key}"
         return None
 
-    def match_report(self, report_name: str, limit: int = 5) -> list[MatchResult]:
+    def match_report(self: typing.Any, report_name: str, limit: int = 5) -> typing.Any:
         """Find likely Jira matches for a report using cached artifacts."""
         import time
 
@@ -128,7 +129,7 @@ class MatchingService:
             report_rows = pd.DataFrame([{"name": report_name, "workspace_name": None, "app_name": None}])
 
         # Pre-compute Jira issue tokens once to avoid repeated extraction
-        jira_data = []
+        jira_data: list[typing.Any] = []
         for _, issue_row in self.jira_issues.iterrows():
             issue_text = _safe_get(issue_row, "searchable_text") or _safe_get(issue_row, "summary")
             issue_tokens = extract_keywords(str(issue_text), include_report_stopwords=False)
@@ -175,7 +176,7 @@ class MatchingService:
 
         return deduped_results[:limit]
 
-    def _find_report_rows(self, normalized_query: str, query_tokens: list[str]) -> pd.DataFrame:
+    def _find_report_rows(self: typing.Any, normalized_query: str, query_tokens: list[str]) -> typing.Any:
         """Find Power BI rows relevant to the requested report using fuzzy matching.
 
         Matches against report name, workspace name, and app name with scoring.
@@ -185,7 +186,7 @@ class MatchingService:
             return pd.DataFrame()
 
         # Build search fields for each row
-        def build_search_fields(row: pd.Series) -> dict[str, str]:
+        def build_search_fields(row: pd.Series) -> typing.Any:
             """Extract searchable fields from a report row."""
             return {
                 "name": normalize_text(str(_safe_get(row, "name"))),
@@ -227,7 +228,9 @@ class MatchingService:
 
         return pd.DataFrame(filtered_rows)
 
-    def _calculate_field_match_score(self, field_value: str, normalized_query: str, query_tokens: list[str]) -> float:
+    def _calculate_field_match_score(
+        self: typing.Any, field_value: str, normalized_query: str, query_tokens: list[str]
+    ) -> typing.Any:
         """Calculate fuzzy match score between a field value and query.
 
         Uses multiple strategies:
@@ -238,7 +241,7 @@ class MatchingService:
         if not field_value or not normalized_query:
             return 0.0
 
-        scores = []
+        scores: list[typing.Any] = []
 
         # Exact normalized match
         if field_value == normalized_query:
@@ -269,7 +272,7 @@ class MatchingService:
 
         return max(scores) if scores else 0.0
 
-    def _dedupe_results(self, results: list[MatchResult]) -> list[MatchResult]:
+    def _dedupe_results(self: typing.Any, results: list[MatchResult]) -> typing.Any:
         """Keep the highest-scoring result per Jira issue key."""
         deduped: dict[tuple[str | None, str | None], MatchResult] = {}
         for result in results:
@@ -280,13 +283,13 @@ class MatchingService:
         return list(deduped.values())
 
     def _build_result(
-        self,
+        self: typing.Any,
         report_row: dict[str, Any],
         issue_row: dict[str, Any],
         report_name: str,
         normalized_query: str,
         score_detail: ScoreDetail,
-    ) -> MatchResult:
+    ) -> typing.Any:
         """Create final result object with concise evidence."""
         evidence = list(score_detail.evidence)
 
@@ -334,7 +337,7 @@ class MatchingService:
             evidence=evidence,
         )
 
-    def _safe_get_str(self, row: dict[str, Any], key: str) -> str | None:
+    def _safe_get_str(self: typing.Any, row: dict[str, Any], key: str) -> typing.Any:
         """Safely extract string value from row, handling pandas NaN and pd.NA."""
         import math
 

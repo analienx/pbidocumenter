@@ -1,6 +1,7 @@
 """Data lineage diagram generation."""
 
 import math
+import typing
 
 from pbip_documenter.analysis.connectors import _scan_all_sources
 from pbip_documenter.config import _LINEAGE_MAX_ROWS, C
@@ -16,8 +17,16 @@ from pbip_documenter.docx_render.typography import page_break
 
 
 def _lineage_one_slice(
-    doc, src_slice, stg_slice, tbl_slice, caption, part_label=None, src_tbl_map=None, tbl_pg_map=None, pg_slice=None
-):
+    doc: typing.Any,
+    src_slice: typing.Any,
+    stg_slice: typing.Any,
+    tbl_slice: typing.Any,
+    caption: typing.Any,
+    part_label: typing.Any = None,
+    src_tbl_map: typing.Any = None,
+    tbl_pg_map: typing.Any = None,
+    pg_slice: typing.Any = None,
+) -> typing.Any:
     E = _emu
     LW = E(6.5)
     BADGE_W = E(0.55)
@@ -26,7 +35,7 @@ def _lineage_one_slice(
     hdr_h = E(0.22)
     banner_h = (E(0.20) + E(0.05)) if part_label else 0
     y_start = banner_h + hdr_h + E(0.08)
-    PIPE = [
+    PIPE: list[typing.Any] = [
         ("Data Sources", C.RUBINE, src_slice),
         ("Staging Queries", C.MARIGOLD, stg_slice),
         ("Loaded Tables", C.PACIFIC, tbl_slice),
@@ -42,17 +51,17 @@ def _lineage_one_slice(
     badge_x = pipe_w + E(0.12)
     max_rows = max(len(d) for _, _, d in active)
     LH = y_start + max_rows * (row_h + row_gap) + E(0.1)
-    shapes = []
+    shapes: list[typing.Any] = []
     if part_label:
         shapes.append(_dml_header_label(0, 0, LW, E(0.20), part_label, C.DGRAY))
     for i, (lbl, clr, _) in enumerate(active):
         shapes.append(_dml_header_label(col_x[i], banner_h, col_bw, hdr_h, lbl, clr))
     shapes.append(_dml_header_label(badge_x, banner_h, BADGE_W, hdr_h, "# Pages", C.DGRAY))
-    col_pts = []
-    col_lbls = []
+    col_pts: list[typing.Any] = []
+    col_lbls: list[typing.Any] = []
     for ci, (lbl, color, data) in enumerate(active):
-        pts = []
-        lbls = []
+        pts: list[typing.Any] = []
+        lbls: list[typing.Any] = []
         for ri, item in enumerate(data):
             y = y_start + ri * (row_h + row_gap)
             if lbl == "Data Sources":
@@ -101,9 +110,8 @@ def _lineage_one_slice(
         rx_start = col_x[ci + 1]
         if not rpts:
             continue
-        cmap = None
+        cmap: dict[typing.Any, typing.Any] = {}
         if lname == "Data Sources" and src_tbl_map:
-            cmap = {}
             for src_lbl in llbls:
                 for fn, tbl_set in src_tbl_map.items():
                     if fn.split(".")[0].lower() in src_lbl.lower() or src_lbl.lower() in fn.split(".")[0].lower():
@@ -126,13 +134,13 @@ def _lineage_one_slice(
     _insert_diagram(doc, shapes, LW, LH, caption)
 
 
-def insert_lineage_diagram(doc, summary):
+def insert_lineage_diagram(doc: typing.Any, summary: typing.Any) -> typing.Any:
     sm = summary.get("semantic_model") or {}
     rpt = summary.get("report") or {}
     tables = sm.get("tables", [])
     pages = rpt.get("pages", [])
     all_sources_data = _scan_all_sources(sm.get("expressions", []), tables)
-    src_label_map = {}
+    src_label_map: dict[typing.Any, typing.Any] = {}
     for s in all_sources_data:
         lbl = s["label"]
         srv = s["server"]
@@ -155,7 +163,7 @@ def insert_lineage_diagram(doc, summary):
     dims = [t for t in tables if (t.get("name") or "").lower().startswith(("dim_", "dimension_"))]
     others = [t for t in tables if t not in facts and t not in dims]
     all_t = [(t, C.PACIFIC) for t in facts] + [(t, C.EVERGREEN) for t in dims] + [(t, C.TEAL) for t in others]
-    tbl_pg_map = {}
+    tbl_pg_map: dict[typing.Any, typing.Any] = {}
     for pg in pages:
         for v in pg.get("visuals", []):
             for f in v.get("fields", []):

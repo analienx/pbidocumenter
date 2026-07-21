@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import re
 import textwrap
+import typing
 from collections import Counter, defaultdict, deque
 
 from pbip_documenter.config import (
@@ -35,9 +36,16 @@ from pbip_documenter.config import (
 from pbip_documenter.docx_render.diagrams import _box_edge_point, _dml_connector, _dml_shape, _emu, _insert_diagram
 from pbip_documenter.docx_render.typography import callout
 
-LIGHT = {C.BLIGHT, C.LGRAY, C.SUBTLE, C.TAN, C.MARIGOLD}
-FILL = {"fact": C.PACIFIC, "dim": C.EVERGREEN, "date": C.TAN, "plan": C.RUBINE, "domain": C.SKY, "helper": C.BLIGHT}
-DOMAIN = {"fact", "plan", "domain"}
+LIGHT: set[typing.Any] = {C.BLIGHT, C.LGRAY, C.SUBTLE, C.TAN, C.MARIGOLD}
+FILL: dict[typing.Any, typing.Any] = {
+    "fact": C.PACIFIC,
+    "dim": C.EVERGREEN,
+    "date": C.TAN,
+    "plan": C.RUBINE,
+    "domain": C.SKY,
+    "helper": C.BLIGHT,
+}
+DOMAIN: set[typing.Any] = {"fact", "plan", "domain"}
 
 # SCHEMA LAYOUT TUNING CONSTANTS
 # All values below are inches unless noted otherwise. Values are converted with _emu(value).
@@ -70,11 +78,11 @@ SCHEMA_NODE_CLAMP_TOP_IN = 0.60  # Highest allowed node center after overlap-rel
 SCHEMA_NODE_CLAMP_BOTTOM_IN = 5  # Lowest allowed node center; keep above SCHEMA_GROUP_Y_IN to avoid card overlap.
 
 
-def _norm(n):
+def _norm(n: typing.Any) -> typing.Any:
     return re.sub(r"[^a-z0-9]+", " ", (n or "").lower()).strip()
 
 
-def _role(t):
+def _role(t: typing.Any) -> typing.Any:
     n = _norm(t.get("name", ""))
     m = len(t.get("measures", []) or [])
     if any(
@@ -109,8 +117,8 @@ def _role(t):
     return "domain"
 
 
-def _usage(summary):
-    c = Counter()
+def _usage(summary: typing.Any) -> typing.Any:
+    c: Counter[typing.Any] = Counter()
     for p in (summary.get("report") or {}).get("pages", []) or []:
         for v in p.get("visuals", []) or []:
             for f in v.get("fields", []) or []:
@@ -119,22 +127,22 @@ def _usage(summary):
     return c
 
 
-def _score(n, tm, g, u):
+def _score(n: typing.Any, tm: typing.Any, g: typing.Any, u: typing.Any) -> typing.Any:
     t = tm[n]
     r = _role(t)
     bonus = {"fact": 45, "plan": 32, "domain": 24, "dim": -34, "date": -22, "helper": -30}[r]
     return len(g[n]) * 20 + len(t.get("measures", []) or []) * 8 + u.get(n, 0) * 2 + bonus
 
 
-def _components(g):
+def _components(g: typing.Any) -> typing.Any:
     seen = set()
-    out = []
+    out: list[typing.Any] = []
     for n in g:
         if n in seen:
             continue
-        q = [n]
+        q: list[typing.Any] = [n]
         seen.add(n)
-        comp = []
+        comp: list[typing.Any] = []
         while q:
             x = q.pop()
             comp.append(x)
@@ -146,13 +154,13 @@ def _components(g):
     return out
 
 
-def analyze_relationship_landscape(summary):
+def analyze_relationship_landscape(summary: typing.Any) -> typing.Any:
     sm = summary.get("semantic_model") or {}
     tables = sm.get("tables", []) or []
     rels = sm.get("relationships", []) or []
     tm = {t.get("name"): t for t in tables if t.get("name")}
-    g = {n: set() for n in tm}
-    pc = Counter()
+    g: dict[typing.Any, set[typing.Any]] = {n: set() for n in tm}
+    pc: Counter[tuple[typing.Any, ...]] = Counter()
     u = _usage(summary)
     for r in rels:
         a, b = r.get("from_table"), r.get("to_table")
@@ -160,7 +168,7 @@ def analyze_relationship_landscape(summary):
             g[a].add(b)
             g[b].add(a)
             pc[tuple(sorted((a, b)))] += 1
-    comps = []
+    comps: list[typing.Any] = []
     for c in _components(g):
         e = sum(1 for r in rels if r.get("from_table") in c and r.get("to_table") in c)
         comps.append(
@@ -187,18 +195,18 @@ def analyze_relationship_landscape(summary):
 # Selects tables that deserve their own focused diagram. Scoring favors fact/planning/domain
 # tables with many relationships, many measures and report usage. Increase _SCHEMA_MAX_ANCHORS
 # in config.py if more focused views are needed.
-def _anchors(comp, tm, g, u):
+def _anchors(comp: typing.Any, tm: typing.Any, g: typing.Any, u: typing.Any) -> typing.Any:
     cand = [n for n in comp["nodes"] if _role(tm[n]) in DOMAIN and g[n]] or [n for n in comp["nodes"] if g[n]]
     return sorted(cand, key=lambda n: (-_score(n, tm, g, u), n))[:_SCHEMA_MAX_ANCHORS]
 
 
-def _anchor(comp, tm, g, u):
+def _anchor(comp: typing.Any, tm: typing.Any, g: typing.Any, u: typing.Any) -> typing.Any:
     anchors = _anchors(comp, tm, g, u)
     return anchors[0] if anchors else comp["nodes"][0]
 
 
-def _dist(a, nodes, g):
-    d = {a: 0}
+def _dist(a: typing.Any, nodes: typing.Any, g: typing.Any) -> typing.Any:
+    d: dict[typing.Any, typing.Any] = {a: 0}
     q = deque([a])
     nodes = set(nodes)
     while q:
@@ -214,8 +222,8 @@ def _dist(a, nodes, g):
 # Tables that do not fit into a focused diagram are grouped here. The resulting labels
 # become the summary cards below the diagram, for example "Related fact / domain" and
 # "Helper summary". Their position and size are controlled by SCHEMA_GROUP_* constants.
-def _hidden(hidden, tm):
-    lab = {
+def _hidden(hidden: typing.Any, tm: typing.Any) -> typing.Any:
+    lab: dict[typing.Any, typing.Any] = {
         "dim": "Dimensions",
         "date": "Calendar / date",
         "plan": "Planning / deviation",
@@ -235,7 +243,7 @@ def _hidden(hidden, tm):
 # TWEAK: explicit tables per focused view
 # Chooses visible tables for a focused diagram: anchor first, then direct neighbors, then
 # nearby/high-scoring tables until _SCHEMA_FOCUS_MAX_NODES. Hidden tables become summary cards.
-def _view(comp, analysis, anchor=None):
+def _view(comp: typing.Any, analysis: typing.Any, anchor: typing.Any = None) -> typing.Any:
     tm, g, u, rels = analysis["table_map"], analysis["graph"], Counter(analysis["usage"]), analysis["relationships"]
     a = anchor or _anchor(comp, tm, g, u)
     direct = sorted(
@@ -264,8 +272,8 @@ def _view(comp, analysis, anchor=None):
     }
 
 
-def _remainder(comps):
-    members = sum([c["nodes"] for c in comps], [])
+def _remainder(comps: typing.Any) -> typing.Any:
+    members: list[typing.Any] = sum([c["nodes"] for c in comps], [])
     return {
         "kind": "remainder",
         "title": "Grouped helper and disconnected tables",
@@ -281,13 +289,13 @@ def _remainder(comps):
     }
 
 
-def plan_schema_views(summary):
+def plan_schema_views(summary: typing.Any) -> typing.Any:
     a = analyze_relationship_landscape(summary)
     comps = a["components"]
     tm = a["table_map"]
     g = a["graph"]
     u = Counter(a["usage"])
-    views = []
+    views: list[typing.Any] = []
     for c in [x for x in comps if x["is_large"]]:
         for anchor in _anchors(c, tm, g, u):
             if len(views) >= _SCHEMA_MAX_DIAGRAMS:
@@ -300,16 +308,16 @@ def plan_schema_views(summary):
     return a, views
 
 
-def _wrap(s, w):
+def _wrap(s: typing.Any, w: typing.Any) -> typing.Any:
     lines = textwrap.wrap(str(s).replace("_", " "), width=w, break_long_words=False) or [""]
     return lines[:1] + ([lines[1][: w - 1] + "..."] if len(lines) > 2 else lines[1:])
 
 
-def _txt(fill):
+def _txt(fill: typing.Any) -> typing.Any:
     return C.DGRAY if fill in LIGHT else C.WHITE
 
 
-def _span(count, start, end):
+def _span(count: typing.Any, start: typing.Any, end: typing.Any) -> typing.Any:
     if count <= 0:
         return []
     if count == 1:
@@ -318,18 +326,22 @@ def _span(count, start, end):
     return [int(start + i * step) for i in range(count)]
 
 
-def _build_layout(view, tm):
+def _build_layout(view: typing.Any, tm: typing.Any) -> typing.Any:
     # TWEAK: node placement inside the schema diagram canvas.
     # Layout lanes: anchor center, dimensions/date left/right, facts/domain/planning top/bottom/middle.
     anchor = view["anchor"]
     dims = [n for n in view["visible"] if n != anchor and _role(tm[n]) in ("dim", "date")]
     facts = [n for n in view["visible"] if n != anchor and n not in dims]
-    pos = {anchor: (_emu(5.10), _emu(SCHEMA_ANCHOR_Y_IN), True)}
+    pos: dict[typing.Any, typing.Any] = {anchor: (_emu(5.10), _emu(SCHEMA_ANCHOR_Y_IN), True)}
     left = dims[0::2]
     right = dims[1::2]
-    for n, y in zip(left, _span(len(left), _emu(SCHEMA_DIM_LANE_TOP_IN), _emu(SCHEMA_DIM_LANE_BOTTOM_IN)), strict=False):
+    for n, y in zip(
+        left, _span(len(left), _emu(SCHEMA_DIM_LANE_TOP_IN), _emu(SCHEMA_DIM_LANE_BOTTOM_IN)), strict=False
+    ):
         pos[n] = (_emu(1.15), y, False)
-    for n, y in zip(right, _span(len(right), _emu(SCHEMA_DIM_LANE_TOP_IN), _emu(SCHEMA_DIM_LANE_BOTTOM_IN)), strict=False):
+    for n, y in zip(
+        right, _span(len(right), _emu(SCHEMA_DIM_LANE_TOP_IN), _emu(SCHEMA_DIM_LANE_BOTTOM_IN)), strict=False
+    ):
         pos[n] = (_emu(9.05), y, False)
     top = facts[:6]
     bottom = facts[6:12]
@@ -340,9 +352,13 @@ def _build_layout(view, tm):
         pos[n] = (x, _emu(SCHEMA_BOTTOM_NODE_Y_IN), False)
     mid_left = mid[0::2]
     mid_right = mid[1::2]
-    for n, y in zip(mid_left, _span(len(mid_left), _emu(SCHEMA_MID_LANE_TOP_IN), _emu(SCHEMA_MID_LANE_BOTTOM_IN)), strict=False):
+    for n, y in zip(
+        mid_left, _span(len(mid_left), _emu(SCHEMA_MID_LANE_TOP_IN), _emu(SCHEMA_MID_LANE_BOTTOM_IN)), strict=False
+    ):
         pos[n] = (_emu(2.85), y, False)
-    for n, y in zip(mid_right, _span(len(mid_right), _emu(SCHEMA_MID_LANE_TOP_IN), _emu(SCHEMA_MID_LANE_BOTTOM_IN)), strict=False):
+    for n, y in zip(
+        mid_right, _span(len(mid_right), _emu(SCHEMA_MID_LANE_TOP_IN), _emu(SCHEMA_MID_LANE_BOTTOM_IN)), strict=False
+    ):
         pos[n] = (_emu(7.35), y, False)
     widths = {n: _emu(1.62 if n == anchor else 1.16) for n in view["visible"]}
     heights = {n: _emu(0.56 if n == anchor else 0.45) for n in view["visible"]}
@@ -365,7 +381,17 @@ def _build_layout(view, tm):
     return {n: (coords[n][0], coords[n][1], pos[n][2]) for n in names}, widths, heights
 
 
-def _node(shapes, n, t, cx, cy, w, h, sid, anchor=False):
+def _node(
+    shapes: typing.Any,
+    n: typing.Any,
+    t: typing.Any,
+    cx: typing.Any,
+    cy: typing.Any,
+    w: typing.Any,
+    h: typing.Any,
+    sid: typing.Any,
+    anchor: typing.Any = False,
+) -> typing.Any:
     fill = FILL[_role(t)]
     color = _txt(fill)
     lines = [
@@ -393,7 +419,7 @@ def _node(shapes, n, t, cx, cy, w, h, sid, anchor=False):
     )
 
 
-def _idx(p, q):
+def _idx(p: typing.Any, q: typing.Any) -> typing.Any:
     sx, sy = p
     tx, ty = q
     if abs(tx - sx) >= abs(ty - sy):
@@ -404,8 +430,8 @@ def _idx(p, q):
 # TWEAK: legend row labels and sizing
 # These are the legend labels and colors. Vertical position is SCHEMA_LEGEND_Y_IN.
 # Legend item box size is SCHEMA_LEGEND_ITEM_W_IN x SCHEMA_LEGEND_ITEM_H_IN.
-def _legend(shapes, y):
-    items = [
+def _legend(shapes: typing.Any, y: typing.Any) -> typing.Any:
+    items: list[typing.Any] = [
         ("Fact / anchor", FILL["fact"]),
         ("Dimension", FILL["dim"]),
         ("Planning / deviation", FILL["plan"]),
@@ -444,13 +470,13 @@ def _legend(shapes, y):
         x += _emu(SCHEMA_LEGEND_ITEM_W_IN + SCHEMA_LEGEND_GAP_IN)
 
 
-def _render_focus(doc, view, analysis, fig):
+def _render_focus(doc: typing.Any, view: typing.Any, analysis: typing.Any, fig: typing.Any) -> typing.Any:
     # TWEAK: per-diagram rendering. Assembles title, connectors, nodes, summary cards, legend and caption.
     tm = analysis["table_map"]
     pos, w, h = _build_layout(view, tm)
     base = fig * 10000
     ids = {n: base + 1000 + i for i, n in enumerate(view["visible"], 1)}
-    shapes = []
+    shapes: list[typing.Any] = []
     defaultdict(int)
     shapes.append(
         _dml_shape(
@@ -551,13 +577,13 @@ def _render_focus(doc, view, analysis, fig):
     )
 
 
-def _render_remainder(doc, view, fig):
-    shapes = []
+def _render_remainder(doc: typing.Any, view: typing.Any, fig: typing.Any) -> typing.Any:
+    shapes: list[typing.Any] = []
     _legend(shapes, _emu(4.25))
     _insert_diagram(doc, shapes, _emu(10.1), _emu(4.8), caption=f"Figure {fig} - {view['title']}.")
 
 
-def insert_star_schema(doc, summary):
+def insert_star_schema(doc: typing.Any, summary: typing.Any) -> typing.Any:
     analysis, views = plan_schema_views(summary)
     if not analysis["table_map"]:
         callout(doc, "No semantic model tables found - relationship diagram cannot be generated.")
