@@ -1,0 +1,60 @@
+table 'Fact Sales'
+
+	column 'Sales Order Number'
+		dataType: string
+		isKey
+		summarizeBy: none
+
+	column 'Order Date Key'
+		dataType: int64
+		summarizeBy: none
+
+	column 'Customer Key'
+		dataType: int64
+		summarizeBy: none
+
+	column 'Product Key'
+		dataType: int64
+		summarizeBy: none
+
+	column 'Store Key'
+		dataType: int64
+		summarizeBy: none
+
+	column Quantity
+		dataType: int64
+		summarizeBy: sum
+
+	column 'Net Sales'
+		dataType: decimal
+		formatString: $#,0.00;($#,0.00);$#,0.00
+		summarizeBy: sum
+
+	column 'Cost Amount'
+		dataType: decimal
+		formatString: $#,0.00;($#,0.00);$#,0.00
+		summarizeBy: sum
+
+	measure 'Sales Amount' = SUM ( 'Fact Sales'[Net Sales] )
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Sales
+
+	measure 'Total Cost' = SUM ( 'Fact Sales'[Cost Amount] )
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Sales
+
+	measure 'Gross Margin' = [Sales Amount] - [Total Cost]
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Sales
+
+	measure 'Gross Margin %' = DIVIDE ( [Gross Margin], [Sales Amount] )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Sales
+
+	measure 'Order Count' = DISTINCTCOUNT ( 'Fact Sales'[Sales Order Number] )
+		formatString: #,0
+		displayFolder: Orders
+
+	measure 'Units Sold' = SUM ( 'Fact Sales'[Quantity] )
+		formatString: #,0
+		displayFolder: Orders

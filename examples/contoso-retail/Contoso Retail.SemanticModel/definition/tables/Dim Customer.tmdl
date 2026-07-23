@@ -1,0 +1,22 @@
+table 'Dim Customer'
+
+	column 'Customer Key'
+		dataType: int64
+		isKey
+		summarizeBy: none
+
+	column 'Customer Name'
+		dataType: string
+		summarizeBy: none
+
+	column Segment
+		dataType: string
+		summarizeBy: none
+
+	column City
+		dataType: string
+		summarizeBy: none
+
+	column Country
+		dataType: string
+		summarizeBy: none

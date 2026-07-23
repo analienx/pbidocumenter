@@ -1,0 +1,9 @@
+{
+  "metadata": {
+    "displayName": "Contoso Retail",
+    "type": "SemanticModel"
+  },
+  "config": {
+    "logicalId": "contoso-retail-demo-model"
+  }
+}

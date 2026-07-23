@@ -1,0 +1,18 @@
+table 'Dim Store'
+
+	column 'Store Key'
+		dataType: int64
+		isKey
+		summarizeBy: none
+
+	column 'Store Name'
+		dataType: string
+		summarizeBy: none
+
+	column Region
+		dataType: string
+		summarizeBy: none
+
+	column Country
+		dataType: string
+		summarizeBy: none

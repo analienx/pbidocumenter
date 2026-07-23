@@ -1,0 +1,22 @@
+table 'Dim Product'
+
+	column 'Product Key'
+		dataType: int64
+		isKey
+		summarizeBy: none
+
+	column 'Product Name'
+		dataType: string
+		summarizeBy: none
+
+	column Brand
+		dataType: string
+		summarizeBy: none
+
+	column Category
+		dataType: string
+		summarizeBy: none
+
+	column Subcategory
+		dataType: string
+		summarizeBy: none
