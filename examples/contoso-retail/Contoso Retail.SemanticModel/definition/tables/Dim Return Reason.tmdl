@@ -1,0 +1,30 @@
+/// Return reason dimension used to separate quality, fulfilment, and preference issues.
+table 'Dim Return Reason'
+
+	column 'Return Reason Key'
+		dataType: int64
+		isHidden
+		isKey
+		summarizeBy: none
+		sourceColumn: Return Reason Key
+
+	column 'Return Reason'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Return Reason
+
+	column 'Reason Group'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Reason Group
+
+	partition 'Dim Return Reason' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [#"Return Reason Key" = Int64.Type, #"Return Reason" = text, #"Reason Group" = text], {{1, "Damaged in transit", "Fulfilment"}, {2, "Product defect", "Quality"}, {3, "Changed mind", "Preference"}, {4, "Incorrect item", "Fulfilment"}})
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+

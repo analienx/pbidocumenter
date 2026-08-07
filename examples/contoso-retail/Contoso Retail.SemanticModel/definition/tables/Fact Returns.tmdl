@@ -1,0 +1,106 @@
+/// Return transaction fact table at returned-line grain.
+table 'Fact Returns'
+
+	/// Monetary value returned by customers.
+	measure 'Return Amount' = SUM ( 'Fact Returns'[Return Amount] )
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Returns
+
+	/// Units returned by customers.
+	measure 'Returned Units' = SUM ( 'Fact Returns'[Return Quantity] )
+		formatString: #,0
+		displayFolder: Returns
+
+	/// Number of individual return transactions.
+	measure 'Return Orders' = COUNTROWS ( 'Fact Returns' )
+		formatString: #,0
+		displayFolder: Returns
+
+	/// Returned value as a proportion of gross sales.
+	measure 'Return Rate %' = DIVIDE ( [Return Amount], [Sales Amount] )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Returns
+
+	/// Sales remaining after return value is deducted.
+	measure 'Net Sales After Returns' = [Sales Amount] - [Return Amount]
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Returns
+
+	column 'Return ID'
+		dataType: string
+		isHidden
+		isKey
+		summarizeBy: none
+		sourceColumn: Return ID
+
+	column 'Return Date Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Return Date Key
+
+	column 'Customer Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Customer Key
+
+	column 'Product Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Product Key
+
+	column 'Store Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Store Key
+
+	column 'Promotion Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Promotion Key
+
+	column 'Return Reason Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Return Reason Key
+
+	column 'Return Quantity'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: Return Quantity
+
+	column 'Return Amount'
+		dataType: decimal
+		isHidden
+		formatString: $#,0.00;($#,0.00);$#,0.00
+		summarizeBy: sum
+		sourceColumn: Return Amount
+
+	partition 'Fact Returns' = m
+		mode: import
+		source =
+				let
+					Months = List.Generate(() => #date(2023, 1, 1), each _ <= #date(2025, 12, 1), each Date.AddMonths(_, 1)),
+					Rows = List.Combine(List.Transform(Months, (d as date) => List.Transform({1..8}, (p as number) =>
+						let
+							StoreKey = Number.Mod(p + Date.Month(d), 5) + 1,
+							CustomerKey = Number.Mod(p * 2 + Date.Month(d) + Date.Year(d), 12) + 1,
+							PromotionKey = Number.Mod(p + Date.Month(d), 4) + 1,
+							Quantity = if Number.Mod(p + Date.Month(d), 3) = 0 then 2 else 1,
+							UnitPrice = {1180, 980, 760, 640, 220, 280, 190, 150}{p - 1},
+							Amount = Number.Round(Quantity * UnitPrice * (0.82 + Number.Mod(Date.Month(d), 3) * 0.04), 2)
+						in
+							[#"Return ID" = Text.Combine({"R", Text.From(Date.Year(d)), Text.PadStart(Text.From(Date.Month(d)), 2, "0"), Text.From(p)}, "-"), #"Return Date Key" = Date.Year(d) * 10000 + Date.Month(d) * 100 + 20, #"Customer Key" = CustomerKey, #"Product Key" = p, #"Store Key" = StoreKey, #"Promotion Key" = PromotionKey, #"Return Reason Key" = Number.Mod(p + Date.Month(d), 4) + 1, #"Return Quantity" = Quantity, #"Return Amount" = Amount]
+					))),
+					Source = Table.FromRecords(Rows, type table [#"Return ID" = text, #"Return Date Key" = Int64.Type, #"Customer Key" = Int64.Type, #"Product Key" = Int64.Type, #"Store Key" = Int64.Type, #"Promotion Key" = Int64.Type, #"Return Reason Key" = Int64.Type, #"Return Quantity" = Int64.Type, #"Return Amount" = Currency.Type])
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+

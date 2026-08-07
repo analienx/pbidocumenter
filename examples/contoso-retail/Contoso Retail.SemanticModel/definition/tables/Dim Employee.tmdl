@@ -1,0 +1,35 @@
+/// Commercial employee dimension used for accountable sales performance.
+table 'Dim Employee'
+
+	column 'Employee Key'
+		dataType: int64
+		isHidden
+		isKey
+		summarizeBy: none
+		sourceColumn: Employee Key
+
+	column 'Employee Name'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Employee Name
+
+	column Role
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Role
+
+	column Region
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Region
+
+	partition 'Dim Employee' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [#"Employee Key" = Int64.Type, #"Employee Name" = text, Role = text, Region = text], {{1, "Jordan Lee", "Account Executive", "North America"}, {2, "Morgan Chen", "Account Executive", "North America"}, {3, "Taylor Hughes", "Digital Lead", "Europe"}, {4, "Riley Singh", "Store Manager", "Europe"}, {5, "Casey Wong", "Digital Lead", "Asia Pacific"}, {6, "Avery Martin", "Commercial Manager", "Global"}})
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+

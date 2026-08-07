@@ -1,0 +1,35 @@
+/// Promotion dimension used to analyse campaign mix and return behaviour.
+table 'Dim Promotion'
+
+	column 'Promotion Key'
+		dataType: int64
+		isHidden
+		isKey
+		summarizeBy: none
+		sourceColumn: Promotion Key
+
+	column 'Promotion Name'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Promotion Name
+
+	column 'Promotion Type'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Promotion Type
+
+	column 'Discount Band'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Discount Band
+
+	partition 'Dim Promotion' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [#"Promotion Key" = Int64.Type, #"Promotion Name" = text, #"Promotion Type" = text, #"Discount Band" = text], {{1, "Always On", "Base", "None"}, {2, "Spring Upgrade", "Seasonal", "10%"}, {3, "Summer Bundle", "Bundle", "15%"}, {4, "Holiday Event", "Seasonal", "20%"}})
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+

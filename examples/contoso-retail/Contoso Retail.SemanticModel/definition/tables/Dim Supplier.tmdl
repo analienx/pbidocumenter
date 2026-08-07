@@ -1,0 +1,41 @@
+/// Supplier dimension used to assess inventory ownership and supply risk.
+table 'Dim Supplier'
+
+	column 'Supplier Key'
+		dataType: int64
+		isHidden
+		isKey
+		summarizeBy: none
+		sourceColumn: Supplier Key
+
+	column 'Supplier Name'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Supplier Name
+
+	column Country
+		dataType: string
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: Country
+
+	column 'Lead Time Days'
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: Lead Time Days
+
+	column 'Risk Tier'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Risk Tier
+
+	partition 'Dim Supplier' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [#"Supplier Key" = Int64.Type, #"Supplier Name" = text, Country = text, #"Lead Time Days" = Int64.Type, #"Risk Tier" = text], {{1, "Alpine Components", "United States", 12, "Low"}, {2, "Fabrikam Manufacturing", "Germany", 21, "Medium"}, {3, "Northwind Imports", "United Kingdom", 28, "High"}, {4, "Adventure Distribution", "Japan", 18, "Medium"}})
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+

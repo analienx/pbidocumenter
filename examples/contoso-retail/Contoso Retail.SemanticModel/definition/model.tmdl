@@ -8,7 +8,7 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation PBI_QueryOrder = ["Dim Customer","Dim Date","Dim Product","Dim Store","Fact Sales"]
+annotation PBI_QueryOrder = ["pScenarioStartDate","pScenarioEndDate","fnSeasonalityFactor","stgProductEconomics","stgSalesPlan","Dim Customer","Dim Date","Dim Product","Dim Store","Dim Promotion","Dim Employee","Dim Supplier","Dim Return Reason","Fact Sales","Fact Returns","Fact Inventory Snapshot","Fact Sales Budget"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -16,5 +16,18 @@ ref table 'Dim Customer'
 ref table 'Dim Date'
 ref table 'Dim Product'
 ref table 'Dim Store'
+ref table 'Dim Promotion'
+ref table 'Dim Employee'
+ref table 'Dim Supplier'
+ref table 'Dim Return Reason'
 ref table 'Fact Sales'
+ref table 'Fact Returns'
+ref table 'Fact Inventory Snapshot'
+ref table 'Fact Sales Budget'
+
+ref expression pScenarioStartDate
+ref expression pScenarioEndDate
+ref expression fnSeasonalityFactor
+ref expression stgProductEconomics
+ref expression stgSalesPlan
 

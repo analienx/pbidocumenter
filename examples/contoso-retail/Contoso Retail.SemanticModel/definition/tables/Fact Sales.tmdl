@@ -289,6 +289,20 @@ table 'Fact Sales'
 		summarizeBy: none
 		sourceColumn: Store Key
 
+	/// Foreign key to the promotion applied to the sales line.
+	column 'Promotion Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Promotion Key
+
+	/// Foreign key to the commercial employee responsible for the sales line.
+	column 'Employee Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Employee Key
+
 	/// Units sold on the transaction line.
 	column Quantity
 		dataType: int64
@@ -335,13 +349,15 @@ table 'Fact Sales'
 									CostRate = {0.66, 0.68, 0.63, 0.70, 0.57, 0.61, 0.72, 0.60}{p - 1},
 									SalesValue = Number.Round(QuantityValue * UnitPrice * YearFactor * Seasonality * StoreFactor * ProductFactor, 2),
 									CostValue = Number.Round(SalesValue * CostRate, 2),
-									CustomerValue = Number.Mod(Date.Month(d) + s * 2 + p * 3 + Date.Year(d), 12) + 1
+					CustomerValue = Number.Mod(Date.Month(d) + s * 2 + p * 3 + Date.Year(d), 12) + 1,
+					PromotionValue = Number.Mod(p + Date.Month(d), 4) + 1,
+					EmployeeValue = Number.Mod(s + p + Date.Month(d), 6) + 1
 								in
-									[#"Sales Order Number" = Text.Combine({Text.From(Date.Year(d)), Text.PadStart(Text.From(Date.Month(d)), 2, "0"), Text.From(s), Text.PadStart(Text.From(p), 2, "0")}, "-"), #"Order Date Key" = Date.Year(d) * 10000 + Date.Month(d) * 100 + 1, #"Customer Key" = CustomerValue, #"Product Key" = p, #"Store Key" = s, Quantity = QuantityValue, #"Net Sales" = SalesValue, #"Cost Amount" = CostValue]
+									[#"Sales Order Number" = Text.Combine({Text.From(Date.Year(d)), Text.PadStart(Text.From(Date.Month(d)), 2, "0"), Text.From(s), Text.PadStart(Text.From(p), 2, "0")}, "-"), #"Order Date Key" = Date.Year(d) * 10000 + Date.Month(d) * 100 + 1, #"Customer Key" = CustomerValue, #"Product Key" = p, #"Store Key" = s, #"Promotion Key" = PromotionValue, #"Employee Key" = EmployeeValue, Quantity = QuantityValue, #"Net Sales" = SalesValue, #"Cost Amount" = CostValue]
 							)
 						))
 					)),
-					Source = Table.FromRecords(Rows, type table [#"Sales Order Number" = text, #"Order Date Key" = Int64.Type, #"Customer Key" = Int64.Type, #"Product Key" = Int64.Type, #"Store Key" = Int64.Type, Quantity = Int64.Type, #"Net Sales" = Currency.Type, #"Cost Amount" = Currency.Type])
+					Source = Table.FromRecords(Rows, type table [#"Sales Order Number" = text, #"Order Date Key" = Int64.Type, #"Customer Key" = Int64.Type, #"Product Key" = Int64.Type, #"Store Key" = Int64.Type, #"Promotion Key" = Int64.Type, #"Employee Key" = Int64.Type, Quantity = Int64.Type, #"Net Sales" = Currency.Type, #"Cost Amount" = Currency.Type])
 				in
 					Source
 

@@ -1,0 +1,84 @@
+/// Monthly inventory snapshot fact table at product-store-supplier grain.
+table 'Fact Inventory Snapshot'
+
+	/// Units available at month-end.
+	measure 'Units On Hand' = SUM ( 'Fact Inventory Snapshot'[Units On Hand] )
+		formatString: #,0
+		displayFolder: Inventory
+
+	/// Carrying value of stock available at month-end.
+	measure 'Inventory Value' = SUM ( 'Fact Inventory Snapshot'[Inventory Value] )
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Inventory
+
+	/// Count of products with zero available units.
+	measure 'Stockout SKU Count' = CALCULATE ( DISTINCTCOUNT ( 'Fact Inventory Snapshot'[Product Key] ), 'Fact Inventory Snapshot'[Stockout Flag] = 1 )
+		formatString: #,0
+		displayFolder: Inventory
+
+	/// Approximate weeks of cover using current reporting-year demand.
+	measure 'Weeks of Supply' = DIVIDE ( [Units On Hand], DIVIDE ( [Reporting Year Units], 52 ) )
+		formatString: 0.0
+		displayFolder: Inventory
+
+	column 'Snapshot Date Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Snapshot Date Key
+
+	column 'Product Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Product Key
+
+	column 'Store Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Store Key
+
+	column 'Supplier Key'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Supplier Key
+
+	column 'Units On Hand'
+		dataType: int64
+		isHidden
+		summarizeBy: sum
+		sourceColumn: Units On Hand
+
+	column 'Inventory Value'
+		dataType: decimal
+		isHidden
+		formatString: $#,0.00;($#,0.00);$#,0.00
+		summarizeBy: sum
+		sourceColumn: Inventory Value
+
+	column 'Stockout Flag'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Stockout Flag
+
+	partition 'Fact Inventory Snapshot' = m
+		mode: import
+		source =
+				let
+					Months = List.Generate(() => #date(2023, 1, 1), each _ <= #date(2025, 12, 1), each Date.AddMonths(_, 1)),
+					Rows = List.Combine(List.Transform(Months, (d as date) => List.Combine(List.Transform({1..5}, (s as number) => List.Transform({1..8}, (p as number) =>
+						let
+							Units = Number.Mod(Date.Month(d) * 3 + p * 7 + s * 5, 42),
+							UnitCost = {779, 666, 479, 448, 125, 171, 137, 90}{p - 1}
+						in
+							[#"Snapshot Date Key" = Date.Year(d) * 10000 + Date.Month(d) * 100 + 28, #"Product Key" = p, #"Store Key" = s, #"Supplier Key" = Number.Mod(p - 1, 4) + 1, #"Units On Hand" = Units, #"Inventory Value" = Number.Round(Units * UnitCost, 2), #"Stockout Flag" = if Units = 0 then 1 else 0]
+					))))),
+					Source = Table.FromRecords(Rows, type table [#"Snapshot Date Key" = Int64.Type, #"Product Key" = Int64.Type, #"Store Key" = Int64.Type, #"Supplier Key" = Int64.Type, #"Units On Hand" = Int64.Type, #"Inventory Value" = Currency.Type, #"Stockout Flag" = Int64.Type])
+				in
+					Source
+
+	annotation PBI_ResultType = Table
+
