@@ -1,124 +1,60 @@
 {
-  "sections": [
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY24SU06",
+      "reportVersionAtImport": {
+        "visual": "2.9.0",
+        "page": "2.1.0",
+        "report": "3.3.0"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "ContosoExecutive-4f18b4d2.json",
+      "reportVersionAtImport": {
+        "visual": "2.9.0",
+        "page": "2.1.0",
+        "report": "3.3.0"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "resourcePackages": [
     {
-      "id": "executive-overview",
-      "displayName": "Executive Overview",
-      "width": 1280,
-      "height": 720,
-      "filters": "[]",
-      "visualContainers": [
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
         {
-          "x": 24,
-          "y": 24,
-          "width": 1180,
-          "height": 56,
-          "config": "{\"name\":\"overview-title\",\"singleVisual\":{\"visualType\":\"textbox\"}}"
-        },
-        {
-          "x": 24,
-          "y": 96,
-          "width": 220,
-          "height": 124,
-          "config": "{\"name\":\"sales-card\",\"singleVisual\":{\"visualType\":\"card\"}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Fact Sales\"}},\"Property\":\"Sales Amount\"},\"Name\":\"Sales Amount\"}]}}}]}"
-        },
-        {
-          "x": 268,
-          "y": 96,
-          "width": 220,
-          "height": 124,
-          "config": "{\"name\":\"margin-card\",\"singleVisual\":{\"visualType\":\"card\"}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Fact Sales\"}},\"Property\":\"Gross Margin\"},\"Name\":\"Gross Margin\"}]}}}]}"
-        },
-        {
-          "x": 512,
-          "y": 96,
-          "width": 220,
-          "height": 124,
-          "config": "{\"name\":\"margin-rate-card\",\"singleVisual\":{\"visualType\":\"card\"}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Fact Sales\"}},\"Property\":\"Gross Margin %\"},\"Name\":\"Gross Margin %\"}]}}}]}"
-        },
-        {
-          "x": 756,
-          "y": 96,
-          "width": 220,
-          "height": 124,
-          "config": "{\"name\":\"orders-card\",\"singleVisual\":{\"visualType\":\"card\"}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Fact Sales\"}},\"Property\":\"Order Count\"},\"Name\":\"Order Count\"}]}}}]}"
-        },
-        {
-          "x": 24,
-          "y": 244,
-          "width": 650,
-          "height": 380,
-          "config": "{\"name\":\"sales-by-month\",\"singleVisual\":{\"visualType\":\"lineChart\"}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Dim Date\"}},\"Property\":\"Month Name\"},\"Name\":\"Axis Month\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Fact Sales\"}},\"Property\":\"Sales Amount\"},\"Name\":\"Values Sales Amount\"}]}}}]}"
-        },
-        {
-          "x": 700,
-          "y": 244,
-          "width": 280,
-          "height": 380,
-          "config": "{\"name\":\"sales-by-category\",\"singleVisual\":{\"visualType\":\"donutChart\"}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Dim Product\"}},\"Property\":\"Category\"},\"Name\":\"Legend Category\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Fact Sales\"}},\"Property\":\"Sales Amount\"},\"Name\":\"Values Sales Amount\"}]}}}]}"
-        },
-        {
-          "x": 1004,
-          "y": 244,
-          "width": 200,
-          "height": 380,
-          "config": "{\"name\":\"year-slicer\",\"singleVisual\":{\"visualType\":\"slicer\",\"objects\":{\"data\":[{\"properties\":{\"mode\":{\"expr\":{\"Literal\":{\"Value\":\"'Dropdown'\"}}}}}]}}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Dim Date\"}},\"Property\":\"Year\"},\"Name\":\"Field Year\"}]}}}]}"
+          "name": "ContosoExecutive-4f18b4d2.json",
+          "path": "ContosoExecutive-4f18b4d2.json",
+          "type": "CustomTheme"
         }
       ]
     },
     {
-      "id": "sales-detail",
-      "displayName": "Sales Detail",
-      "width": 1280,
-      "height": 720,
-      "filters": "[]",
-      "visualContainers": [
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
         {
-          "x": 24,
-          "y": 24,
-          "width": 1180,
-          "height": 56,
-          "config": "{\"name\":\"detail-title\",\"singleVisual\":{\"visualType\":\"textbox\"}}"
-        },
-        {
-          "x": 24,
-          "y": 96,
-          "width": 280,
-          "height": 130,
-          "config": "{\"name\":\"region-slicer\",\"singleVisual\":{\"visualType\":\"slicer\"}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Dim Store\"}},\"Property\":\"Region\"},\"Name\":\"Field Region\"}]}}}]}"
-        },
-        {
-          "x": 328,
-          "y": 96,
-          "width": 280,
-          "height": 130,
-          "config": "{\"name\":\"category-slicer\",\"singleVisual\":{\"visualType\":\"slicer\"}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Dim Product\"}},\"Property\":\"Category\"},\"Name\":\"Field Category\"}]}}}]}"
-        },
-        {
-          "x": 24,
-          "y": 250,
-          "width": 760,
-          "height": 360,
-          "config": "{\"name\":\"product-matrix\",\"singleVisual\":{\"visualType\":\"matrix\"}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Dim Product\"}},\"Property\":\"Category\"},\"Name\":\"Rows Category\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Dim Product\"}},\"Property\":\"Subcategory\"},\"Name\":\"Rows Subcategory\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Fact Sales\"}},\"Property\":\"Sales Amount\"},\"Name\":\"Values Sales Amount\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Fact Sales\"}},\"Property\":\"Gross Margin %\"},\"Name\":\"Values Gross Margin %\"}]}}}]}"
-        },
-        {
-          "x": 808,
-          "y": 250,
-          "width": 396,
-          "height": 360,
-          "config": "{\"name\":\"store-ranking\",\"singleVisual\":{\"visualType\":\"clusteredBarChart\"}}",
-          "query": "{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Dim Store\"}},\"Property\":\"Store Name\"},\"Name\":\"Axis Store Name\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Fact Sales\"}},\"Property\":\"Sales Amount\"},\"Name\":\"Values Sales Amount\"}]}}}]}"
+          "name": "CY24SU06",
+          "path": "BaseThemes/CY24SU06.json",
+          "type": "BaseTheme"
         }
       ]
+    }
+  ],
+  "settings": {
+    "hideVisualContainerHeader": true,
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "useEnhancedTooltips": true,
+    "pagesPosition": "Bottom"
+  },
+  "annotations": [
+    {
+      "name": "design",
+      "value": "Contoso executive retail analytics"
     }
   ]
 }

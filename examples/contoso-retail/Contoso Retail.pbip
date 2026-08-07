@@ -1,4 +1,13 @@
 {
   "version": "1.0",
-  "artifacts": []
+  "artifacts": [
+    {
+      "report": {
+        "path": "Contoso Retail.Report"
+      }
+    }
+  ],
+  "settings": {
+    "enableAutoRecovery": true
+  }
 }
