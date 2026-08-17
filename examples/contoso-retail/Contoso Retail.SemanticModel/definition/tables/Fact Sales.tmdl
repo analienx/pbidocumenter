@@ -248,6 +248,84 @@ table 'Fact Sales'
 		displayFolder: Display
 		lineageTag: 39d6ddaa-0e15-4d51-973a-5827017fde58
 
+	/// Sales on lines associated with a promotional campaign.
+	measure 'Promo Sales' = CALCULATE ( [Sales Amount], 'Dim Promotion'[Promotion Type] <> "Base" )
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Promotion
+		lineageTag: f80f2f10-067f-4ad2-bfca-75cc9e322e55
+
+	/// Share of sales generated through promotions.
+	measure 'Promo Sales %' = DIVIDE ( [Promo Sales], [Sales Amount] )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Promotion
+		lineageTag: 87c01aad-5733-4943-b697-1b27969f6c99
+
+	/// Gross margin on promotional lines.
+	measure 'Promo Margin $' = CALCULATE ( [Gross Margin], 'Dim Promotion'[Promotion Type] <> "Base" )
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Promotion
+		lineageTag: 77995ae3-b996-49c6-89e5-6cec1f718125
+
+	/// Gross margin percentage on promotional lines.
+	measure 'Promo GM %' = DIVIDE ( [Promo Margin $], [Promo Sales] )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Promotion
+		lineageTag: 9d217c01-a093-4f0d-97de-3098987334cd
+
+	/// Gross margin percentage on the standard (always on) base lines.
+	measure 'Non-Promo GM %' = DIVIDE ( CALCULATE ( [Gross Margin], 'Dim Promotion'[Promotion Type] = "Base" ), CALCULATE ( [Sales Amount], 'Dim Promotion'[Promotion Type] = "Base" ) )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Promotion
+		lineageTag: 09650e27-a1da-49b4-af31-85d55f801850
+
+	/// Promotional margin less base margin, in percentage points. Negative means campaigns dilute margin.
+	measure 'Promo Margin Dilution pp' = [Promo GM %] - [Non-Promo GM %]
+		formatString: 0.0 "pp";-0.0 "pp";0.0 "pp"
+		displayFolder: Promotion
+		lineageTag: eff31e22-161d-4fd3-9065-0bde3ae3a3fc
+
+	/// Average number of distinct orders per active customer.
+	measure 'Orders per Active Customer' = DIVIDE ( [Order Count], [Active Customers] )
+		formatString: 0.0
+		displayFolder: Customer
+		lineageTag: 53913bb8-6cc6-49b5-b9b8-d901fa1d02f7
+
+	/// Active customers who placed more than one distinct order in the selection.
+	measure 'Repeat Customers' = COUNTROWS ( FILTER ( ADDCOLUMNS ( VALUES ( 'Fact Sales'[Customer Key] ), "__Orders", CALCULATE ( [Order Count] ) ), [__Orders] > 1 ) )
+		formatString: #,0
+		displayFolder: Customer
+		lineageTag: 429e0dae-255b-4314-a016-5b7a13643881
+
+	/// Share of active customers who placed more than one order.
+	measure 'Repeat Customer Rate' = DIVIDE ( [Repeat Customers], [Active Customers] )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Customer
+		lineageTag: 088fdac7-ac6e-48a3-9374-3ffe193fa429
+
+	/// Sales attributable to the five highest-selling stores.
+	measure 'Top 5 Store Sales' = SUMX ( TOPN ( 5, ALL ( 'Dim Store'[Store Name] ), [Reporting Year Sales], DESC ), CALCULATE ( [Reporting Year Sales], 'Dim Store'[Store Name] = 'Dim Store'[Store Name] ) )
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Concentration
+		lineageTag: 7764155f-9dc8-415e-9128-87c79bd72dde
+
+	/// Share of reporting-year sales captured by the five highest-selling stores.
+	measure 'Top 5 Store Sales Share' = DIVIDE ( [Top 5 Store Sales], [Reporting Year Sales] )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Concentration
+		lineageTag: b59d6013-52b5-4044-aeaf-14709dc7c4b6
+
+	/// Sales attributable to the five highest-selling products.
+	measure 'Top 5 Product Sales' = SUMX ( TOPN ( 5, ALL ( 'Dim Product'[Product Name] ), [Reporting Year Sales], DESC ), CALCULATE ( [Reporting Year Sales], 'Dim Product'[Product Name] = 'Dim Product'[Product Name] ) )
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Concentration
+		lineageTag: 3db9a620-1037-4a26-91d0-bb9f0bb7e6d4
+
+	/// Share of reporting-year sales captured by the five highest-selling products.
+	measure 'Top 5 Product Sales Share' = DIVIDE ( [Top 5 Product Sales], [Reporting Year Sales] )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Concentration
+		lineageTag: ebb125eb-85c5-4b02-b1a3-f1ae3a62a17f
+
 	/// Degenerate order identifier at the transaction grain.
 	column 'Sales Order Number'
 		dataType: string

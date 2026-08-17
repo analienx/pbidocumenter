@@ -17,3 +17,4 @@ expression stgProductEconomics = #table(type table [#"Product Key" = Int64.Type,
 expression stgSalesPlan = #table(type table [Year = Int64.Type, #"Growth Rate" = number], {{2023, 1.00}, {2024, 1.10}, {2025, 1.21}})
 
 	annotation PBI_ResultType = Table
+

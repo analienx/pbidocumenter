@@ -15,6 +15,7 @@ table 'Dim Date'
 	/// Calendar date used for time intelligence.
 	column Date
 		dataType: dateTime
+		isUnique
 		formatString: yyyy-MM-dd
 		lineageTag: 9c39bf14-ddce-45e5-a7ba-02ea133e960b
 		dataCategory: Time

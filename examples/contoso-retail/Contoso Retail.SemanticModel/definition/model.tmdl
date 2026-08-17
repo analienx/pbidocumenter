@@ -25,9 +25,3 @@ ref table 'Fact Returns'
 ref table 'Fact Inventory Snapshot'
 ref table 'Fact Sales Budget'
 
-ref expression pScenarioStartDate
-ref expression pScenarioEndDate
-ref expression fnSeasonalityFactor
-ref expression stgProductEconomics
-ref expression stgSalesPlan
-

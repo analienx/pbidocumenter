@@ -16,6 +16,24 @@ table 'Fact Sales Budget'
 		formatString: 0.0%;(0.0%);0.0%
 		displayFolder: Budget
 
+	/// Sales variance relative to plan as a percentage.
+	measure 'Budget Variance %' = DIVIDE ( [Sales vs Budget], [Sales Budget] )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Budget
+		lineageTag: fcf6c4fc-4003-4ffd-a042-449396812a0e
+
+	/// Planned sales accumulated from the start of the year through the visible date.
+	measure 'YTD Budget' = TOTALYTD ( [Sales Budget], 'Dim Date'[Date] )
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Budget
+		lineageTag: 108fbb02-3fd2-4c2d-b8d0-f3600cbc03ec
+
+	/// Year-to-date actual sales less the comparable year-to-date plan.
+	measure 'YTD Actual vs Budget' = [Sales YTD] - [YTD Budget]
+		formatString: $#,0;($#,0);$#,0
+		displayFolder: Budget
+		lineageTag: 1936d0c1-9448-4092-940c-1cda5d726049
+
 	column 'Budget Date Key'
 		dataType: int64
 		isHidden

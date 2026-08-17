@@ -21,6 +21,24 @@ table 'Fact Inventory Snapshot'
 		formatString: 0.0
 		displayFolder: Inventory
 
+	/// Annualized sell-through proxy: reporting-year units moved divided by units currently on hand.
+	measure 'Inventory Turnover' = DIVIDE ( [Reporting Year Units], [Units On Hand] )
+		formatString: 0.0
+		displayFolder: Inventory
+		lineageTag: cdea4485-e9ce-44d4-a825-25308198ab74
+
+	/// Number of products holding more than twelve weeks of cover, indicating potential excess stock.
+	measure 'Excess Inventory SKU Count' = CALCULATE ( DISTINCTCOUNT ( 'Fact Inventory Snapshot'[Product Key] ), FILTER ( VALUES ( 'Fact Inventory Snapshot'[Product Key] ), [Weeks of Supply] > 12 ) )
+		formatString: #,0
+		displayFolder: Inventory
+		lineageTag: 110969fc-3123-45c2-be38-fb5a950bc0fb
+
+	/// Number of products with between zero and two weeks of cover, indicating stockout risk.
+	measure 'Low Stock SKU Count' = CALCULATE ( DISTINCTCOUNT ( 'Fact Inventory Snapshot'[Product Key] ), FILTER ( VALUES ( 'Fact Inventory Snapshot'[Product Key] ), [Weeks of Supply] > 0 && [Weeks of Supply] < 2 ) )
+		formatString: #,0
+		displayFolder: Inventory
+		lineageTag: 6e857aa1-08cb-4393-93f4-8da917e907c6
+
 	column 'Snapshot Date Key'
 		dataType: int64
 		isHidden

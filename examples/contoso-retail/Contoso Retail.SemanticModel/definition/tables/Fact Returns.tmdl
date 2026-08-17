@@ -26,6 +26,24 @@ table 'Fact Returns'
 		formatString: $#,0;($#,0);$#,0
 		displayFolder: Returns
 
+	/// Units returned as a share of units sold.
+	measure 'Return Units % of Sold' = DIVIDE ( [Returned Units], [Units Sold] )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Returns
+		lineageTag: fa9d147f-67fb-43a4-b22a-2b8ba7db8f4b
+
+	/// Prior-year return rate for the equivalent visible period.
+	measure 'Return Rate LY' = CALCULATE ( [Return Rate %], SAMEPERIODLASTYEAR ( 'Dim Date'[Date] ) )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Returns
+		lineageTag: 13851870-2a43-45f7-affd-ae4f356df8b2
+
+	/// Change in return rate versus the prior-year period, in percentage points.
+	measure 'Return Rate YoY Delta' = [Return Rate %] - [Return Rate LY]
+		formatString: 0.0 "pp";-0.0 "pp";0.0 "pp"
+		displayFolder: Returns
+		lineageTag: 05c837fc-fe69-4bae-be39-100aff63d8ae
+
 	column 'Return ID'
 		dataType: string
 		isHidden
