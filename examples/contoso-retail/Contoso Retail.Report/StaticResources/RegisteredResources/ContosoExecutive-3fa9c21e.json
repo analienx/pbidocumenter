@@ -1,0 +1,204 @@
+{
+  "name": "ContosoExecutive-3fa9c21e.json",
+  "dataColors": [
+    "#2563EB",
+    "#7C3AED",
+    "#0F766E",
+    "#94A3B8",
+    "#B45309",
+    "#15803D",
+    "#B91C1C",
+    "#64748B"
+  ],
+  "background": "#F6F8FB",
+  "foreground": "#172033",
+  "tableAccent": "#2563EB",
+  "good": "#15803D",
+  "neutral": "#B45309",
+  "bad": "#B91C1C",
+  "maximum": "#2563EB",
+  "center": "#7C3AED",
+  "minimum": "#DBEAFE",
+  "null": "#94A3B8",
+  "textClasses": {
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 16,
+      "color": "#172033",
+      "fontWeight": "bold"
+    },
+    "header": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#172033",
+      "fontWeight": "bold"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#64748B"
+    },
+    "callout": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 28,
+      "color": "#172033",
+      "fontWeight": "bold"
+    }
+  },
+  "foregroundNeutralSecondary": "#64748B",
+  "foregroundNeutralTertiary": "#94A3B8",
+  "backgroundLight": "#EEF2F7",
+  "backgroundNeutral": "#F1F5F9",
+  "accent": "#2563EB",
+  "shapeStroke": "#E2E8F0",
+  "mapPushpin": "#0F766E",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#E2E8F0"
+              }
+            },
+            "radius": 8,
+            "width": 1
+          }
+        ],
+        "title": [
+          {
+            "show": true,
+            "fontColor": {
+              "solid": {
+                "color": "#172033"
+              }
+            },
+            "fontFamily": "'Segoe UI Semibold'",
+            "fontSize": 13
+          }
+        ],
+        "visualHeader": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "tableEx": {
+      "*": {
+        "stylePreset": [
+          {
+            "name": "Minimal"
+          }
+        ],
+        "grid": [
+          {
+            "outlineColor": {
+              "solid": {
+                "color": "#E2E8F0"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "pivotTable": {
+      "*": {
+        "stylePreset": [
+          {
+            "name": "Minimal"
+          }
+        ],
+        "grid": [
+          {
+            "outlineColor": {
+              "solid": {
+                "color": "#E2E8F0"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "outspace": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F6F8FB"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "outspacePane": [
+          {
+            "width": 280,
+            "backgroundColor": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "border": true,
+            "borderColor": {
+              "solid": {
+                "color": "#E2E8F0"
+              }
+            },
+            "foregroundColor": {
+              "solid": {
+                "color": "#172033"
+              }
+            },
+            "fontFamily": "Segoe UI",
+            "headerSize": 14,
+            "titleSize": 11,
+            "searchTextSize": 11,
+            "inputBoxColor": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "checkboxAndApplyColor": {
+              "solid": {
+                "color": "#2563EB"
+              }
+            }
+          }
+        ],
+        "filterCard": [
+          {
+            "$id": "Applied",
+            "backgroundColor": {
+              "solid": {
+                "color": "#ECFDF3"
+              }
+            }
+          },
+          {
+            "$id": "Available",
+            "backgroundColor": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

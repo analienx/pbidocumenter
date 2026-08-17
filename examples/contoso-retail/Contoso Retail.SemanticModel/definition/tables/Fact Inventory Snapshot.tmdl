@@ -2,12 +2,12 @@
 table 'Fact Inventory Snapshot'
 
 	/// Units available at month-end.
-	measure 'Units On Hand' = SUM ( 'Fact Inventory Snapshot'[Units On Hand] )
+	measure 'Inventory Units On Hand' = SUM ( 'Fact Inventory Snapshot'[Units On Hand] )
 		formatString: #,0
 		displayFolder: Inventory
 
 	/// Carrying value of stock available at month-end.
-	measure 'Inventory Value' = SUM ( 'Fact Inventory Snapshot'[Inventory Value] )
+	measure 'Inventory Carrying Value' = SUM ( 'Fact Inventory Snapshot'[Inventory Value] )
 		formatString: $#,0;($#,0);$#,0
 		displayFolder: Inventory
 
@@ -17,12 +17,12 @@ table 'Fact Inventory Snapshot'
 		displayFolder: Inventory
 
 	/// Approximate weeks of cover using current reporting-year demand.
-	measure 'Weeks of Supply' = DIVIDE ( [Units On Hand], DIVIDE ( [Reporting Year Units], 52 ) )
+	measure 'Weeks of Supply' = DIVIDE ( [Inventory Units On Hand], DIVIDE ( [Reporting Year Units], 52 ) )
 		formatString: 0.0
 		displayFolder: Inventory
 
 	/// Annualized sell-through proxy: reporting-year units moved divided by units currently on hand.
-	measure 'Inventory Turnover' = DIVIDE ( [Reporting Year Units], [Units On Hand] )
+	measure 'Inventory Turnover' = DIVIDE ( [Reporting Year Units], [Inventory Units On Hand] )
 		formatString: 0.0
 		displayFolder: Inventory
 		lineageTag: cdea4485-e9ce-44d4-a825-25308198ab74

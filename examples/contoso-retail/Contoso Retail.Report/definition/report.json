@@ -11,7 +11,7 @@
       "type": "SharedResources"
     },
     "customTheme": {
-      "name": "ContosoExecutive-4f18b4d2.json",
+      "name": "ContosoExecutive-3fa9c21e.json",
       "reportVersionAtImport": {
         "visual": "2.9.0",
         "page": "2.1.0",
@@ -26,8 +26,8 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "ContosoExecutive-4f18b4d2.json",
-          "path": "ContosoExecutive-4f18b4d2.json",
+          "name": "ContosoExecutive-3fa9c21e.json",
+          "path": "ContosoExecutive-3fa9c21e.json",
           "type": "CustomTheme"
         }
       ]

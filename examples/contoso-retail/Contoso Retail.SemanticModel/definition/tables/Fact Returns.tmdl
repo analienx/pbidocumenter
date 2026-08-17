@@ -2,7 +2,7 @@
 table 'Fact Returns'
 
 	/// Monetary value returned by customers.
-	measure 'Return Amount' = SUM ( 'Fact Returns'[Return Amount] )
+	measure 'Return Value' = SUM ( 'Fact Returns'[Return Amount] )
 		formatString: $#,0;($#,0);$#,0
 		displayFolder: Returns
 
@@ -17,12 +17,12 @@ table 'Fact Returns'
 		displayFolder: Returns
 
 	/// Returned value as a proportion of gross sales.
-	measure 'Return Rate %' = DIVIDE ( [Return Amount], [Sales Amount] )
+	measure 'Return Rate %' = DIVIDE ( [Return Value], [Sales Amount] )
 		formatString: 0.0%;(0.0%);0.0%
 		displayFolder: Returns
 
 	/// Sales remaining after return value is deducted.
-	measure 'Net Sales After Returns' = [Sales Amount] - [Return Amount]
+	measure 'Net Sales After Returns' = [Sales Amount] - [Return Value]
 		formatString: $#,0;($#,0);$#,0
 		displayFolder: Returns
 
