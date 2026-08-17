@@ -10,11 +10,27 @@ expression fnSeasonalityFactor = (month as number) as number => {0.90, 0.94, 1.0
 
 	annotation PBI_ResultType = Function
 
-expression stgProductEconomics = #table(type table [#"Product Key" = Int64.Type, #"Unit Price" = Currency.Type, #"Cost Rate" = number], {{1, 1180, 0.66}, {2, 980, 0.68}, {3, 760, 0.63}, {4, 640, 0.70}, {5, 220, 0.57}, {6, 280, 0.61}, {7, 190, 0.72}, {8, 150, 0.60}})
+/// Staged product economics used to enrich sales lines with margin and seasonality context.
+expression stgProductEconomics =
+		let
+		    Source = #table(type table [#"Product Key" = Int64.Type, #"Unit Price" = Currency.Type, #"Cost Rate" = number], {{1, 1180, 0.66}, {2, 980, 0.68}, {3, 760, 0.63}, {4, 640, 0.70}, {5, 220, 0.57}, {6, 280, 0.61}, {7, 190, 0.72}, {8, 150, 0.60}}),
+		    #"Changed Types" = Table.TransformColumnTypes(Source, {{#"Product Key", Int64.Type}, {#"Unit Price", Currency.Type}, {#"Cost Rate", number}}),
+		    #"Added Gross Margin" = Table.AddColumn(#"Changed Types", "Gross Margin %", each 1 - [Cost Rate], Percentage.Type),
+		    #"Added Holiday Seasonality" = Table.AddColumn(#"Added Gross Margin", "Holiday Seasonality", each fnSeasonalityFactor(12), type number)
+		in
+		    #"Added Holiday Seasonality"
 
 	annotation PBI_ResultType = Table
 
-expression stgSalesPlan = #table(type table [Year = Int64.Type, #"Growth Rate" = number], {{2023, 1.00}, {2024, 1.10}, {2025, 1.21}})
+/// Annual sales plan with growth rate derived from a base plan value, prepared for budget load.
+expression stgSalesPlan =
+		let
+		    Base = #table(type table [Year = Int64.Type, #"Plan Value" = Currency.Type], {{2023, 1000000}, {2024, 1100000}, {2025, 1210000}}),
+		    #"Changed Types" = Table.TransformColumnTypes(Base, {{"Year", Int64.Type}, {"Plan Value", Currency.Type}}),
+		    #"Added Growth Rate" = Table.AddColumn(#"Changed Types", "Growth Rate", each [Plan Value] / 1000000, type number),
+		    #"Selected Columns" = Table.SelectColumns(#"Added Growth Rate", {"Year", "Growth Rate"})
+		in
+		    #"Selected Columns"
 
 	annotation PBI_ResultType = Table
 
