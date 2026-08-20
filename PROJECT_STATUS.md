@@ -14,6 +14,8 @@ CI-health issues #6 and #8 were resolved before this bootstrap rollout was final
 
 The task issue and its newest comments are authoritative for the current objective, tool requirements and acceptance criteria.
 
+<!-- temporary CI base refresh marker; removed immediately -->
+
 ## Supervisor acceptance rule
 
 Do not accept completion from source edits alone. Where required by the task, verify:
