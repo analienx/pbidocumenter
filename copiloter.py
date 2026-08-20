@@ -347,7 +347,7 @@ class TmdlParser:
         if not text:
             return result
 
-        m = re.match(r"^table\s+(?:'([^']+)'|(\S+))", text, re.MULTILINE)
+        m = re.search(r"^table\s+(?:'([^']+)'|(\S+))", text, re.MULTILINE)
         if m:
             result["name"] = m.group(1) or m.group(2)
 
