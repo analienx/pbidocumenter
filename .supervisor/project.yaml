@@ -4,11 +4,15 @@ repo: analienx/pbidocumenter
 lifecycle: active
 
 canonical_skill:
+  source: external_github
   repo: analienx/config
+  ref: main
   path: skills/supervisor-executor/SKILL.md
 
 registry:
+  source: external_github
   repo: analienx/config
+  ref: main
   path: supervisor/projects.yaml
 
 context:
