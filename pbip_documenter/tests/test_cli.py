@@ -20,15 +20,20 @@ def test_generates_document_for_direct_project_path(tmp_path: Path) -> typing.An
 def test_contoso_sample_models_a_star_schema() -> typing.Any:
     summary = build_project_summary(PbipProject(EXAMPLE_DIR))
     model = summary["semantic_model"]
+    table_names = {table["name"] for table in model["tables"]}
 
-    assert {table["name"] for table in model["tables"]} == {
+    # The showcase model intentionally expands beyond the original five-table
+    # star schema. Keep the core-star regression while allowing new dimensions
+    # and facts to be added by the active Contoso expansion work.
+    assert None not in table_names
+    assert {
         "Dim Customer",
         "Dim Date",
         "Dim Product",
         "Dim Store",
         "Fact Sales",
-    }
-    assert model["relationship_count"] == 4
+    } <= table_names
+    assert model["relationship_count"] >= 4
     assert model["total_measures"] >= 6
 
 

@@ -3,10 +3,10 @@
 import json
 import re
 import shutil
+import sys
 import time
 import typing
 import webbrowser
-import winreg
 from pathlib import Path
 
 from pbip_documenter.downloads.config import DownloadConfig, DownloadTarget
@@ -24,6 +24,13 @@ class DownloadService:
     @staticmethod
     def _get_windows_downloads_dir() -> typing.Any:
         """Resolve real Windows Downloads folder, including redirected folders."""
+        if sys.platform != "win32":
+            raise RuntimeError("SharePoint browser download monitoring requires Windows.")
+
+        # winreg is available only on Windows. Keep the import local so the
+        # package and its tests remain importable on Linux/macOS.
+        import winreg
+
         key_path = r"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
         downloads_guid = "{<UUID_097>}"
         with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_path) as key:
