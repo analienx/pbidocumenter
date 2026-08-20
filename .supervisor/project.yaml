@@ -24,6 +24,7 @@ control:
   primary_issue: 4
   active_streams:
     contoso-showcase: 4
+    linux-ci-winreg: 6
 
 executor:
   environment: windows_workstation
