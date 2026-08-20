@@ -1,4 +1,29 @@
-# Repository Guidelines
+# Agent instructions — `analienx/pbidocumenter`
+
+## Mandatory Supervisor ↔ Executor bootstrap
+
+Before supervising or executing supervised work in this repository, read the latest:
+
+`analienx/config:skills/supervisor-executor/SKILL.md`
+
+Then read:
+
+1. `analienx/config:supervisor/projects.yaml`;
+2. `.supervisor/project.yaml`;
+3. this file;
+4. `SUPERVISOR.md` or `EXECUTOR.md` according to role;
+5. `PROJECT_STATUS.md`;
+6. project-specific design/architecture docs named by the active issue;
+7. the assigned issue and its **newest comments**;
+8. referenced PR/commit/CI/rendered evidence.
+
+Do not rely on cached global workflow text.
+
+The canonical skill governs coordination. This repository specializes it for PBIP/PBIR engineering. An Executor task may explicitly delegate implementation through local tools such as SemanticOps or PBIR Toolkit; when delegated, read current state first, use required tool APIs rather than bypassing them silently, validate each meaningful batch, preserve unrelated local work, and report exact evidence.
+
+The repository default branch is currently `feature/expand-contoso-pbip`. Never silently assume `main` is the authoritative target; use the task/PR base explicitly.
+
+`.` means the canonical `supervise_latest` operation: resolve the active PBIP Documenter stream from context/registry, fetch newest issue comments, inspect referenced implementation/CI/rendered output, take the necessary supervisory action, and return a compact status without asking the user to relay Executor messages.
 
 ## Project Structure & Module Organization
 
@@ -26,4 +51,4 @@ Use pytest and add focused tests beside the existing suite. Name files `test_<fe
 
 ## Commit & Pull Request Guidelines
 
-No formal commit-message policy is configured. Use short, imperative subjects such as `Add Jira normalization fallback`, and keep each commit scoped to one logical change. Pull requests should explain purpose and behavior changes, list validation commands, link relevant issues, and include sample output or screenshots when generated Word layout changes. Do not commit real client reports, credentials, tokens, or generated build artifacts.
+No formal commit-message policy is configured. Use short, imperative subjects such as `Add Jira normalization fallback`, and keep each commit scoped to one logical change. Pull requests should explain purpose and behavior changes, list validation commands, link relevant issues, and include sample output or screenshots when generated Word layout changes. Do not commit real client reports, credentials, tokens, cache contents, or generated build/private artifacts.
