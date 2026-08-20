@@ -7,7 +7,6 @@ from copiloter import PbipProject, build_project_summary
 from pbip_documenter.cli import main
 
 EXAMPLE_DIR = Path(__file__).parents[2] / "examples" / "contoso-retail"
-# Temporary dependency-stack refresh marker; removed immediately.
 
 
 def test_generates_document_for_direct_project_path(tmp_path: Path) -> typing.Any:
