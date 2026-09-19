@@ -25,7 +25,7 @@ def _setup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, unsaved: bool = F
     report = project / 'Contoso Retail.Report'
     ids = load(report / 'definition/pages/pages.json')['pageOrder']
     calibration = tmp_path / 'calibration.json'
-    calibration.write_text(json.dumps({'native_pixels': [1400, 900], 'rect': [0, 100, 1280, 720]}))
+    calibration.write_text(json.dumps({'native_pixels': [1400, 900], 'rect': [0, 100, 1280, 720], 'scale_one_canvas_pixels': [640, 360]}))
     cli = tmp_path / 'bridge.cmd'
     cli.write_text('stub', encoding='utf-8')
     instance = {'pid': 42, 'bridgeStatus': 'connected', 'currentFilePath': str(pbip),
@@ -74,7 +74,18 @@ def test_bridge_requires_calibration_and_current_inventory(tmp_path, monkeypatch
     with pytest.raises(ValueError, match='inventories differ'):
         bridge.capture(report, pbip, tmp_path / 'renders', pid=42, cli=cli, crop=calibration)
     state['pages'] = [{'id': i} for i in load(report / 'definition/pages/pages.json')['pageOrder']]
-    calibration.write_text(json.dumps({'native_pixels': [1400, 900], 'rect': [0, 100, 1250, 720]}))
-    with pytest.raises(ValueError, match='canvas ratio'):
+    calibration.write_text(json.dumps({'native_pixels': [1400, 900], 'rect': [0, 100, 1250, 720], 'scale_one_canvas_pixels': [640, 360]}))
+    with pytest.raises(ValueError, match='scale-one calibration'):
+        bridge.capture(report, pbip, tmp_path / 'renders', pid=42, cli=cli, crop=calibration)
+    assert not (tmp_path / 'renders' / 'capture-manifest.json').exists()
+
+
+def test_bridge_rejects_same_aspect_ratio_partial_canvas(tmp_path, monkeypatch):
+    """A truncated 16:9 crop is not a valid full 16:9 report canvas."""
+    report, pbip, cli, calibration, _ = _setup(tmp_path, monkeypatch)
+    calibration.write_text(json.dumps({
+        'native_pixels': [1400, 900], 'rect': [0, 100, 1024, 576],
+        'scale_one_canvas_pixels': [640, 360]}), encoding='utf-8')
+    with pytest.raises(ValueError, match='scale-one calibration'):
         bridge.capture(report, pbip, tmp_path / 'renders', pid=42, cli=cli, crop=calibration)
     assert not (tmp_path / 'renders' / 'capture-manifest.json').exists()

@@ -29,13 +29,13 @@ calibrate the **canvas** pixel rectangle at the intended Desktop viewport.
 For example, create a local calibration JSON for **your** exact screenshot:
 
 ```json
-{"native_pixels": [3915, 2394], "rect": [0, 330, 3074, 1730]}
+{"native_pixels": [3915, 2394], "rect": [0, 330, 3074, 1730], "scale_one_canvas_pixels": [1537, 865]}
 ```
 
 These are measured example coordinates, NOT portable defaults. `rect` is
 `[left, top, width, height]` in the native Bridge PNG. Recalibrate after a
 resolution, window, zoom, filter-pane or Desktop layout change. The adapter
-requires the crop's aspect ratio to match the PBIR page to within 1% and the
+requires an independently measured full-canvas size at scale 1; the crop at scale N must match N times those dimensions to within 2 pixels. A proportional partial crop can still have the correct 16:9 aspect ratio, so aspect ratio alone is insufficient. The adapter also requires the crop's aspect ratio to match the PBIR page to within 1% and the
 full native PNG to match the calibrated size on **every** captured page.
 
 ```powershell
@@ -67,13 +67,17 @@ that the corresponding visual is readable on screen.
 
 ## Verified limitations
 
-The Windows integration trial reached `report.snapshot.capture/v1` for a real
-Contoso page at scales 1 and 2. The raw output included Desktop chrome; a
-calibrated crop yielded a clean report canvas. The running Desktop session had
-`hasUnsavedChanges=true`, so the strict adapter rejected certification and did
-not create a source-bound manifest. This is an **incomplete release capture**,
-not a reason to waive provenance or mark the report approved. Initial model
-refresh reproducibility and independent visual approval are still required.
+A fresh, source-identical disposable PBIP with the synthetic import cache was
+opened without manual refresh. The Desktop Bridge captured **all five populated
+Contoso pages** at scale 2. Its raw output includes Desktop chrome: an early
+partial-width crop falsely made the rightmost slicer and KPI look clipped. The
+corrected 3074-by-1730 canvas was visually inspected and bound to the exact
+report/model source digest; the capture adapter now requires an independently
+measured scale-one canvas width and height as well as a valid aspect ratio.
+This catches that observed undersized-crop regression but cannot replace checking
+the calibration visually after viewport changes. The existing per-page visual
+review is intentionally stale and blocks release; Desktop bulk refresh remains
+unresolved even though the bundled synthetic cache restores first-open data.
 
 Power BI Desktop Bridge is a preview and may change its method manifest or
 capture behavior. Inspect the actual build rather than relying on package or

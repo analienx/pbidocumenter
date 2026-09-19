@@ -70,5 +70,5 @@ def test_populated_images_do_not_override_open_visual_review() -> None:
     assert result["geometry_pass"] and result["captures_pass"]
     assert not result["visual_review_pass"] and not result["release_ready"]
     assert len(result["visual_review"]) == 5
-    assert all(item["status"] == "needs_changes" and item["issues"]
+    assert all(item["status"] == "missing_or_stale"
                for item in result["visual_review"])

@@ -1,18 +1,28 @@
 {
-  "schema": 1,
-  "source_sha256": "62c8b7eccde85587c45ac9657bcd807fb9d4fe2d8de3bc03610c2442dcec2ad2",
-  "captured_at_utc": "2026-09-19T09:02:20.023294+00:00",
-  "capture": "Power BI Desktop, disposable same-digest project; five populated report pages; UIA report canvas crop",
-  "canvas_pixels": [
-    1537,
-    866
-  ],
-  "files": {
-    "01-executive-performance.png": "d80ac2fd435e6b05e0383e83eba40e20467c9d5fed37300dc19a867695ed9e73",
-    "02-markets-stores.png": "ec2f2aa7331ae56d73b7847417f3427049f8da1af8f57f629aaeba9c24c0535e",
-    "03-products-brands.png": "855cf28934e67c09b62afbbf3b768022cc85c0b4accd1e544fad6d7b0fe21ae3",
-    "04-customers-value.png": "febff2d973b19f569471fd74c62b43012fdc43dd08599e9b2a3c7c338a62f379",
-    "05-operations-risk.png": "5c13d22f662a4fffb242efae046f531a06ecdd3ca049710a95fab19235aece1a"
-  },
-  "readiness": "Render evidence only; visual-design review, source refresh reproducibility, document generation and merge acceptance remain separate."
+    "schema":  1,
+    "source_sha256":  "41d760026caf990b48f0dd6eb538acb4dc062007d08e5203af9bb4e18d905477",
+    "captured_at_utc":  "2026-09-19T18:06:27.677081+00:00",
+    "capture":  "Desktop Bridge 0.1.2 with explicit PID, calibrated canvas crop",
+    "native_pixels":  [
+                          3915,
+                          2394
+                      ],
+    "canvas_crop":  [
+                        0,
+                        330,
+                        3074,
+                        1730
+                    ],
+    "canvas_pixels":  [
+                          3074,
+                          1730
+                      ],
+    "files":  {
+                  "01-executive-performance.png":  "ad5a31736ab12c39c55f788e416f811699fb5675ea7d7a3ab2059dbd62afcd84",
+                  "02-markets-stores.png":  "5143bf68748d143814cbd8dc04e5a1d3f06df1f43a1f67a22eda9aa173df89a7",
+                  "03-products-brands.png":  "068d9a4cfa0b64df416dc8049e2b43c77a848e22fbfa4045700514ce9a7c977f",
+                  "04-customers-value.png":  "66880e8f0c48e04782930314e6bac2dfe780fc1f78706dd18c460cd935ce31c9",
+                  "05-operations-risk.png":  "6d9cd04d54596b8ba0699d8948fe08562bb3449ec7f37494af1221e3a9d78ef6"
+              },
+    "readiness":  "Rendered evidence only; no visual, model or data acceptance."
 }

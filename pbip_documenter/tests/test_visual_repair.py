@@ -17,12 +17,30 @@ REPORT = ROOT / "Contoso Retail.Report"
 SHOTS = ROOT / "screenshots"
 VISUAL = "product-quality-growth"
 PAGE = "Products_brands"
+DEFECTIVE_SCATTER = Path(__file__).parent / "fixtures" / "defective-products-scatter.json"
 
 
 def _candidate(tmp_path: Path) -> Path:
     target = tmp_path / "Contoso Retail.Report"
     shutil.copytree(REPORT, target)
     shutil.copytree(ROOT / "Contoso Retail.SemanticModel", tmp_path / "Contoso Retail.SemanticModel")
+    visuals = target / "definition" / "pages" / PAGE / "visuals"
+    shutil.copy2(DEFECTIVE_SCATTER, visuals / VISUAL / "visual.json")
+    # The repair recipe needs the original, deliberately cramped chart geometry.
+    for name in ("card-00f9592e", "card-21ffa979", "card-98a5cc50", "card-da940bf9"):
+        file = visuals / name / "visual.json"
+        item = json.loads(file.read_text(encoding="utf-8"))
+        item["position"]["y"] = 136
+        file.write_text(json.dumps(item), encoding="utf-8")
+    for name in ("product-category", "product-year"):
+        file = visuals / name / "visual.json"
+        item = json.loads(file.read_text(encoding="utf-8"))
+        item["position"]["height"] = 120
+        file.write_text(json.dumps(item), encoding="utf-8")
+    file = visuals / "product-promo-economics" / "visual.json"
+    item = json.loads(file.read_text(encoding="utf-8"))
+    item["position"].update(y=300, height=180)
+    file.write_text(json.dumps(item), encoding="utf-8")
     return target
 
 
@@ -44,7 +62,7 @@ def test_visual_crops_are_source_bound_and_resolve_to_pbir(tmp_path: Path) -> No
     p = next(p for p in manifest["pages"] if p["id"] == PAGE)
     crops = verified_visuals(tmp_path, source_digest(REPORT), PAGE, p["image_sha256"])
     target = next(v for v in crops if v["id"] == VISUAL)
-    assert target["type"] == "scatterChart"
+    assert target["type"] == "clusteredBarChart"
     assert target["roles"]["Y"] == ["Fact Sales.Reporting Year GM %"]
     assert digest(tmp_path / target["crop"]) == target["crop_sha256"]
     (tmp_path / target["crop"]).write_bytes(b"tampered")

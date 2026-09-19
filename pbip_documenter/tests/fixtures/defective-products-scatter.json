@@ -3,14 +3,14 @@
   "name": "product-quality-growth",
   "position": {
     "x": 24,
-    "y": 264,
+    "y": 300,
     "z": 0,
-    "height": 216,
+    "height": 180,
     "width": 608,
     "tabOrder": 0
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "scatterChart",
     "query": {
       "queryState": {
         "Category": {
@@ -32,6 +32,43 @@
             }
           ]
         },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year Sales"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year Sales",
+              "nativeQueryRef": "Reporting Year Sales"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year Sales YoY %"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year Sales YoY %",
+              "nativeQueryRef": "Reporting Year Sales YoY %",
+              "active": true
+            }
+          ]
+        },
         "Y": {
           "projections": [
             {
@@ -49,39 +86,6 @@
               "nativeQueryRef": "Reporting Year GM %"
             }
           ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Fact Sales"
-                    }
-                  },
-                  "Property": "Reporting Year Sales YoY %"
-                }
-              },
-              "queryRef": "Fact Sales.Reporting Year Sales YoY %",
-              "nativeQueryRef": "Reporting Year Sales YoY %",
-              "active": true
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Fact Sales"
-                    }
-                  },
-                  "Property": "Reporting Year Sales"
-                }
-              },
-              "queryRef": "Fact Sales.Reporting Year Sales",
-              "nativeQueryRef": "Reporting Year Sales"
-            }
-          ]
         }
       },
       "sortDefinition": {
@@ -94,7 +98,7 @@
                     "Entity": "Fact Sales"
                   }
                 },
-                "Property": "Reporting Year GM %"
+                "Property": "Reporting Year Sales YoY %"
               }
             },
             "direction": "Descending"
@@ -117,7 +121,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Gross margin by brand'"
+                  "Value": "'Portfolio: growth vs margin by brand'"
                 }
               }
             }
@@ -138,34 +142,6 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true,
-    "objects": {
-      "categoryAxis": [
-        {
-          "properties": {
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "valueAxis": [
-        {
-          "properties": {
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
+    "drillFilterOtherVisuals": true
   }
 }

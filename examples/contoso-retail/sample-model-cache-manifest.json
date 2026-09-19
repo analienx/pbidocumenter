@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "fixture": "Contoso Retail synthetic demo",
+  "source_sha256": "4e60829cce3916420b31c2a698bdd2c4676538ff66973ebdfde571ad026fecd9",
+  "cache_sha256": "c5ec5d8afe719387390338b136d7fce207fa7aeabe60fadba2b3a8649a4b67ef",
+  "cache_bytes": 201479,
+  "imported_tables": 12,
+  "verified_sales_rows": 1440,
+  "generated_from": "Power BI Desktop model after 12 individual partition refreshes",
+  "scope": "Sample-only first-open snapshot; not a fix for Desktop bulk-refresh errors"
+}

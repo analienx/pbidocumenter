@@ -218,5 +218,5 @@ def test_iteration_repeats_render_review_and_repair_until_pass(tmp_path: Path) -
             "workspace": str(workspace), "fixer_id": "fixer", "max_rounds": 3}
     with patch("pbip_documenter.visual_quality.runner._adapter", side_effect=adapter):
         result = iterate(spec)
-    assert result["outcome"] == "passed" and len(result["rounds"]) == 2
+    assert result["outcome"] == "passed" and len(result["rounds"]) == 2, result
     assert calls == ["renderer", "reviewer", "fixer", "renderer", "reviewer"]

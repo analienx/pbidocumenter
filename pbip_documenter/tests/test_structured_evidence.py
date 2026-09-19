@@ -17,13 +17,15 @@ def test_context_contains_exact_page_and_visual_inventory():
     assert 'not visual or data approval' in result['kind']
 
 
-def test_context_preserves_scatter_roles_without_inventing_formats():
+def test_context_preserves_repaired_bar_roles_and_explicit_formats():
     page = next(p for p in report_context(REPORT)['pages'] if p['id'] == 'Products_brands')
     chart = next(v for v in page['visuals'] if v['visual_id'] == 'product-quality-growth')
-    assert chart['visual_type'] == 'scatterChart'
-    assert chart['field_bindings']['X'][0]['query_ref'] == 'Fact Sales.Reporting Year Sales YoY %'
+    assert chart['visual_type'] == 'clusteredBarChart'
+    assert chart['field_bindings']['Category'][0]['query_ref'] == 'Dim Product.Brand'
     assert chart['field_bindings']['Y'][0]['query_ref'] == 'Fact Sales.Reporting Year GM %'
-    assert chart['configured_visual_properties'] == []
+    assert {x['path'] for x in chart['configured_visual_properties']} == {
+        'visual.objects.categoryAxis[0].properties.showAxisTitle.expr.Literal.Value',
+        'visual.objects.valueAxis[0].properties.showAxisTitle.expr.Literal.Value'}
     assert chart['evidence_limits']['pixel_readability'] == 'requires fresh rendered image'
     assert chart['evidence_limits']['data_values'] == 'requires a live semantic-model query'
 

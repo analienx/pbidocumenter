@@ -23,3 +23,19 @@ strict per-page image observations and automatic repair adapters), see
 [Visual Quality System](../../docs/VISUAL_QUALITY_SYSTEM.md). This new gate
 does not convert the sample's outstanding visual-review findings into approval.
 For the complete run and repository guide, see the [root README](../../README.md).
+
+## Included synthetic data snapshot
+
+The sample includes `Contoso Retail.SemanticModel/.pbi/cache.abf` (about 201 KB), a
+Power BI Desktop import snapshot containing **only this sample's synthetic data**.
+It was independently checked by opening the original PBIR/TMDL with **only this
+cache added**: all five report pages became populated immediately. Removing
+only the cache reproduces Desktop's empty-first-open state on the tested build.
+`sample-model-cache-manifest.json` binds the snapshot to its semantic definition;
+the fixture test fails if the model source changes without regenerating it.
+This binary is a sample bootstrap, **not a portable substitute for refresh**:
+Power BI versions can invalidate caches, and Desktop bulk refresh still reports
+cyclic-reference errors on this test setup. Individual partition refresh via
+SemanticOps has loaded all 12 tables successfully. Do not use this synthetic
+cache or any cached business data as a general-purpose report distribution
+strategy; verify source connectivity, freshness and repeatable refresh separately.

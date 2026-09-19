@@ -3,9 +3,9 @@
   "name": "product-promo-economics",
   "position": {
     "x": 648,
-    "y": 300,
+    "y": 264,
     "z": 0,
-    "height": 180,
+    "height": 216,
     "width": 608,
     "tabOrder": 0
   },
@@ -116,7 +116,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Promotion mix and margin dilution'"
+                  "Value": "'Sales share by promotion type'"
                 }
               }
             }
@@ -137,6 +137,34 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

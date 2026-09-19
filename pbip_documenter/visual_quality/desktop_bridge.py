@@ -64,7 +64,14 @@ def capture(report: Path, pbip: Path, renders: Path, *, pid: int,
         not all(type(x) is int and x > 0 for x in native) or
         not all(type(x) is int and x >= 0 for x in box)):
         raise ValueError('Invalid native screenshot dimensions or crop rectangle')
+    reference = calibration.get('scale_one_canvas_pixels')
+    if (not isinstance(reference, list) or len(reference) != 2 or
+        not all(type(value) is int and value > 0 for value in reference)):
+        raise ValueError('Canvas calibration requires independently measured scale_one_canvas_pixels')
     x, y, width, height = box
+    if (abs(width - reference[0] * scale) > 2 or
+        abs(height - reference[1] * scale) > 2):
+        raise ValueError('Canvas crop dimensions disagree with independent scale-one calibration')
     if (not width or not height or x + width > native[0] or y + height > native[1]):
         raise ValueError('Canvas crop lies outside the calibrated screenshot')
     import re
