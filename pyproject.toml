@@ -47,6 +47,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+visual = ["Pillow>=10.0"]
 augmentation = [
     "pandas>=1.5.0",
     "pyarrow>=12.0.0",
@@ -107,7 +108,7 @@ py-modules = ["copiloter"]
 version = {attr = "pbip_documenter.version.__version__"}
 
 [tool.setuptools.package-data]
-pbip_documenter = ["py.typed"]
+pbip_documenter = ["py.typed", "visual_quality/*.mjs"]
 
 [tool.ruff]
 target-version = "py310"

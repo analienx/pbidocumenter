@@ -17,6 +17,7 @@ from pathlib import Path
 
 from .evidence import digest, load, png_size, verify_review
 from .policy import CRITERIA, OPTIONAL, POLICY_VERSION, REQUIRED
+from .visual_evidence import verified_visuals
 
 SYSTEM_PROMPT = """You are an INDEPENDENT visual QA reviewer, not the report generator.
 Examine the supplied rendered page at its actual intended display size, not
@@ -26,6 +27,11 @@ Evaluate color meaning, contrast, hierarchy, spacing, inner padding, chart
 appropriateness, axis tick count and distinctness, useful/nonredundant axis
 titles, clipping, unnecessary scrollbars, table fit, consistency and narrative.
 A semantically wrong but attractive graphic FAILS. Empty charts FAIL.
+Apply a publication-quality bar: a redundant technical measure name on an axis,
+a table occupying only a fraction of its large panel, or a chart with hidden
+essential categories is a defect even when other visuals are readable.
+Report only visible symptoms; do not assert that DAX, data binding or model
+refresh is broken based on a screenshot. Root causes require separate verification.
 Return exactly JSON {"observations": [{"id":..., "status":"pass|fail|not_applicable",
 "reason":..., "severity":"critical|high|medium|low" or null,
 "region":[x0,y0,x1,y1] or null, "visual_id":..., "proposed_fix":...}]}.
@@ -92,6 +98,17 @@ def review_with_model(request_file: Path, renders: Path, output: Path, *,
                 raise ValueError("Reference style image is stale or invalid")
             content += [{"type": "text", "text": "First-page reference for cross-page theme consistency:"},
                         _image(renders / first)]
+        focused = verified_visuals(renders, template["source_sha256"], page["id"], page["image_sha256"]) if surface == "report" else []
+        priority = {"scatterChart": 0, "tableEx": 1, "lineChart": 2}
+        focused = sorted(focused, key=lambda item: priority.get(item["type"], 5))[:3]
+        for item in focused:
+            crop = renders / item["crop"]
+            content.append({"type": "text", "text": json.dumps({
+                "visual_id": item["id"], "visual_type": item["type"],
+                "field_bindings": item["roles"], "canvas_region": item["crop_box_normalized"],
+                "instruction": "Inspect this visual at full crop resolution. Attribute defects to its visual_id."},
+                ensure_ascii=False)})
+            content.append(_image(crop))
         payload = {"model": model, "temperature": 0,
                    "messages": [{"role": "system", "content": SYSTEM_PROMPT},
                                 {"role": "user", "content": content}]}
