@@ -79,3 +79,7 @@ updates.md
 # Docx files are ignored globally, except in Templates/
 *.docx
 !Templates/*.docx
+
+# Transient visual-review crops; keep the public report-page evidence tracked.
+**/screenshots/visual-crops/
+**/screenshots/visual-crops.json

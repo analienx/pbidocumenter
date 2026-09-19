@@ -124,3 +124,11 @@ claim a PBIR geometry diagram is a Desktop screenshot. The portable Word
 adapter requires the external tools described above. Report-model refresh,
 SemanticOps/PBIR schema validation, Word-content fidelity and merge approval
 remain separate release gates in addition to VQS.
+
+## API-first Power BI evidence and native Desktop capture
+
+Use [Desktop Bridge integration](VQS_DESKTOP_BRIDGE.md) for explicit-PID,
+source-bound capture, with a calibrated canvas crop that excludes Desktop chrome.
+The reviewer also receives [structured PBIR context](../pbip_documenter/visual_quality/structured_evidence.py)
+for each focused visual. Bridge captures and PBIR metadata complement rather
+than replace fresh rendered-image inspection and live semantic-model queries.

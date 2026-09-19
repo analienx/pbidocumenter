@@ -90,3 +90,7 @@ investigate disagreement; compare source-bound diagnostic files with
 `python -m pbip_documenter.visual_quality.consensus`. Agreement is not semantic
 proof, and contradictory findings trigger adjudication rather than silently
 approving the page or averaging model opinions.
+
+For API-first source context and native Power BI Desktop capture, see
+[Desktop Bridge integration](VQS_DESKTOP_BRIDGE.md). A Desktop Bridge raw PNG
+may contain editing chrome; its calibrated canvas-only image is the review input.

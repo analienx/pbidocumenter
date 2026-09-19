@@ -61,6 +61,7 @@ inventory = [
     "azure-keyvault-secrets>=4.7.0",
 ]
 dev = [
+    "Pillow>=10.0",
     "build>=1.2.0",
     "lxml-stubs>=0.5.0",
     "pandas-stubs>=2.0.0",
@@ -71,6 +72,7 @@ dev = [
     "mypy>=1.0.0",
 ]
 all = [
+    "Pillow>=10.0",
     "lxml-stubs>=0.5.0",
     "pandas-stubs>=2.0.0",
     "numpy<2.5",

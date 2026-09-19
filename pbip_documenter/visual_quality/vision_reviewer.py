@@ -105,7 +105,7 @@ def review_with_model(request_file: Path, renders: Path, output: Path, *,
             crop = renders / item["crop"]
             content.append({"type": "text", "text": json.dumps({
                 "visual_id": item["id"], "visual_type": item["type"],
-                "field_bindings": item["roles"], "canvas_region": item["crop_box_normalized"],
+                "field_bindings": item["roles"], "source_context": item.get("source_context"), "canvas_region": item["crop_box_normalized"],
                 "instruction": "Inspect this visual at full crop resolution. Attribute defects to its visual_id."},
                 ensure_ascii=False)})
             content.append(_image(crop))

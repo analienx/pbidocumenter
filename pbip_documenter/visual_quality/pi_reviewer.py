@@ -85,7 +85,7 @@ def _review_page(template: dict, page: dict, renders: Path, *, profile: Path,
               + json.dumps({"page_id": page["id"], "surface": template["surface"],
                             "checks": tasks, "visual_inventory": page.get("visual_inventory", []),
                             "focused_crops": [{"id": item["id"], "type": item["type"],
-                                                "bindings": item["roles"],
+                                                "bindings": item["roles"], "source_context": item.get("source_context"),
                                                 "page_region": item["crop_box_normalized"]}
                                                for item in crops]}, ensure_ascii=False))
     images = [{"path": str(image), "sha256": page["image_sha256"]}]

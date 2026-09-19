@@ -11,6 +11,7 @@ from pathlib import Path
 
 from .evidence import digest, load
 from .report import inspect_report_surface
+from .structured_evidence import visual_context
 
 
 def crop_report_visuals(report: Path, renders: Path, *, padding_px: int = 8) -> dict:
@@ -64,7 +65,7 @@ def crop_report_visuals(report: Path, renders: Path, *, padding_px: int = 8) -> 
                 page_record["visuals"].append({
                     "id": visual["name"], "type": visual.get("visual", {}).get("visualType", ""),
                     "pbir_file": str(visual_path.relative_to(report)).replace("\\", "/"),
-                    "position": pos, "roles": binding, "crop": str(target.relative_to(renders)).replace("\\", "/"),
+                    "position": pos, "roles": binding, "source_context": visual_context(visual), "crop": str(target.relative_to(renders)).replace("\\", "/"),
                     "crop_sha256": digest(target), "crop_box_px": box,
                     "crop_box_normalized": [round(v / divisor, 6) for v, divisor in
                                             zip(box, (width, height, width, height), strict=True)],

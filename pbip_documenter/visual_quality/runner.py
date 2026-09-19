@@ -88,6 +88,9 @@ def iterate(spec: dict) -> dict:
                    "round": str(len(history["rounds"]) + 1)}
         try:
             _adapter(spec, "renderer", context)
+            if surface == "report" and spec.get("crop_visuals") is True:
+                from .visual_evidence import crop_report_visuals
+                crop_report_visuals(source, renders)
             save(request_file, request(surface, source, renders, fixer_id))
             review.unlink(missing_ok=True)  # Reject a review left over from an earlier round.
             _adapter(spec, "reviewer", context)
