@@ -1,25 +1,30 @@
 /// Monthly inventory snapshot fact table at product-store-supplier grain.
 table 'Fact Inventory Snapshot'
+	lineageTag: 01d9fd07-7bce-4219-84ff-f1eef1d5ce19
 
 	/// Units available at month-end.
 	measure 'Inventory Units On Hand' = SUM ( 'Fact Inventory Snapshot'[Units On Hand] )
 		formatString: #,0
 		displayFolder: Inventory
+		lineageTag: dcb5ebaa-37c4-44a6-a64b-97af49aaa5e4
 
 	/// Carrying value of stock available at month-end.
 	measure 'Inventory Carrying Value' = SUM ( 'Fact Inventory Snapshot'[Inventory Value] )
 		formatString: $#,0;($#,0);$#,0
 		displayFolder: Inventory
+		lineageTag: 720c4f1d-5b5b-4b5f-8296-69279b7dc3be
 
 	/// Count of products with zero available units.
 	measure 'Stockout SKU Count' = CALCULATE ( DISTINCTCOUNT ( 'Fact Inventory Snapshot'[Product Key] ), 'Fact Inventory Snapshot'[Stockout Flag] = 1 )
 		formatString: #,0
 		displayFolder: Inventory
+		lineageTag: 8330ebdc-e44f-454e-ae29-17d7287529c9
 
 	/// Approximate weeks of cover using current reporting-year demand.
 	measure 'Weeks of Supply' = DIVIDE ( [Inventory Units On Hand], DIVIDE ( [Reporting Year Units], 52 ) )
 		formatString: 0.0
 		displayFolder: Inventory
+		lineageTag: a57b3b8a-f82c-441d-8d18-601a93c024e7
 
 	/// Annualized sell-through proxy: reporting-year units moved divided by units currently on hand.
 	measure 'Inventory Turnover' = DIVIDE ( [Reporting Year Units], [Inventory Units On Hand] )
@@ -39,33 +44,44 @@ table 'Fact Inventory Snapshot'
 		displayFolder: Inventory
 		lineageTag: 6e857aa1-08cb-4393-93f4-8da917e907c6
 
+	/// Count of inventory positions requiring attention due to either low-stock or excess-inventory exposure.
+	measure 'Stock Risk SKU Count' = [Low Stock SKU Count] + [Excess Inventory SKU Count]
+		formatString: #,0
+		displayFolder: Inventory Risk
+		lineageTag: c2cf552b-7de0-469a-af5c-728a90edc467
+
 	column 'Snapshot Date Key'
 		dataType: int64
 		isHidden
+		lineageTag: 0cb1bf21-732c-46ae-a88a-68f4519de4f9
 		summarizeBy: none
 		sourceColumn: Snapshot Date Key
 
 	column 'Product Key'
 		dataType: int64
 		isHidden
+		lineageTag: ef16292b-1453-4956-bd2e-0fcf47b136b2
 		summarizeBy: none
 		sourceColumn: Product Key
 
 	column 'Store Key'
 		dataType: int64
 		isHidden
+		lineageTag: 4be5e559-e342-47e3-b7ed-46f3a781d384
 		summarizeBy: none
 		sourceColumn: Store Key
 
 	column 'Supplier Key'
 		dataType: int64
 		isHidden
+		lineageTag: a0c6ddef-57ef-4514-839e-e2307b1d805f
 		summarizeBy: none
 		sourceColumn: Supplier Key
 
 	column 'Units On Hand'
 		dataType: int64
 		isHidden
+		lineageTag: 2fc2e899-e065-4de0-960d-b782f3ffd7f8
 		summarizeBy: sum
 		sourceColumn: Units On Hand
 
@@ -73,12 +89,14 @@ table 'Fact Inventory Snapshot'
 		dataType: decimal
 		isHidden
 		formatString: $#,0.00;($#,0.00);$#,0.00
+		lineageTag: 5bb1e77b-cc8a-43fd-9d65-f1c7fc9cc44b
 		summarizeBy: sum
 		sourceColumn: Inventory Value
 
 	column 'Stockout Flag'
 		dataType: int64
 		isHidden
+		lineageTag: a1da6a0b-aed0-43de-8be2-69c1f615dc9b
 		summarizeBy: none
 		sourceColumn: Stockout Flag
 

@@ -1,25 +1,30 @@
 /// Promotion dimension used to analyse campaign mix and return behaviour.
 table 'Dim Promotion'
+	lineageTag: f3aa9b3b-dade-42bd-b176-1698c8056f6c
 
 	column 'Promotion Key'
 		dataType: int64
 		isHidden
 		isKey
+		lineageTag: 6b81cff7-6b1c-4c40-9056-351c52c594a5
 		summarizeBy: none
 		sourceColumn: Promotion Key
 
 	column 'Promotion Name'
 		dataType: string
+		lineageTag: 41c4e8a3-a25f-410f-8d0f-68fac2445674
 		summarizeBy: none
 		sourceColumn: Promotion Name
 
 	column 'Promotion Type'
 		dataType: string
+		lineageTag: da5acd3d-79fe-4a7d-a51a-136394fd454d
 		summarizeBy: none
 		sourceColumn: Promotion Type
 
 	column 'Discount Band'
 		dataType: string
+		lineageTag: 85f149ca-e2e0-4336-8b34-3a3d77e42522
 		summarizeBy: none
 		sourceColumn: Discount Band
 

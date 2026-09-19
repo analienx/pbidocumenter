@@ -1,0 +1,128 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "market-employee-sales",
+  "position": {
+    "x": 440,
+    "y": 500,
+    "z": 0,
+    "height": 200,
+    "width": 400,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Employee"
+                    }
+                  },
+                  "Property": "Employee Name"
+                }
+              },
+              "queryRef": "Dim Employee.Employee Name",
+              "nativeQueryRef": "Employee Name",
+              "active": true
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year GM %"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year GM %",
+              "nativeQueryRef": "Reporting Year GM %"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year Sales"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year Sales",
+              "nativeQueryRef": "Reporting Year Sales"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fact Sales"
+                  }
+                },
+                "Property": "Reporting Year Sales"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Sales contribution by employee'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

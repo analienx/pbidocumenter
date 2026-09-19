@@ -1,13 +1,21 @@
 {
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "card-21ffa979",
+  "position": {
+    "x": 648,
+    "y": 136,
+    "z": 0,
+    "height": 140,
+    "width": 296,
+    "tabOrder": 0
+  },
   "visual": {
-    "visualType": "card",
+    "visualType": "cardVisual",
     "query": {
       "queryState": {
-        "Values": {
+        "Data": {
           "projections": [
             {
-              "queryRef": "Fact Sales.Reporting Year GM %",
               "field": {
                 "Measure": {
                   "Expression": {
@@ -18,6 +26,7 @@
                   "Property": "Reporting Year GM %"
                 }
               },
+              "queryRef": "Fact Sales.Reporting Year GM %",
               "nativeQueryRef": "Reporting Year GM %"
             }
           ]
@@ -42,132 +51,7 @@
         "isDefaultSort": true
       }
     },
-    "objects": {
-      "labels": [
-        {
-          "properties": {
-            "fontFamily": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Segoe UI Semibold'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "24D"
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryLabels": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
-      "background": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#111B2E'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "border": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#26364D'"
-                    }
-                  }
-                }
-              }
-            },
-            "width": {
-              "expr": {
-                "Literal": {
-                  "Value": "1D"
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "visualHeader": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
       "title": [
         {
           "properties": {
@@ -184,51 +68,24 @@
                   "Value": "'Gross margin'"
                 }
               }
-            },
-            "fontSize": {
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "fontFamily": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Segoe UI Semibold'"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#B7C2D4'"
-                    }
-                  }
-                }
-              }
-            },
-            "alignment": {
-              "expr": {
-                "Literal": {
-                  "Value": "'left'"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ]
-    }
-  },
-  "position": {
-    "x": 648,
-    "y": 104,
-    "width": 296,
-    "height": 96,
-    "z": 0,
-    "tabOrder": 0
-  },
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json"
+    },
+    "drillFilterOtherVisuals": true
+  }
 }

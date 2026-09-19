@@ -1,0 +1,138 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "exec-trend",
+  "position": {
+    "x": 24,
+    "y": 300,
+    "z": 0,
+    "height": 180,
+    "width": 816,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Date"
+                    }
+                  },
+                  "Property": "Year Month"
+                }
+              },
+              "queryRef": "Dim Date.Year Month",
+              "nativeQueryRef": "Year Month",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year Sales"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year Sales",
+              "nativeQueryRef": "Reporting Year Sales"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year Sales LY"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year Sales LY",
+              "nativeQueryRef": "Reporting Year Sales LY"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales Budget"
+                    }
+                  },
+                  "Property": "Sales Budget"
+                }
+              },
+              "queryRef": "Fact Sales Budget.Sales Budget",
+              "nativeQueryRef": "Sales Budget"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Dim Date"
+                  }
+                },
+                "Property": "Year Month"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Actual, budget and prior-year sales by month'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

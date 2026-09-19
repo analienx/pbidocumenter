@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "Executive_performance",
+  "displayName": "Executive performance",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "annotations": [
+    {
+      "name": "purpose",
+      "value": "Executive Overview"
+    }
+  ],
+  "objects": {
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F6F8FB'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

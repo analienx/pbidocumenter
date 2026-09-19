@@ -1,12 +1,15 @@
 expression pScenarioStartDate = #date(2023, 1, 1) meta [IsParameterQuery=true, Type="Date", IsParameterQueryRequired=true]
+	lineageTag: 0c26982f-9274-4aa7-9ba1-86257a0be991
 
 	annotation PBI_ResultType = Date
 
 expression pScenarioEndDate = #date(2025, 12, 31) meta [IsParameterQuery=true, Type="Date", IsParameterQueryRequired=true]
+	lineageTag: e5e4a694-c6d4-4004-b5a1-c9feac25f70a
 
 	annotation PBI_ResultType = Date
 
 expression fnSeasonalityFactor = (month as number) as number => {0.90, 0.94, 1.02, 1.05, 1.08, 1.13, 0.99, 1.01, 1.09, 1.18, 1.30, 1.48}{month - 1}
+	lineageTag: 923c2f95-437d-47ff-a1d0-c584c294feb9
 
 	annotation PBI_ResultType = Function
 
@@ -19,6 +22,7 @@ expression stgProductEconomics =
 		    #"Added Holiday Seasonality" = Table.AddColumn(#"Added Gross Margin", "Holiday Seasonality", each fnSeasonalityFactor(12), type number)
 		in
 		    #"Added Holiday Seasonality"
+	lineageTag: 64724671-af2b-4a5b-a725-e2e6571fa667
 
 	annotation PBI_ResultType = Table
 
@@ -31,6 +35,7 @@ expression stgSalesPlan =
 		    #"Selected Columns" = Table.SelectColumns(#"Added Growth Rate", {"Year", "Growth Rate"})
 		in
 		    #"Selected Columns"
+	lineageTag: 1daa70c4-ba35-438c-86da-7165c4537c03
 
 	annotation PBI_ResultType = Table
 

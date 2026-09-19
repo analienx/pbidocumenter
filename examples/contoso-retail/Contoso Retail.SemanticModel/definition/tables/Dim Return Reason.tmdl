@@ -1,20 +1,24 @@
 /// Return reason dimension used to separate quality, fulfilment, and preference issues.
 table 'Dim Return Reason'
+	lineageTag: 1266a636-cd8f-457f-af00-899a46159d16
 
 	column 'Return Reason Key'
 		dataType: int64
 		isHidden
 		isKey
+		lineageTag: ef5e20bf-dcf4-49fe-87cc-08a8feece83d
 		summarizeBy: none
 		sourceColumn: Return Reason Key
 
 	column 'Return Reason'
 		dataType: string
+		lineageTag: 363dfb7b-6354-47b2-9390-fa3ae9a83a74
 		summarizeBy: none
 		sourceColumn: Return Reason
 
 	column 'Reason Group'
 		dataType: string
+		lineageTag: 0b212240-b6f0-4ca1-9ec7-e812f3bf8ec5
 		summarizeBy: none
 		sourceColumn: Reason Group
 

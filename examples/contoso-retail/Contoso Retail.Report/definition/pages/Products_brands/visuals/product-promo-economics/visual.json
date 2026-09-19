@@ -1,0 +1,142 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "product-promo-economics",
+  "position": {
+    "x": 648,
+    "y": 300,
+    "z": 0,
+    "height": 180,
+    "width": 608,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Promotion"
+                    }
+                  },
+                  "Property": "Promotion Type"
+                }
+              },
+              "queryRef": "Dim Promotion.Promotion Type",
+              "nativeQueryRef": "Promotion Type",
+              "active": true
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Promo Margin Dilution pp"
+                }
+              },
+              "queryRef": "Fact Sales.Promo Margin Dilution pp",
+              "nativeQueryRef": "Promo Margin Dilution pp"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Promo GM %"
+                }
+              },
+              "queryRef": "Fact Sales.Promo GM %",
+              "nativeQueryRef": "Promo GM %"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Promo Sales %"
+                }
+              },
+              "queryRef": "Fact Sales.Promo Sales %",
+              "nativeQueryRef": "Promo Sales %"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fact Sales"
+                  }
+                },
+                "Property": "Promo Sales %"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Promotion mix and margin dilution'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

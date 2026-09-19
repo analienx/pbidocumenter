@@ -1,0 +1,133 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "product-action-list",
+  "position": {
+    "x": 648,
+    "y": 496,
+    "z": 0,
+    "height": 220,
+    "width": 608,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Product"
+                    }
+                  },
+                  "Property": "Category"
+                }
+              },
+              "queryRef": "Dim Product.Category",
+              "nativeQueryRef": "Category"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year Sales"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year Sales",
+              "nativeQueryRef": "Reporting Year Sales"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "GM Target Gap"
+                }
+              },
+              "queryRef": "Fact Sales.GM Target Gap",
+              "nativeQueryRef": "GM Target Gap"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Returns"
+                    }
+                  },
+                  "Property": "Return Rate %"
+                }
+              },
+              "queryRef": "Fact Returns.Return Rate %",
+              "nativeQueryRef": "Return Rate %"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fact Sales"
+                  }
+                },
+                "Property": "Reporting Year Sales"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Products requiring action'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

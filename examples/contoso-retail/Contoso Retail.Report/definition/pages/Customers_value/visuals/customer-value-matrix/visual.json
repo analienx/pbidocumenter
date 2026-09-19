@@ -1,0 +1,147 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "customer-value-matrix",
+  "position": {
+    "x": 24,
+    "y": 300,
+    "z": 0,
+    "height": 180,
+    "width": 816,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Customer"
+                    }
+                  },
+                  "Property": "Segment"
+                }
+              },
+              "queryRef": "Dim Customer.Segment",
+              "nativeQueryRef": "Segment",
+              "active": true
+            }
+          ]
+        },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year Sales"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year Sales",
+              "nativeQueryRef": "Reporting Year Sales"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Orders per Active Customer"
+                }
+              },
+              "queryRef": "Fact Sales.Orders per Active Customer",
+              "nativeQueryRef": "Orders per Active Customer",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Sales per Active Customer"
+                }
+              },
+              "queryRef": "Fact Sales.Sales per Active Customer",
+              "nativeQueryRef": "Sales per Active Customer"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fact Sales"
+                  }
+                },
+                "Property": "Orders per Active Customer"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Customer value: frequency vs spend by segment'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

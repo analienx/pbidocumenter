@@ -10,7 +10,7 @@
       "nodes": [
         {
           "location": {
-            "x": 334.18204729728262,
+            "x": 2272.5436867126423,
             "y": 200.1864704124514
           },
           "nodeIndex": "Fact Sales",
@@ -22,7 +22,7 @@
         },
         {
           "location": {
-            "x": 125.086723979961,
+            "x": 2063.4483633953209,
             "y": 550.36064836192475
           },
           "nodeIndex": "Dim Customer",
@@ -34,7 +34,7 @@
         },
         {
           "location": {
-            "x": 50,
+            "x": 1988.3616394153598,
             "y": -6.4020575931048143
           },
           "nodeIndex": "Dim Date",
@@ -46,7 +46,7 @@
         },
         {
           "location": {
-            "x": 618.36192891785549,
+            "x": 2556.7235683332156,
             "y": 448.87694609169557
           },
           "nodeIndex": "Dim Product",
@@ -58,10 +58,101 @@
         },
         {
           "location": {
-            "x": 554.31402057017431,
+            "x": 2492.6756599855344,
             "y": -50
           },
           "nodeIndex": "Dim Store",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1186.3616394153598,
+            "y": 200.18032418096237
+          },
+          "nodeIndex": "Fact Inventory Snapshot",
+          "nodeLineageTag": "01d9fd07-7bce-4219-84ff-f1eef1d5ce19",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 334.18475118062975,
+            "y": 200.1803241809624
+          },
+          "nodeIndex": "Fact Returns",
+          "nodeLineageTag": "5773c85d-2d3c-4919-87ae-404147b8eacf",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1420.3616394153598,
+            "y": 250.18032418096237
+          },
+          "nodeIndex": "Fact Sales Budget",
+          "nodeLineageTag": "c9be24e3-7843-46b6-99d6-c1308cac205d",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1704.3616394153598,
+            "y": 312.18032418096237
+          },
+          "nodeIndex": "Dim Employee",
+          "nodeLineageTag": "1f0c6fcb-17a5-4850-8db1-a06531c86e88",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 618.36163941535983,
+            "y": 275.50531681339703
+          },
+          "nodeIndex": "Dim Promotion",
+          "nodeLineageTag": "f3aa9b3b-dade-42bd-b176-1698c8056f6c",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 255.24543335830393
+          },
+          "nodeIndex": "Dim Return Reason",
+          "nodeLineageTag": "1266a636-cd8f-457f-af00-899a46159d16",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 902.36163941535983,
+            "y": 250.18032418096237
+          },
+          "nodeIndex": "Dim Supplier",
+          "nodeLineageTag": "e4cf9252-37ec-4bc8-9d4f-19d8f307ceee",
           "size": {
             "height": 200,
             "width": 234

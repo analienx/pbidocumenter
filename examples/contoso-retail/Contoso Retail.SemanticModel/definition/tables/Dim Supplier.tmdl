@@ -1,31 +1,37 @@
 /// Supplier dimension used to assess inventory ownership and supply risk.
 table 'Dim Supplier'
+	lineageTag: e4cf9252-37ec-4bc8-9d4f-19d8f307ceee
 
 	column 'Supplier Key'
 		dataType: int64
 		isHidden
 		isKey
+		lineageTag: a312bd0d-783c-4c32-a247-2459d93b2c45
 		summarizeBy: none
 		sourceColumn: Supplier Key
 
 	column 'Supplier Name'
 		dataType: string
+		lineageTag: 6d0bb3b4-3766-4e7d-afe0-5a9376216649
 		summarizeBy: none
 		sourceColumn: Supplier Name
 
 	column Country
 		dataType: string
+		lineageTag: 39c356c3-c0b4-4747-955b-fc4b8ecc8e79
 		dataCategory: Country
 		summarizeBy: none
 		sourceColumn: Country
 
 	column 'Lead Time Days'
 		dataType: int64
+		lineageTag: de3afaf0-97d8-467b-86d5-8d750a04f619
 		summarizeBy: none
 		sourceColumn: Lead Time Days
 
 	column 'Risk Tier'
 		dataType: string
+		lineageTag: 23b134f1-7f88-4aae-a531-772926955968
 		summarizeBy: none
 		sourceColumn: Risk Tier
 

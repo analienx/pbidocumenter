@@ -1,0 +1,174 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "customer-segment-ranking",
+  "position": {
+    "x": 857.21181036555345,
+    "y": 300.11792047809308,
+    "z": 0,
+    "height": 180,
+    "width": 400,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Customer"
+                    }
+                  },
+                  "Property": "Segment"
+                }
+              },
+              "queryRef": "Dim Customer.Segment",
+              "nativeQueryRef": "Segment",
+              "active": true
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Repeat Customer Rate"
+                }
+              },
+              "queryRef": "Fact Sales.Repeat Customer Rate",
+              "nativeQueryRef": "Repeat Customer Rate"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year Sales"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year Sales",
+              "nativeQueryRef": "Reporting Year Sales"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fact Sales"
+                  }
+                },
+                "Property": "Reporting Year Sales"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Sales contribution by customer segment'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "bacf38d97095ed201bc1",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Dim Customer"
+              }
+            },
+            "Property": "Segment"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "3919cc50bc1601c00e00",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact Sales"
+              }
+            },
+            "Property": "Reporting Year Sales"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "1925ec8e17ee01dc44ca",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact Sales"
+              }
+            },
+            "Property": "Repeat Customer Rate"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

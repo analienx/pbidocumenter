@@ -1,0 +1,142 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "ops-return-reasons",
+  "position": {
+    "x": 440,
+    "y": 292,
+    "z": 0,
+    "height": 192,
+    "width": 400,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Return Reason"
+                    }
+                  },
+                  "Property": "Reason Group"
+                }
+              },
+              "queryRef": "Dim Return Reason.Reason Group",
+              "nativeQueryRef": "Reason Group",
+              "active": true
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Returns"
+                    }
+                  },
+                  "Property": "Return Rate %"
+                }
+              },
+              "queryRef": "Fact Returns.Return Rate %",
+              "nativeQueryRef": "Return Rate %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Returns"
+                    }
+                  },
+                  "Property": "Return Orders"
+                }
+              },
+              "queryRef": "Fact Returns.Return Orders",
+              "nativeQueryRef": "Return Orders"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Returns"
+                    }
+                  },
+                  "Property": "Return Value"
+                }
+              },
+              "queryRef": "Fact Returns.Return Value",
+              "nativeQueryRef": "Return Value"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fact Returns"
+                  }
+                },
+                "Property": "Return Value"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Return value by reason'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "ops-inventory-risk",
+  "position": {
+    "x": 856,
+    "y": 292,
+    "z": 0,
+    "height": 192,
+    "width": 400,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Product"
+                    }
+                  },
+                  "Property": "Product Name"
+                }
+              },
+              "queryRef": "Dim Product.Product Name",
+              "nativeQueryRef": "Product Name",
+              "active": true
+            }
+          ]
+        },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Inventory Snapshot"
+                    }
+                  },
+                  "Property": "Inventory Carrying Value"
+                }
+              },
+              "queryRef": "Fact Inventory Snapshot.Inventory Carrying Value",
+              "nativeQueryRef": "Inventory Carrying Value"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": []
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year Sales"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year Sales",
+              "nativeQueryRef": "Reporting Year Sales",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Inventory Snapshot"
+                    }
+                  },
+                  "Property": "Weeks of Supply"
+                }
+              },
+              "queryRef": "Fact Inventory Snapshot.Weeks of Supply",
+              "nativeQueryRef": "Weeks of Supply"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fact Sales"
+                  }
+                },
+                "Property": "Reporting Year Sales"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Inventory risk: demand vs weeks of supply'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

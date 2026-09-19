@@ -1,25 +1,30 @@
 /// Commercial employee dimension used for accountable sales performance.
 table 'Dim Employee'
+	lineageTag: 1f0c6fcb-17a5-4850-8db1-a06531c86e88
 
 	column 'Employee Key'
 		dataType: int64
 		isHidden
 		isKey
+		lineageTag: a0d7d207-29e6-4a32-9174-da26fed0bdd2
 		summarizeBy: none
 		sourceColumn: Employee Key
 
 	column 'Employee Name'
 		dataType: string
+		lineageTag: 2e1b8550-523a-401f-9472-f2f65d86c076
 		summarizeBy: none
 		sourceColumn: Employee Name
 
 	column Role
 		dataType: string
+		lineageTag: 46ca3980-80a9-4bca-aa72-5d48e700e619
 		summarizeBy: none
 		sourceColumn: Role
 
 	column Region
 		dataType: string
+		lineageTag: 7db74728-705d-4bb5-ae05-44b3c31cd037
 		summarizeBy: none
 		sourceColumn: Region
 

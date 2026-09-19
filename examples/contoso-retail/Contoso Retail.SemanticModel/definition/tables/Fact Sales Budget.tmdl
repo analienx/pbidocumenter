@@ -1,20 +1,24 @@
 /// Monthly sales plan fact table at product-store grain.
 table 'Fact Sales Budget'
+	lineageTag: c9be24e3-7843-46b6-99d6-c1308cac205d
 
 	/// Planned sales value for the visible period.
 	measure 'Sales Budget' = SUM ( 'Fact Sales Budget'[Budget Amount] )
 		formatString: $#,0;($#,0);$#,0
 		displayFolder: Budget
+		lineageTag: d2a29255-61c2-4c9d-8fc9-c254f437f5bc
 
 	/// Sales value relative to the approved plan.
 	measure 'Sales vs Budget' = [Sales Amount] - [Sales Budget]
 		formatString: $#,0;($#,0);$#,0
 		displayFolder: Budget
+		lineageTag: 981a337d-9807-4a8e-a6b4-b82482cfd9ca
 
 	/// Sales attainment relative to the approved plan.
 	measure 'Budget Attainment %' = DIVIDE ( [Sales Amount], [Sales Budget] )
 		formatString: 0.0%;(0.0%);0.0%
 		displayFolder: Budget
+		lineageTag: 2fad11e6-8202-4362-8117-f2a9a2c6019a
 
 	/// Sales variance relative to plan as a percentage.
 	measure 'Budget Variance %' = DIVIDE ( [Sales vs Budget], [Sales Budget] )
@@ -37,18 +41,21 @@ table 'Fact Sales Budget'
 	column 'Budget Date Key'
 		dataType: int64
 		isHidden
+		lineageTag: 7d357c92-0c7b-48de-b134-4bac466c1bc2
 		summarizeBy: none
 		sourceColumn: Budget Date Key
 
 	column 'Product Key'
 		dataType: int64
 		isHidden
+		lineageTag: 4e283924-9433-4542-96e4-57cc3bf451e7
 		summarizeBy: none
 		sourceColumn: Product Key
 
 	column 'Store Key'
 		dataType: int64
 		isHidden
+		lineageTag: 5d3a9059-4340-4bed-bf06-068257768297
 		summarizeBy: none
 		sourceColumn: Store Key
 
@@ -56,6 +63,7 @@ table 'Fact Sales Budget'
 		dataType: decimal
 		isHidden
 		formatString: $#,0.00;($#,0.00);$#,0.00
+		lineageTag: 9c7bf69d-5b2a-46a1-bb70-f284e8040763
 		summarizeBy: sum
 		sourceColumn: Budget Amount
 

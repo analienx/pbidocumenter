@@ -371,6 +371,7 @@ table 'Fact Sales'
 	column 'Promotion Key'
 		dataType: int64
 		isHidden
+		lineageTag: d69ea7e7-4fa8-4427-b71c-9d7383f4c90b
 		summarizeBy: none
 		sourceColumn: Promotion Key
 
@@ -378,6 +379,7 @@ table 'Fact Sales'
 	column 'Employee Key'
 		dataType: int64
 		isHidden
+		lineageTag: 4083cad1-8713-4019-ac91-d4ba1e276301
 		summarizeBy: none
 		sourceColumn: Employee Key
 

@@ -1,30 +1,36 @@
 /// Return transaction fact table at returned-line grain.
 table 'Fact Returns'
+	lineageTag: 5773c85d-2d3c-4919-87ae-404147b8eacf
 
 	/// Monetary value returned by customers.
 	measure 'Return Value' = SUM ( 'Fact Returns'[Return Amount] )
 		formatString: $#,0;($#,0);$#,0
 		displayFolder: Returns
+		lineageTag: 895e4b3b-8123-417a-b467-facac904e025
 
 	/// Units returned by customers.
 	measure 'Returned Units' = SUM ( 'Fact Returns'[Return Quantity] )
 		formatString: #,0
 		displayFolder: Returns
+		lineageTag: cdeedacb-30f7-4253-9ec1-ad91ba290aa1
 
 	/// Number of individual return transactions.
 	measure 'Return Orders' = COUNTROWS ( 'Fact Returns' )
 		formatString: #,0
 		displayFolder: Returns
+		lineageTag: 755f7b5c-9490-4be2-8834-7e8a6005cdcb
 
 	/// Returned value as a proportion of gross sales.
 	measure 'Return Rate %' = DIVIDE ( [Return Value], [Sales Amount] )
 		formatString: 0.0%;(0.0%);0.0%
 		displayFolder: Returns
+		lineageTag: 9da09ecc-8737-4d8b-9c63-91e091010417
 
 	/// Sales remaining after return value is deducted.
 	measure 'Net Sales After Returns' = [Sales Amount] - [Return Value]
 		formatString: $#,0;($#,0);$#,0
 		displayFolder: Returns
+		lineageTag: afe0057e-2929-4b65-b4a4-e4948d98f7ec
 
 	/// Units returned as a share of units sold.
 	measure 'Return Units % of Sold' = DIVIDE ( [Returned Units], [Units Sold] )
@@ -48,48 +54,56 @@ table 'Fact Returns'
 		dataType: string
 		isHidden
 		isKey
+		lineageTag: 18edd69b-6372-4126-8021-8cafea78759a
 		summarizeBy: none
 		sourceColumn: Return ID
 
 	column 'Return Date Key'
 		dataType: int64
 		isHidden
+		lineageTag: 10ae29c8-4591-49bf-bd0e-0cd417ec186e
 		summarizeBy: none
 		sourceColumn: Return Date Key
 
 	column 'Customer Key'
 		dataType: int64
 		isHidden
+		lineageTag: 7d8f2a2c-96d7-4fdf-afec-0cdc562d146c
 		summarizeBy: none
 		sourceColumn: Customer Key
 
 	column 'Product Key'
 		dataType: int64
 		isHidden
+		lineageTag: 62352260-77a2-44cc-bb29-bd428672f986
 		summarizeBy: none
 		sourceColumn: Product Key
 
 	column 'Store Key'
 		dataType: int64
 		isHidden
+		lineageTag: c49a186c-fa7c-46f2-87bb-72b2b42c1448
 		summarizeBy: none
 		sourceColumn: Store Key
 
 	column 'Promotion Key'
 		dataType: int64
 		isHidden
+		lineageTag: 77957c83-2e41-4dca-aa89-93467196da37
 		summarizeBy: none
 		sourceColumn: Promotion Key
 
 	column 'Return Reason Key'
 		dataType: int64
 		isHidden
+		lineageTag: 81c6e476-65cf-488d-9e45-2a33e04cbe05
 		summarizeBy: none
 		sourceColumn: Return Reason Key
 
 	column 'Return Quantity'
 		dataType: int64
 		isHidden
+		lineageTag: 23cdbbe0-717f-4ada-97b7-2bef2d166687
 		summarizeBy: sum
 		sourceColumn: Return Quantity
 
@@ -97,6 +111,7 @@ table 'Fact Returns'
 		dataType: decimal
 		isHidden
 		formatString: $#,0.00;($#,0.00);$#,0.00
+		lineageTag: e897469d-cb17-4629-8e8b-57174a3e26a3
 		summarizeBy: sum
 		sourceColumn: Return Amount
 

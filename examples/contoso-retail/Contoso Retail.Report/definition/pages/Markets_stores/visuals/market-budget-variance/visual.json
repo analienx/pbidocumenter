@@ -1,0 +1,128 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "market-budget-variance",
+  "position": {
+    "x": 24,
+    "y": 292,
+    "z": 0,
+    "height": 192,
+    "width": 816,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "waterfallChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Store"
+                    }
+                  },
+                  "Property": "Region"
+                }
+              },
+              "queryRef": "Dim Store.Region",
+              "nativeQueryRef": "Region",
+              "active": true
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year GM %"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year GM %",
+              "nativeQueryRef": "Reporting Year GM %"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales Budget"
+                    }
+                  },
+                  "Property": "YTD Actual vs Budget"
+                }
+              },
+              "queryRef": "Fact Sales Budget.YTD Actual vs Budget",
+              "nativeQueryRef": "YTD Actual vs Budget"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fact Sales Budget"
+                  }
+                },
+                "Property": "YTD Actual vs Budget"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Budget variance by region'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
