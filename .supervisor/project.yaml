@@ -3,6 +3,13 @@ project_id: pbidocumenter
 repo: analienx/pbidocumenter
 lifecycle: active
 
+execution:
+  schema_version: 1
+  default_mode: direct_trusted
+  optional_modes: [foundry_isolated]
+  build_lane: Windows/.NET CI
+  host_specialist: Power BI and semantic tools
+
 canonical_skill:
   source: external_github
   repo: analienx/config
