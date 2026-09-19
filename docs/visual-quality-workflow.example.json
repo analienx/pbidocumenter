@@ -1,0 +1,20 @@
+{
+  "surface": "document",
+  "source": "./Exported Documents/Example/Example_DesignSpecification_default.docx",
+  "renders": "./.visual-quality/word-pages",
+  "workspace": "./.visual-quality/word-run",
+  "fixer_id": "document-repair-executor",
+  "max_rounds": 6,
+  "renderer": {
+    "argv": ["python", "-m", "pbip_documenter.visual_quality.render_word", "{source}", "{renders}"],
+    "timeout_seconds": 400
+  },
+  "reviewer": {
+    "argv": ["python", "-m", "pbip_documenter.visual_quality.vision_reviewer", "--request", "{request}", "--renders", "{renders}", "--review", "{review}", "--endpoint", "http://127.0.0.1:11434/v1/chat/completions", "--model", "REPLACE_WITH_VISION_MODEL", "--reviewer-id", "independent-vision-reviewer"],
+    "timeout_seconds": 7200
+  },
+  "fixer": {
+    "argv": ["REPLACE_WITH_YOUR_DOCUMENT_REPAIR_EXECUTOR", "--source", "{source}", "--findings", "{findings}"],
+    "timeout_seconds": 3600
+  }
+}

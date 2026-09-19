@@ -47,6 +47,15 @@ pbip-documenter --version
 See the [CLI reference](docs/CLI.md), [sample output gallery](docs/EXAMPLES.md),
 and [advanced inventory guide](docs/INVENTORY.md).
 
+## Independent visual quality (opt-in)
+
+The [Visual Quality System](docs/VISUAL_QUALITY_SYSTEM.md) independently examines
+source-bound, **rendered Power BI pages and paginated Word output** against a
+versioned rubric for readability, axis density, padding, theming, color, chart
+choice, whitespace, tables, page breaks, and document/report consistency.
+It exposes preflight, review requests, strict verification, and a resumable
+render/review/repair loop. Image-review and repair agents must be explicitly
+configured; static PBIR/OOXML validity is never presented as visual approval.
 ## Privacy and scope
 
 PBIP Documenter reads project files and writes a `.docx`; it does not alter
