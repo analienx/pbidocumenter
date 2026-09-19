@@ -74,11 +74,11 @@
                       "Entity": "Fact Sales"
                     }
                   },
-                  "Property": "Promo Sales %"
+                  "Property": "Promotion Type Sales Share %"
                 }
               },
-              "queryRef": "Fact Sales.Promo Sales %",
-              "nativeQueryRef": "Promo Sales %"
+              "queryRef": "Fact Sales.Promotion Type Sales Share %",
+              "nativeQueryRef": "Promotion Type Sales Share %"
             }
           ]
         }
@@ -93,7 +93,7 @@
                     "Entity": "Fact Sales"
                   }
                 },
-                "Property": "Promo Sales %"
+                "Property": "Promotion Type Sales Share %"
               }
             },
             "direction": "Descending"

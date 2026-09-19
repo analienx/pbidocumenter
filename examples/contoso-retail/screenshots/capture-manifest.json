@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "source_sha256": "62c8b7eccde85587c45ac9657bcd807fb9d4fe2d8de3bc03610c2442dcec2ad2",
+  "captured_at_utc": "2026-09-19T09:02:20.023294+00:00",
+  "capture": "Power BI Desktop, disposable same-digest project; five populated report pages; UIA report canvas crop",
+  "canvas_pixels": [
+    1537,
+    866
+  ],
+  "files": {
+    "01-executive-performance.png": "d80ac2fd435e6b05e0383e83eba40e20467c9d5fed37300dc19a867695ed9e73",
+    "02-markets-stores.png": "ec2f2aa7331ae56d73b7847417f3427049f8da1af8f57f629aaeba9c24c0535e",
+    "03-products-brands.png": "855cf28934e67c09b62afbbf3b768022cc85c0b4accd1e544fad6d7b0fe21ae3",
+    "04-customers-value.png": "febff2d973b19f569471fd74c62b43012fdc43dd08599e9b2a3c7c338a62f379",
+    "05-operations-risk.png": "5c13d22f662a4fffb242efae046f531a06ecdd3ca049710a95fab19235aece1a"
+  },
+  "readiness": "Render evidence only; visual-design review, source refresh reproducibility, document generation and merge acceptance remain separate."
+}

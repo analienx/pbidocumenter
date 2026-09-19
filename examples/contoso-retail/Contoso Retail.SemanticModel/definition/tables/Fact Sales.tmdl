@@ -260,6 +260,12 @@ table 'Fact Sales'
 		displayFolder: Promotion
 		lineageTag: 87c01aad-5733-4943-b697-1b27969f6c99
 
+	/// Share of sales attributable to each promotion type within the current non-promotion filters.
+	measure 'Promotion Type Sales Share %' = DIVIDE ( [Sales Amount], CALCULATE ( [Sales Amount], REMOVEFILTERS ( 'Dim Promotion'[Promotion Type] ) ) )
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Promotion
+		lineageTag: 305079ca-1400-4724-9911-c422a4d2c36b
+
 	/// Gross margin on promotional lines.
 	measure 'Promo Margin $' = CALCULATE ( [Gross Margin], 'Dim Promotion'[Promotion Type] <> "Base" )
 		formatString: $#,0;($#,0);$#,0

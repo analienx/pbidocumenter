@@ -1,0 +1,57 @@
+﻿{
+    "source_sha256":  "62c8b7eccde85587c45ac9657bcd807fb9d4fe2d8de3bc03610c2442dcec2ad2",
+    "reviewed_at_utc":  "2026-09-19T09:04:57.3231851+00:00",
+    "schema":  1,
+    "pages":  [
+                  {
+                      "status":  "needs_changes",
+                      "issues":  [
+                                     "Quality-of-growth scatter axes repeat 10% and 33.863% tick labels; regional separation is not readable.",
+                                     "Monthly trend needs horizontal scrolling at fit-to-page size."
+                                 ],
+                      "image_sha256":  "d80ac2fd435e6b05e0383e83eba40e20467c9d5fed37300dc19a867695ed9e73",
+                      "id":  "Executive_performance",
+                      "image":  "01-executive-performance.png"
+                  },
+                  {
+                      "status":  "needs_changes",
+                      "issues":  [
+                                     "Store growth scatter axes repeat percentage tick labels at the displayed precision.",
+                                     "Employee sales chart requires scrolling to see remaining entries."
+                                 ],
+                      "image_sha256":  "ec2f2aa7331ae56d73b7847417f3427049f8da1af8f57f629aaeba9c24c0535e",
+                      "id":  "Markets_stores",
+                      "image":  "02-markets-stores.png"
+                  },
+                  {
+                      "status":  "needs_changes",
+                      "issues":  [
+                                     "Brand growth scatter repeats 10% ticks on its X axis and truncates its vertical axis label."
+                                 ],
+                      "image_sha256":  "855cf28934e67c09b62afbbf3b768022cc85c0b4accd1e544fad6d7b0fe21ae3",
+                      "id":  "Products_brands",
+                      "image":  "03-products-brands.png"
+                  },
+                  {
+                      "status":  "needs_changes",
+                      "issues":  [
+                                     "All customer segments have the same horizontal position in the frequency-versus-spend plot; the X dimension does not discriminate segments.",
+                                     "The wide action table uses less than half its canvas width."
+                                 ],
+                      "image_sha256":  "febff2d973b19f569471fd74c62b43012fdc43dd08599e9b2a3c7c338a62f379",
+                      "id":  "Customers_value",
+                      "image":  "04-customers-value.png"
+                  },
+                  {
+                      "status":  "needs_changes",
+                      "issues":  [
+                                     "Inventory exceptions title promises store and supplier details, but the table contains only product name and weeks of supply.",
+                                     "The oversized two-column table leaves most of its width empty; the monthly trend needs horizontal scrolling."
+                                 ],
+                      "image_sha256":  "5c13d22f662a4fffb242efae046f531a06ecdd3ca049710a95fab19235aece1a",
+                      "id":  "899f9e3459c96b94",
+                      "image":  "05-operations-risk.png"
+                  }
+              ],
+    "method":  "Direct visual inspection of the five populated, cropped Power BI Desktop report screenshots"
+}
