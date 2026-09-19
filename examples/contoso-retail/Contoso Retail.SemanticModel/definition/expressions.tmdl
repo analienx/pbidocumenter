@@ -38,4 +38,3 @@ expression stgSalesPlan =
 	lineageTag: 1daa70c4-ba35-438c-86da-7165c4537c03
 
 	annotation PBI_ResultType = Table
-
