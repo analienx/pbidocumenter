@@ -1,0 +1,52 @@
+schema_version: 1
+project_id: pbidocumenter
+repo: analienx/pbidocumenter
+lifecycle: active
+
+canonical_skill:
+  source: external_github
+  repo: analienx/config
+  ref: main
+  path: skills/supervisor-executor/SKILL.md
+
+registry:
+  source: external_github
+  repo: analienx/config
+  ref: main
+  path: supervisor/projects.yaml
+
+context:
+  root_agents: AGENTS.md
+  supervisor: SUPERVISOR.md
+  executor: EXECUTOR.md
+  status: PROJECT_STATUS.md
+  decisions: null
+  legacy_supervisor_brief: docs/supervisor-agent.md
+
+control:
+  mode: task_issue
+  primary_issue: 4
+  active_streams:
+    contoso-showcase: 4
+
+executor:
+  environment: windows_workstation
+  management_paths:
+    - local_shell
+    - semanticops
+    - pbir_toolkit
+
+mutation_policy:
+  proposal_required: true
+  proposal_ids: true
+  task_issue_may_preapprove_bounded_tool_local_sequence: true
+
+read_only_policy:
+  may_batch_without_microapproval: true
+
+secrets:
+  policy: never_print
+  sample_data_must_be_synthetic: true
+
+user_shorthand:
+  ".": supervise_latest
