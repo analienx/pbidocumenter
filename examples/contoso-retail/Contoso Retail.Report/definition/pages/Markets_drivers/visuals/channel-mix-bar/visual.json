@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "channel-mix-donut",
+  "name": "channel-mix-bar",
   "position": {
     "x": 856,
     "y": 216,
@@ -10,7 +10,7 @@
     "tabOrder": 0
   },
   "visual": {
-    "visualType": "donutChart",
+    "visualType": "clusteredBarChart",
     "query": {
       "queryState": {
         "Category": {
@@ -71,55 +71,10 @@
       }
     },
     "objects": {
-      "labels": [
+      "categoryAxis": [
         {
           "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "labelStyle": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Category, percent of total'"
-                }
-              }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'outside'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "10D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#F5F7FB'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ],
-      "legend": [
-        {
-          "properties": {
-            "show": {
+            "showAxisTitle": {
               "expr": {
                 "Literal": {
                   "Value": "false"
@@ -129,13 +84,13 @@
           }
         }
       ],
-      "slices": [
+      "valueAxis": [
         {
           "properties": {
-            "innerRadiusRatio": {
+            "showAxisTitle": {
               "expr": {
                 "Literal": {
-                  "Value": "62D"
+                  "Value": "false"
                 }
               }
             }
@@ -144,8 +99,11 @@
       ],
       "dataPoint": [
         {
+          "properties": {}
+        },
+        {
           "properties": {
-            "defaultColor": {
+            "fill": {
               "solid": {
                 "color": {
                   "expr": {
@@ -156,44 +114,12 @@
                 }
               }
             }
-          }
-        },
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#8796AE'"
-                    }
-                  }
-                }
-              }
-            }
           },
           "selector": {
             "data": [
               {
-                "scopeId": {
-                  "Comparison": {
-                    "ComparisonKind": 0,
-                    "Left": {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Entity": "Dim Store"
-                          }
-                        },
-                        "Property": "Channel"
-                      }
-                    },
-                    "Right": {
-                      "Literal": {
-                        "Value": "'Retail'"
-                      }
-                    }
-                  }
+                "dataViewWildcard": {
+                  "matchingOption": 1
                 }
               }
             ]
@@ -228,14 +154,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Channel share of selected reporting-year sales.'"
+                  "Value": "false"
                 }
               }
             }
@@ -257,9 +176,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#111B2E'"
+                      "Value": "'#F3F4F6'"
                     }
                   }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -281,16 +207,23 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#26364D'"
+                      "Value": "'#E5E7EB'"
                     }
                   }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
                 }
               }
             },
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "10D"
                 }
               }
             }

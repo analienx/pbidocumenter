@@ -4,7 +4,7 @@
   "position": {
     "x": 24,
     "y": 16,
-    "width": 720,
+    "width": 600,
     "height": 56,
     "z": 1000,
     "tabOrder": 1000
@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "26px",
-                      "color": "#F8FBFF",
+                      "color": "#101828",
                       "fontWeight": "bold"
                     }
                   }
@@ -37,7 +37,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "12px",
-                      "color": "#9AA9BD"
+                      "color": "#52617A"
                     }
                   }
                 ],
