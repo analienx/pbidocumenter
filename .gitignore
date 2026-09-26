@@ -79,3 +79,6 @@ updates.md
 # Docx files are ignored globally, except in Templates/
 *.docx
 !Templates/*.docx
+# Power BI Desktop local state (never commit: data caches, machine-local settings)
+*.abf
+**/.pbi/
