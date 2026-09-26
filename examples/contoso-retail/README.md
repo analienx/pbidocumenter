@@ -1,12 +1,9 @@
-# Contoso Retail sample
+# Contoso Retail Power BI sample
 
-This fictional PBIP fixture is safe to share and exists for documentation and
-smoke testing. It models a conventional retail star schema: `Fact Sales` holds
-transactional measures and keys, while Date, Customer, Product, and Store are
-single-direction dimensions. The report binds its visuals to these model
-objects so generated documentation demonstrates relationships, DAX measures,
-and report lineage.
+A self-contained PBIP sample with an import-mode star schema, generated Contoso-style retail data for 2023–2025, reusable DAX measures, and four PBIR report pages.
 
-```powershell
-pbip-documenter examples/contoso-retail --mode full -o contoso-retail.docx
-```
+## Run it
+
+Open `Contoso Retail.pbip` in Power BI Desktop using **File → Open**. The project includes no external data-source dependency or sign-in requirement.
+
+For the complete run, validation, and repository guide, see the [root README](../../README.md).
