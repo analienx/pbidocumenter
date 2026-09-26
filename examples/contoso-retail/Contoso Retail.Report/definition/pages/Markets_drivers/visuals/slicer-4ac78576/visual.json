@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "slicer-4ac78576",
   "position": {
-    "x": 1032,
+    "x": 960,
     "y": 8,
-    "z": 0,
+    "width": 296,
     "height": 80,
-    "width": 224,
+    "z": 0,
     "tabOrder": 0
   },
   "visual": {
@@ -64,13 +64,6 @@
                   "Value": "'Reporting year'"
                 }
               }
-            },
-            "textSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "11D"
-                }
-              }
             }
           }
         }
@@ -92,7 +85,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#111B2E'"
+                      "Value": "'#F3F4F6'"
                     }
                   }
                 }
@@ -123,7 +116,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#26364D'"
+                      "Value": "'#E5E7EB'"
                     }
                   }
                 }
