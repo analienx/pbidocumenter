@@ -4,18 +4,18 @@
     "baseTheme": {
       "name": "CY24SU06",
       "reportVersionAtImport": {
-        "visual": "2.9.0",
-        "page": "2.1.0",
-        "report": "3.3.0"
+        "visual": "2.12.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
       },
       "type": "SharedResources"
     },
     "customTheme": {
       "name": "ContosoExecutive-4f18b4d2.json",
       "reportVersionAtImport": {
-        "visual": "2.9.0",
-        "page": "2.1.0",
-        "report": "3.3.0"
+        "visual": "2.12.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
       },
       "type": "RegisteredResources"
     }

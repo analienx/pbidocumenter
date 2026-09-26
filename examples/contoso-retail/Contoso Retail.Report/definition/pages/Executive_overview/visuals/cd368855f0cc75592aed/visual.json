@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "cd368855f0cc75592aed",
   "position": {
-    "x": 440,
-    "y": 468,
-    "width": 816,
-    "height": 228,
+    "x": 439.71819817621764,
+    "y": 469.69898441550521,
     "z": 7000,
+    "height": 228,
+    "width": 816,
     "tabOrder": 7000
   },
   "visual": {
@@ -32,24 +32,6 @@
             }
           ]
         },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Fact Sales"
-                    }
-                  },
-                  "Property": "Reporting Year GM %"
-                }
-              },
-              "queryRef": "Fact Sales.Reporting Year GM %",
-              "nativeQueryRef": "Reporting Year GM %"
-            }
-          ]
-        },
         "Tooltips": {
           "projections": [
             {
@@ -65,6 +47,24 @@
               },
               "queryRef": "Fact Sales.Reporting Year Sales",
               "nativeQueryRef": "Reporting Year Sales"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Sales"
+                    }
+                  },
+                  "Property": "Reporting Year GM %"
+                }
+              },
+              "queryRef": "Fact Sales.Reporting Year GM %",
+              "nativeQueryRef": "Reporting Year GM %"
             }
           ]
         }
@@ -184,7 +184,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "9D"
+                  "Value": "10D"
                 }
               }
             },
@@ -193,7 +193,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#B7C5D9'"
+                      "Value": "'#374151'"
                     }
                   }
                 }
@@ -231,7 +231,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FBBF24'"
+                      "Value": "'#D97706'"
                     }
                   }
                 }
@@ -277,7 +277,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FBBF24'"
+                      "Value": "'#92400E'"
                     }
                   }
                 }
@@ -336,7 +336,7 @@
                           },
                           "Value": {
                             "Literal": {
-                              "Value": "'#34D399'"
+                              "Value": "'#047857'"
                             }
                           }
                         },
@@ -363,7 +363,7 @@
                           },
                           "Value": {
                             "Literal": {
-                              "Value": "'#FB7185'"
+                              "Value": "'#BE123C'"
                             }
                           }
                         }
@@ -416,7 +416,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#F5F7FB'"
+                      "Value": "'#0F1626'"
                     }
                   }
                 }
@@ -461,7 +461,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#111B2E'"
+                      "Value": "'#F3F4F6'"
                     }
                   }
                 }
@@ -492,7 +492,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#26364D'"
+                      "Value": "'#E5E7EB'"
                     }
                   }
                 }
@@ -576,5 +576,51 @@
         }
       ]
     }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "eb73d713048ae290b7dc",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Dim Product"
+              }
+            },
+            "Property": "Category"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "effd7e2e09893bd66484",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact Sales"
+              }
+            },
+            "Property": "Reporting Year GM %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "d480a3d4ebb1681990be",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact Sales"
+              }
+            },
+            "Property": "Reporting Year Sales"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }
