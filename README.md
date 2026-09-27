@@ -1,6 +1,6 @@
 # PBIP Documenter
 
-[![CI](https://github.com/analienx/pbip-documenter/actions/workflows/ci.yml/badge.svg)](https://github.com/analienx/pbip-documenter/actions/workflows/ci.yml)
+[![CI](https://github.com/analienx/pbidocumenter/actions/workflows/ci.yml/badge.svg)](https://github.com/analienx/pbidocumenter/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/pbip-documenter)](https://pypi.org/project/pbip-documenter/)
 [![Python](https://img.shields.io/pypi/pyversions/pbip-documenter)](https://pypi.org/project/pbip-documenter/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
@@ -60,7 +60,7 @@ contents. Use the synthetic sample for public issues and pull requests.
 ## Contributing
 
 Issues and pull requests are welcome. Start with
-[Contributing](CONTRIBUTING.md), use [GitHub Discussions](https://github.com/analienx/pbip-documenter/discussions)
+[Contributing](CONTRIBUTING.md), use [GitHub Discussions](https://github.com/analienx/pbidocumenter/discussions)
 for questions, and report vulnerabilities through the private process in
 [Security](SECURITY.md).
 
