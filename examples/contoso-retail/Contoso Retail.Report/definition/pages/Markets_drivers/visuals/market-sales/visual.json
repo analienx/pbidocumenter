@@ -59,6 +59,13 @@
                   "Value": "2D"
                 }
               }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "24D"
+                }
+              }
             }
           }
         }
