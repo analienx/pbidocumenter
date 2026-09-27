@@ -1,12 +1,12 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
-  "name": "sales-by-region",
+  "name": "sales-by-country",
   "position": {
     "x": 664,
-    "y": 468,
-    "z": 7000,
-    "height": 228,
+    "y": 480,
     "width": 592,
+    "height": 232,
+    "z": 7000,
     "tabOrder": 7000
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "Dim Store"
                     }
                   },
-                  "Property": "Region"
+                  "Property": "Country"
                 }
               },
-              "queryRef": "Dim Store.Region",
-              "nativeQueryRef": "Region",
+              "queryRef": "Dim Store.Country",
+              "nativeQueryRef": "Country",
               "active": true
             }
           ]
@@ -46,7 +46,8 @@
                 }
               },
               "queryRef": "Fact Sales.Reporting Year Sales",
-              "nativeQueryRef": "Reporting Year Sales"
+              "nativeQueryRef": "Reporting Year Sales",
+              "active": true
             }
           ]
         }
@@ -66,7 +67,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Sales by region'"
+                  "Value": "'Sales by country'"
                 }
               }
             },
@@ -222,6 +223,28 @@
               "expr": {
                 "Literal": {
                   "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
                 }
               }
             }
