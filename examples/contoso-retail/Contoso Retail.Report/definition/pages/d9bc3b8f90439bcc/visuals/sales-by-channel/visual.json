@@ -3,10 +3,10 @@
   "name": "sales-by-channel",
   "position": {
     "x": 664,
-    "y": 216,
-    "z": 5000,
-    "height": 236,
+    "y": 252,
     "width": 592,
+    "height": 220,
+    "z": 5000,
     "tabOrder": 5000
   },
   "visual": {
@@ -42,11 +42,11 @@
                       "Entity": "Fact Sales"
                     }
                   },
-                  "Property": "Reporting Year Sales"
+                  "Property": "Reporting Year Units"
                 }
               },
-              "queryRef": "Fact Sales.Reporting Year Sales",
-              "nativeQueryRef": "Reporting Year Sales"
+              "queryRef": "Fact Sales.Reporting Year Units",
+              "nativeQueryRef": "Reporting Year Units"
             }
           ]
         }
@@ -99,7 +99,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Sales by channel'"
+                  "Value": "'Units by channel'"
                 }
               }
             },
