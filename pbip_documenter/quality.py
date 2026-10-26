@@ -55,9 +55,12 @@ def quality(
     try:
         report = resolve_report(Path(source))
         root = Path(private_root).resolve()
-        if (root == report or root.is_relative_to(report)
+        # The source boundary is the *whole PBIP project*, not only its
+        # .Report child. Otherwise evidence could land beside the model.
+        project_root = report.parent
+        if (root == project_root or root.is_relative_to(project_root)
                 or report.is_relative_to(root)):
-            raise ValueError("private evidence must be separate from report")
+            raise ValueError("private evidence must be outside source project")
         run_dir = root / rid
         candidate_root = root / "candidates" / rid
         if (run_dir.exists() or run_dir.is_symlink()
@@ -161,3 +164,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
