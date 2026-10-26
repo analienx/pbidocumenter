@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added optional agent-first `pbip-quality`: delegates Power BI quality and allowlisted candidate repairs to VQS, independently checks its sealed run status, and does not overwrite source PBIPs or change Word generation.
+- Added negative evidence tests (invalid identity, missing engine, mismatched exit status, tampered chain, escaped candidate), preserving `blocked` as not verified.
+
 - VQS-verified Contoso Retail project: layout fixes, light/dark theme
   switch, cross-page slicer consistency, Deep-dive insights page,
   example-manifest regression test.
