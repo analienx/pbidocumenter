@@ -28,7 +28,7 @@ Open the generated `.docx` in Word and update its table-of-contents fields.
 
 **PBIPDocumenter generates Word specifications; [Visual Quality System](https://github.com/analienx/visual-quality-system) checks and repairs Power BI reports.** You can use both without merging their parsers or making Word mandatory for Power BI quality.
 
-Install VQS **into the same Python environment** as PBIPDocumenter. For the `pipx` installation shown above:
+Install VQS **into the same Python environment** as PBIPDocumenter. VQS requires **Python 3.11 or newer** (PBIPDocumenter alone supports Python 3.10). If your existing `pipx` installation uses Python 3.10, first reinstall PBIPDocumenter with a newer interpreter (for example, `pipx install --python python3.12 pbip-documenter`). For the `pipx` installation shown above:
 
 ```powershell
 pipx inject pbip-documenter "git+https://github.com/analienx/visual-quality-system.git@ab3185d86a6d4caa77e671a1d773630529c360df"
