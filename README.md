@@ -24,6 +24,25 @@ into your environment at runtime.
 The included **Contoso Retail** project is fictional and safe to use in demos.
 Open the generated `.docx` in Word and update its table-of-contents fields.
 
+## AI-agent quality and safe automatic fixes (optional VQS)
+
+**PBIPDocumenter generates Word specifications; [Visual Quality System](https://github.com/analienx/visual-quality-system) checks and repairs Power BI reports.** You can use both without merging their parsers or making Word mandatory for Power BI quality.
+
+Install VQS **into the same Python environment** as PBIPDocumenter. For the `pipx` installation shown above:
+
+```powershell
+pipx inject pbip-documenter "git+https://github.com/analienx/visual-quality-system.git@ab3185d86a6d4caa77e671a1d773630529c360df"
+pbip-quality examples/contoso-retail --private-root ./private-vqs-evidence --mode repair
+```
+
+`pbip-quality` invokes the existing `vqs run --mode repair` orchestrator, applies **only supported allowlisted edits in an isolated candidate**, checks VQS's sealed event chain using `vqs run-status`, and returns structured JSON with **verdict, candidate, findings summary, source digest and evidence location**. It never promotes or overwrites your original PBIP, never publishes reports, and never treats a blocked native check as success.
+
+For an agent, the recommended instruction is: *“Use `pbip-quality` to fix supported Power BI layout and design defects in a private candidate, verify the evidence, then give me Fixed / Verified / Blocked and the candidate path. Do not modify or publish my original.”*
+
+**Codes:** `0` pass, `1` fail, `2` blocked. Static checks are not visual/interaction release acceptance. Native Desktop scope requires an explicitly authorized `--pid`; see the VQS [agent quickstart](https://github.com/analienx/visual-quality-system/blob/main/docs/AI_AGENT_QUICKSTART.md) and [component architecture](https://github.com/analienx/visual-quality-system/blob/main/docs/AGENT_AUTOFIX_ARCHITECTURE.md).
+
+Both commands are separate: `pbip-documenter` still generates DOCX **without** installing or invoking VQS, while `pbip-quality` delegates quality decisions to VQS. Keep evidence roots outside your source tree and off public GitHub.
+
 ## What it documents
 
 - Semantic-model tables, columns, measures, DAX, relationships, roles, and partitions.

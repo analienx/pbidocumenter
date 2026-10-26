@@ -87,6 +87,7 @@ all = [
 
 [project.scripts]
 pbip-documenter = "pbip_documenter.bootstrap:main"
+pbip-quality = "pbip_documenter.quality:main"
 
 [project.urls]
 Homepage = "https://github.com/analienx/pbip-documenter"
