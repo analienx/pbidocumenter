@@ -10,9 +10,10 @@ from pbip_documenter import quality
 
 @pytest.fixture
 def report(tmp_path: Path) -> Path:
-    p = tmp_path / "Sales.Report"
+    project = tmp_path / "project"
+    p = project / "Sales.Report"
     (p / "definition").mkdir(parents=True)
-    (tmp_path / "Sales.pbip").write_text("{}", encoding="utf8")
+    (project / "Sales.pbip").write_text("{}", encoding="utf8")
     return p
 
 
@@ -96,4 +97,3 @@ def test_missing_report_cli_fails_closed(
                            str(tmp_path / "runs")])
     assert status == 2
     assert json.loads(capsys.readouterr().out)["verdict"] == "blocked"
-
