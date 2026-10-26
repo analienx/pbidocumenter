@@ -33,6 +33,7 @@ def test_wrong_runtime_is_blocked(
 
 def test_never_writes_inside_original(report: Path, tmp_path: Path) -> None:
     assert quality.quality(report, report / "evidence")["verdict"] == "blocked"
+    assert quality.quality(report, report.parent / "private")["verdict"] == "blocked"
     used = tmp_path / "evidence" / "reused"
     used.mkdir(parents=True)
     assert quality.quality(report, used.parent, run_id="reused")["verdict"] == "blocked"
@@ -95,3 +96,4 @@ def test_missing_report_cli_fails_closed(
                            str(tmp_path / "runs")])
     assert status == 2
     assert json.loads(capsys.readouterr().out)["verdict"] == "blocked"
+
