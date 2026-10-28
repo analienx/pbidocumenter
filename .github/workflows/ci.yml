@@ -45,5 +45,5 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install --upgrade pip
       - run: python -m pip install .
-      - run: python -m pip install "git+https://github.com/analienx/visual-quality-system.git@ab3185d86a6d4caa77e671a1d773630529c360df"
+      - run: python -m pip install "git+https://github.com/analienx/visual-quality-system.git@4f51f89f255a6a1798c4baaba3d7b916beb74b94"
       - run: python scripts/ci_vqs_quality_smoke.py
