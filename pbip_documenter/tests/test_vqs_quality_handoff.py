@@ -84,6 +84,7 @@ def test_bounded_sealed_vqs_bridge(
         raise AssertionError("unexpected action")
 
     monkeypatch.setattr(quality.subprocess, "run", fake)
+    monkeypatch.setattr(quality, "source_matches", lambda *_: True)
     result = quality.quality(report, root, run_id=rid)
     assert result["verdict"] == "blocked"
     assert bool(result.get("evidence_verified")) == (fault == "")
