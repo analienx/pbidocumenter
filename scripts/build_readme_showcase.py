@@ -13,9 +13,8 @@ import subprocess
 from pathlib import Path
 
 import pymupdf
-from PIL import Image
-
 from build_readme_hero import create as build_hero
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED = {
