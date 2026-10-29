@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Refined GitHub landing experience: clearer value proposition, streamlined install flow, readable source-derived image excerpts, consistent editorial hierarchy and direct permanent example downloads.
+- Added full/concise authentic Contoso Word files and a browsable PDF with file hashes, linked to the exact installed-wheel CI run.
+- Expanded reproducible imagery and CI provenance guards to include hero art, cropped evidence, Word/PDF samples and the source PBIP tree.
+- Reorganized the gallery around engineering questions and updated visual-evidence documentation.
+
+
 - Rebuilt the public repository landing page around real, source-verified Contoso Word output rather than illustrative documentation mockups.
 - Added a reproducible, provenance-hashed seven-image DOCX/PDF screenshot gallery, optimized social banner, agent-first runbook and architecture guide.
 - Added hosted CI checks for gallery asset integrity, local Markdown image links and Contoso fixture freshness.
