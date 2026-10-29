@@ -23,6 +23,14 @@ def _assert_valid_docx(path: Path) -> None:
         assert "word/document.xml" in archive.namelist()
 
     doc = Document(path)
+    from docx.oxml.ns import qn
+
+    linked = {n.get(qn("w:anchor")) for n in doc.element.body.xpath(".//w:hyperlink")}
+    targets = {n.get(qn("w:name")) for n in doc.element.body.xpath(".//w:bookmarkStart")}
+    required = {
+        "toc_control", "toc_scope", "toc_operations", "toc_technical", "toc_support", "toc_revision"
+    }
+    assert required <= linked & targets, "Generated DOCX has no working linked contents"
     assert len(doc.tables) >= 3, f"No substantive specification tables: {path}"
     assert any(p.style.name.startswith("Heading") for p in doc.paragraphs), f"No Word heading styles: {path}"
     content = "\n".join(

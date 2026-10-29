@@ -959,7 +959,7 @@ def build_doc(
             ("Document Date", datetime.now().strftime("%Y-%m-%d")),
             ("Document Owner", "[To be confirmed]"),
             ("Business Owner", "[To be confirmed]"),
-            ("Classification / GxP", "[Proprietary] | Non-GxP"),
+            ("Classification / GxP", "[To be confirmed]"),
             ("Related Change / Release", "[To be confirmed]"),
         ],
     )
@@ -1595,7 +1595,7 @@ def build_doc(
             _render_rls_details(doc, roles)
     else:
         h2(doc, "3.5 Data security")
-        body(doc, "No RLS roles defined in the semantic model. All authorized users see the full dataset.")
+        body(doc, "No RLS roles were detected in the local semantic model. Effective workspace access and any external row/object security require separate confirmation.")
         if report_name.startswith("MSL"):
             callout(doc, "[Note: MSL reports typically require RLS. Verify if this is intentional.]")
 

@@ -57,7 +57,7 @@ def bookmark_navigation_targets(doc: Any) -> None:
     targets = {title: anchor for title, _, anchor in NAVIGATION}
     found: set[str] = set()
     for p in doc.paragraphs:
-        anchor = targets.get(p.text)
+        anchor = targets.get(" ".join(p.text.split()))
         if anchor is None or p.style.name != "Heading 1":
             continue
         if anchor in found:

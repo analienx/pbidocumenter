@@ -86,9 +86,15 @@ def test_generated_scope_does_not_invent_business_exclusions(tmp_path: Path) -> 
 
     from docx.oxml.ns import qn
 
-    linked = {node.get(qn("w:anchor")) for node in doc.element.body.xpath(".//w:hyperlink")}
+    linked = {
+        anchor
+        for node in doc.element.body.xpath(".//w:hyperlink")
+        if (anchor := node.get(qn("w:anchor"))) and anchor.startswith("toc_")
+    }
     targets = {node.get(qn("w:name")) for node in doc.element.body.xpath(".//w:bookmarkStart")}
     required = {
         "toc_control", "toc_scope", "toc_operations", "toc_technical", "toc_support", "toc_revision"
     }
-    assert required <= linked & targets
+    assert required <= targets
+    if linked:
+        assert required <= linked
