@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Rebuilt the public repository landing page around real, source-verified Contoso Word output rather than illustrative documentation mockups.
+- Added a reproducible, provenance-hashed seven-image DOCX/PDF screenshot gallery, optimized social banner, agent-first runbook and architecture guide.
+- Added hosted CI checks for gallery asset integrity, local Markdown image links and Contoso fixture freshness.
+- Corrected stale public support links and default-branch guidance.
+
 - Added optional agent-first `pbip-quality`: delegates Power BI quality and allowlisted candidate repairs to VQS, independently checks its sealed run status, and does not overwrite source PBIPs or change Word generation.
 - Added negative evidence tests (invalid identity, missing engine, mismatched exit status, tampered chain, escaped candidate), preserving `blocked` as not verified.
 

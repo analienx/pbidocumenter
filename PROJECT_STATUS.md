@@ -7,7 +7,7 @@ Canonical workflow: `analienx/config:skills/supervisor-executor/SKILL.md`.
 ## Current supervised stream
 
 - Issue #4 — Contoso semantic-model expansion and report redesign.
-- Current repository default branch: `feature/expand-contoso-pbip`.
+- Current repository default branch: `main`. The Contoso improvement stream remains tracked in issue #4; documentation showcase work can proceed separately.
 - `docs/supervisor-agent.md` remains useful historical/project context but is not the runtime control ledger.
 
 CI-health issues #6 and #8 were resolved before this bootstrap rollout was finalized. The repair made the Windows Registry dependency platform-scoped, corrected TMDL table-name parsing after documentation comments, updated the expanded Contoso regression, and kept the Python 3.10 mypy target compatible with development dependencies. The integrated repair passed package, pytest, Ruff and mypy on Python 3.10–3.13 before merge.

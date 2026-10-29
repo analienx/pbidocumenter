@@ -40,7 +40,7 @@ Do not rely on cached global workflow text when GitHub access is available.
 
 The canonical external skill governs coordination. This repository specializes it for PBIP/PBIR engineering. An Executor task may explicitly delegate implementation through local tools such as SemanticOps or PBIR Toolkit; when delegated, read current state first, use required tool APIs rather than bypassing them silently, validate each meaningful batch, preserve unrelated local work, and report exact evidence.
 
-The repository default branch is currently `feature/expand-contoso-pbip`. Never silently assume `main` is the authoritative project target branch; use the task/PR base explicitly. This does **not** change the canonical control-plane ref, which remains external `analienx/config` `main`.
+The current GitHub default branch is `main`. Use the assigned task/PR base explicitly; do not overwrite local uncommitted changes or assume a historical feature branch remains active. This does **not** change the canonical control-plane ref, which remains external `analienx/config` `main`.
 
 `.` means the canonical `supervise_latest` operation: resolve the active PBIP Documenter stream from context/external registry, fetch newest external issue comments, inspect referenced implementation/CI/rendered output, take the necessary supervisory action, and return a compact status without asking the user to relay Executor messages.
 
