@@ -108,9 +108,9 @@ def create(root: Path = BASE) -> dict[str, Path]:
     draw.text((74, 287), "Documenter", font=typography(76, True), fill=TEXT)
     draw.rectangle((78, 395, 470, 401), fill=MINT)
     draw.rectangle((470, 395, 592, 401), fill=PINK)
-    draw.text((77, 431), "Power BI source. Structured.", font=typography(28), fill=(229, 239, 250))
-    draw.text((77, 472), "Editable Word documentation.", font=typography(28), fill=(229, 239, 250))
-    draw.text((77, 568), "MODEL   /   DAX   /   LINEAGE   /   REPORT PAGES",
+    draw.text((77, 431), "Source-generated diagrams.", font=typography(28), fill=(229, 239, 250))
+    draw.text((77, 472), "Native, editable Word shapes.", font=typography(28), fill=(229, 239, 250))
+    draw.text((77, 568), "MODEL   /   DAX   /   LINEAGE   /   PBIR WIREFRAMES",
               font=typography(15, True), fill=MUTED)
     draw.text((77, 624), "REAL GENERATED CONTOSO RETAIL OUTPUT", font=typography(15, True), fill=MINT)
 

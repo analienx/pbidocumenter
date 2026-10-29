@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Made dynamically generated **native editable Word diagrams** (schema relationships, source lineage and PBIR-derived wireframes) a prominent product feature, distinct from screenshot previews.
+- Documented the actual DrawingML shapes/connectors architecture and the saved-document snapshot boundary; strengthened installed-wheel CI to prevent regressions to static embedded diagram images.
+
+
 - Refined GitHub landing experience: clearer value proposition, streamlined install flow, readable source-derived image excerpts, consistent editorial hierarchy and direct permanent example downloads.
 - Added full/concise authentic Contoso Word files and a browsable PDF with file hashes, linked to the exact installed-wheel CI run.
 - Expanded reproducible imagery and CI provenance guards to include hero art, cropped evidence, Word/PDF samples and the source PBIP tree.

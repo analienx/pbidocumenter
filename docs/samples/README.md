@@ -2,7 +2,7 @@
 
 [← Real output gallery](../EXAMPLES.md) · [← Product overview](../../README.md)
 
-These are **actual PBIP Documenter outputs**, permanently included in this repository. The input is the fictional [Contoso Retail PBIP project](../../examples/contoso-retail/), not a customer report.
+These are **actual PBIP Documenter outputs**, permanently included in this repository. **The relationship, lineage and PBIR wireframe diagrams are native editable Word shapes and connectors, not embedded picture files.** The input is the fictional [Contoso Retail PBIP project](../../examples/contoso-retail/), not a customer report.
 
 | File | Why download it | Size |
 | :-- | :-- | --: |

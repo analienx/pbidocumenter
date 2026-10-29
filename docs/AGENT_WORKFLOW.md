@@ -16,9 +16,10 @@ You are documenting the Power BI project at:
    pbip-documenter "<ABSOLUTE_PATH_TO_PBIP_PROJECT>"
      --mode full --output "<OUTPUT_DIRECTORY>/design-specification.docx"
 3. Treat a nonzero exit code or missing output as failure.
-4. Verify the DOCX opens and has substantive section headings, a
-   semantic-model inventory, measures, relationships and report pages
-   corresponding to the input.
+4. Verify the DOCX opens, contains substantive headings and source
+   inventories, and includes native Word DrawingML shapes/connectors
+   for model relationships, lineage and PBIR page wireframes. Don't
+   mistake README preview JPGs for embedded diagram images.
 5. Report extracted facts separately from generated recommendations
    and human-confirmation fields. Never invent scope, owners, RLS,
    classification, business impact or refresh SLAs.
@@ -47,7 +48,8 @@ This installs from the current GitHub source. The sample screenshots and [perman
 | :--- | :--- |
 | **Source integrity** | Input PBIP/PBIR/TMDL files are not modified |
 | **Command** | Installed `pbip-documenter` exits successfully |
-| **DOCX** | Valid ZIP/OOXML, nonempty heading structure, substantive tables and diagrams |
+| **DOCX** | Valid ZIP/OOXML, nonempty heading structure and substantive technical tables |
+| **Editable diagrams** | Native OOXML DrawingML groups, shapes and connectors?not flattened report screenshots; regenerate by rerunning the CLI after PBIP changes |
 | **Completeness** | Table, measure, relationship, page and visual counts are consistent with source |
 | **Business certainty** | Suggested requirements and unverified metadata are explicitly flagged |
 | **Privacy** | Source projects, DOCX files and logs remain in approved local/private locations |

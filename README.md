@@ -2,7 +2,7 @@
   <img src="docs/images/hero-product.png" alt="PBIP Documenter — semantic-model relationships and report-page wireframes taken from real generated Word documents" width="100%">
 </p>
 
-<p align="center"><strong>Turn Power BI project files into useful, editable Word documentation.</strong></p>
+<p align="center"><strong>Generate complete Power BI specifications with editable native Word diagrams ? not flattened pictures.</strong></p>
 <p align="center">
   <a href="https://github.com/analienx/pbidocumenter/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/analienx/pbidocumenter/actions/workflows/ci.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/badge/license-Apache--2.0-304C70"></a>
@@ -16,9 +16,22 @@
 
 ---
 
-## The documentation you wish every Power BI report came with
+## Reverse-engineer Power BI into editable technical documentation
 
-Give PBIP Documenter a local **PBIP/PBIR project**. It reads the semantic model and report definition, then builds a structured Microsoft Word specification—with **model relationships, DAX, Power Query, report-page wireframes and handover details**. No tenant connection or Power BI Desktop interaction is required for the core workflow.
+Point PBIP Documenter at a local **PBIP / PBIR / TMDL project**. It reads the semantic model and report structure, then builds a Word specification with **diagrams generated from your actual source**. No Power BI Desktop or tenant connection is required for core generation.
+
+### Six defining capabilities
+
+| Capability | What you get |
+| :-- | :-- |
+| **Native editable Word diagrams** | **DrawingML shapes, connectors and text**, not flattened PNGs: model relationships, source lineage and report-page wireframes. |
+| **Data lineage and model architecture** | Source ? staging queries ? loaded tables ? report usage, plus relationships, columns, roles and partitions. |
+| **DAX and Power Query documentation** | Measure inventories, DAX expressions, M transformations, hierarchies and calculation groups where present; expanded source code in full mode. |
+| **Report reverse-engineering** | PBIR-derived page wireframes, visual types/positions, field bindings, filters, bookmarks and navigation actions. |
+| **Technical quality insights** | Categorized technical observations, warnings and review opportunities for maintenance and handover. |
+| **Agent-ready Word handover** | Concise/full DOCX with native headings, tables, linked contents and clearly labeled owner-confirmation fields; source-read-only CLI. |
+
+**?Dynamic? means generated from the PBIP source at runtime.** In the resulting Word document, diagrams are editable native shapes and connectors?not screenshot images. The DOCX is a snapshot, **not a live-synced connection** to future PBIP changes. [How DrawingML works](docs/ARCHITECTURE.md#native-word-diagrams--not-static-images).
 
 ## Explore an actual generated document
 
@@ -32,7 +45,9 @@ Open the complete example before installing anything. All three files were gener
 | **Semantic-model relationships** | **Report-page layout and bindings** |
 | :--: | :--: |
 | [![Cropped detail from generated Word model-relationship page](docs/images/showcase/detail-lineage.jpg)](docs/images/showcase/model-lineage.jpg) | [![Cropped detail from generated Word report-page wireframe](docs/images/showcase/detail-wireframe.jpg)](docs/images/showcase/report-wireframe.jpg) |
-| *Actual DOCX output · model lineage* | *Actual DOCX output · PBIR wireframe, not a live dashboard screenshot* |
+| *Native Word shapes and relationship connectors* | *Native Word shapes and PBIR-derived layout* |
+
+**These images are only GitHub previews.** The [actual DOCX](docs/samples/Contoso-Retail-full.docx) has native Word DrawingML diagrams. Its generated Contoso example contains **10 grouped diagrams, 266 native shape elements, 78 connector endpoint pairs and zero embedded image files**. The installed-package CI now verifies these structures.
 
 <sub>Source-based acceptance for this example: **12 tables · 55 measures · 19 relationships · 5 pages · 54 visuals**. Crops above come directly from the original generated document pages. [Source and screenshot evidence](docs/EXAMPLES.md#what-was-independently-checked) · [File checksums](docs/samples/README.md).</sub>
 
@@ -49,16 +64,7 @@ That's it: open the editable `design-specification.docx` in Word. Prefer a short
 
 > **Distribution:** Install directly from GitHub as shown above. A PyPI package for this project has not been verified, so this README does not claim a published PyPI release. The [permanent samples](docs/samples/README.md) were generated from a specifically recorded commit, and output may evolve on `main`.
 
-## What you get
-
-| Document section | Based on |
-| :-- | :-- |
-| **Model & data architecture** — tables, columns, measures, relationships, partitions, roles and lineage | TMDL and model files |
-| **Calculations & transformations** — DAX inventories, plus full-code detail in full mode | DAX and Power Query / M |
-| **Report design** — page layouts, visual types, filters, bookmarks and bindings | PBIR report definition |
-| **Operations & handover** — support structure, technical observations and explicit confirmation fields | Extracted facts + labeled suggestions |
-
-**No invented business requirements.** Project source alone cannot establish purpose, owner, classification, refresh SLA or real tenant access. The generated specification distinguishes extracted evidence from items to confirm.
+**Source facts, not invented requirements:** ownership, scope, classification, refresh SLAs and tenant-level access are marked for confirmation whenever the PBIP files cannot establish them.
 
 ## Built for developers and AI agents
 
@@ -79,8 +85,8 @@ Return the exact document path and any limitations.
 flowchart LR
     A["PBIP / PBIR / TMDL"] --> B["Source extraction"]
     B --> C["Model and report inventory"]
-    C --> D["Word document renderer"]
-    D --> E["Editable DOCX"]
+    C --> D["Native DrawingML diagrams<br/>and Word renderer"]
+    D --> E["Editable DOCX<br/>model ? lineage ? wireframes"]
 ```
 
 Core generation is **local and read-only**. GitHub CI separately exercises the **installed wheel**, compares source inventories and renders documents to PDF for page-level evidence. The PDF renderer is LibreOffice, so it does **not** certify exact Microsoft Word pagination. [Architecture, trust boundaries and acceptance](docs/ARCHITECTURE.md).

@@ -2,7 +2,7 @@
 
 [← Overview](../README.md) · [Download sample files](samples/README.md) · [How it works](ARCHITECTURE.md)
 
-**One fictional Power BI project. Two editable Word specifications. Real source-matched output.** All examples on this page come from the Contoso Retail PBIP bundled in the repository—not hand-built demonstration pages.
+**One fictional Power BI project. Two editable Word specifications. Diagrams generated as native Word drawing objects ? not pictures.** All examples on this page come from the Contoso Retail PBIP bundled in the repository—not hand-built demonstration pages.
 
 | Open the result | Get the editable Word document |
 | :-- | :-- |
@@ -13,7 +13,7 @@
 
 [![Detail of the real Word semantic-model relationship diagram](images/showcase/detail-lineage.jpg)](images/showcase/model-lineage.jpg)
 
-*Actual model relationship diagram, cropped for readability. [View the original full page](images/showcase/model-lineage.jpg).*
+*GitHub preview cropped from an actual document render. In the DOCX, the relationship diagram consists of native editable DrawingML shapes and connectors, not this JPEG. [View the original full page](images/showcase/model-lineage.jpg).*
 
 The document describes semantic-model structure and relationships. It doesn't invent table definitions or ask you to reconstruct the model manually.
 
@@ -21,7 +21,11 @@ The document describes semantic-model structure and relationships. It doesn't in
 
 [![Detail of the real generated PBIR executive overview wireframe](images/showcase/detail-wireframe.jpg)](images/showcase/report-wireframe.jpg)
 
-*Actual report-page wireframe, cropped for readability. [View the full page with visual bindings and filters](images/showcase/report-wireframe.jpg). A PBIR wireframe is not a screenshot of a rendered Power BI dashboard.*
+*GitHub preview cropped from an actual document render. In Word, the wireframe consists of editable DrawingML shapes built from PBIR page geometry. [View the full page with visual bindings and filters](images/showcase/report-wireframe.jpg). It is not a screenshot of a live Power BI dashboard.*
+
+### What makes these diagrams different?
+
+**Source-driven generation:** on each invocation, PBIP Documenter recalculates model, lineage and page-layout diagrams from the current project. **Native Word output:** the public example's DOCX has 10 grouped diagrams, 266 shape elements and 78 connector endpoint pairs; no image files are embedded. **Editable, not live-synced:** you can adjust the Word drawing objects; rerun the generator to reflect later PBIP changes. [Inspect the real DOCX](samples/Contoso-Retail-full.docx) or [the implementation](ARCHITECTURE.md#native-word-diagrams--not-static-images).
 
 ## 03 / See the engineering detail
 

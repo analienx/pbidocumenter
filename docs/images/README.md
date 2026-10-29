@@ -2,7 +2,7 @@
 
 [← Example gallery](../EXAMPLES.md) · [← Repository](../../README.md)
 
-Everything here is traceable to actual generated Contoso Retail documentation.
+Everything here is traceable to actual generated Contoso Retail documentation. **The JPEG/PNG files are only GitHub preview assets: the Word generator builds native editable DrawingML diagrams rather than inserting these images into the DOCX.**
 
 | Asset | What you're viewing |
 | :-- | :-- |
