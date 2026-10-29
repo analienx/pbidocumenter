@@ -24,7 +24,7 @@ into your environment at runtime.
 The included **Contoso Retail** project is fictional and safe to use in demos.
 The default output is saved under `Exported Documents/<ProjectName>/` in
 your current working directory; `-o` chooses a single explicit output file.
-Open the generated `.docx` in Word and update its table-of-contents fields.
+Open the generated `.docx` in Word. Its first page provides a linked contents list that works without manually refreshing fields.
 
 ## Optional Power BI report quality checks
 
