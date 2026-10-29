@@ -986,14 +986,15 @@ def build_doc(
         f"{len(tables)} tables, {total_m} measures. Data from {len(set(sm.get('data_sources', [])))} source(s).",
     )
     h2(doc, "1.4 Out of scope")
-    for item in [
-        "No mobile-optimized layout",
-        "No real-time or streaming refresh",
-        "No data write-back or workflow automation",
-        "No budget/forecast comparisons",
-        "No historical data prior to source inception",
-    ]:
-        suggested_bullet(doc, item)
+    # PBIP metadata does not establish business exclusions or deployment SLAs.
+    # In particular, generic exclusions can contradict model facts such as a
+    # budget table, even when presented as a suggestion. Request owner input.
+    suggested(
+        doc,
+        "Confirm out-of-scope capabilities, excluded user scenarios, "
+        "refresh SLAs, and integration limits with the report owner. "
+        "These exclusions cannot be established from PBIP source alone.",
+    )
     h2(doc, "1.5 Assumptions, dependencies and limitations")
     if augmentation and augmentation.requirement and augmentation.requirement.assumptions:
         for item in augmentation.requirement.assumptions:

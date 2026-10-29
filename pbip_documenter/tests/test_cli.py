@@ -69,3 +69,17 @@ def test_multi_project_explicit_filename_fails_before_overwrite(tmp_path: Path, 
 
     assert cli.main([str(project_root), "--output", str(output)]) == 2
     assert output.read_bytes() == original
+
+
+
+def test_generated_scope_does_not_invent_business_exclusions(tmp_path: Path) -> None:
+    from docx import Document
+
+    output = tmp_path / "scope.docx"
+    assert main([str(EXAMPLE_DIR), "--output", str(output)]) == 0
+    doc = Document(output)
+    content = "\n".join(p.text for p in doc.paragraphs)
+
+    assert "These exclusions cannot be established from PBIP source alone." in content
+    assert "No budget/forecast comparisons" not in content
+    assert "No real-time or streaming refresh" not in content
