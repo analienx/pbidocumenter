@@ -26,14 +26,7 @@ def _get_bundle_dir() -> typing.Any:
     return Path(__file__).resolve().parent.parent
 
 
-def _get_exe_dir() -> typing.Any:
-    if getattr(sys, "frozen", False):
-        return Path(sys.argv[0]).resolve().parent
-    return Path(__file__).resolve().parent.parent
-
-
 BUNDLE_DIR = _get_bundle_dir()
-EXE_DIR = _get_exe_dir()
 
 
 def _print_banner() -> typing.Any:
@@ -82,7 +75,7 @@ def main(argv: Sequence[str] | None = None) -> typing.Any:
         "-o",
         type=str,
         default=None,
-        help="Output file path (default: Exported Documents/<ProjectName>/ in repo root)",
+        help="Output DOCX path (default: Exported Documents/<ProjectName>/ under the working directory)",
     )
     ap.add_argument("--logo", type=str, default=None, help="Path to logo image for document header")
     ap.add_argument("--template", "-t", type=str, default=None, help="Path to Word template (.docx)")
@@ -146,13 +139,21 @@ def main(argv: Sequence[str] | None = None) -> typing.Any:
         print(f"ERROR: No PBIP projects found in {REPORTS_DIR}")
         return 2
 
-    generated = 0
+    valid_projects = []
     for pd in projects:
         proj = PbipProject(pd)
-        if not proj.is_valid:
+        if proj.is_valid:
+            valid_projects.append(proj)
+        else:
             print(f"  SKIP: {proj.name}")
-            continue
 
+    if args.output and len(valid_projects) > 1:
+        print("ERROR: --output is a single DOCX filename, but multiple valid projects were found.")
+        print("Run once per project with --output, or omit --output to generate separate files.")
+        return 2
+
+    generated = 0
+    for proj in valid_projects:
         print(f"  Extracting: {proj.name}")
         summary = build_project_summary(proj)
         augmentation = None
@@ -171,7 +172,7 @@ def main(argv: Sequence[str] | None = None) -> typing.Any:
             op = Path(args.output)
         else:
             proj_slug = re.sub(r"[^a-zA-Z0-9_-]", "_", proj.name)
-            op = EXE_DIR / "Exported Documents" / proj.name / f"{proj_slug}_DesignSpecification_{args.mode}.docx"
+            op = Path.cwd() / "Exported Documents" / proj.name / f"{proj_slug}_DesignSpecification_{args.mode}.docx"
 
         op.parent.mkdir(parents=True, exist_ok=True)
         doc.save(str(op))
