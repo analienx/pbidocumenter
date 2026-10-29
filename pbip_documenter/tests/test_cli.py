@@ -77,9 +77,18 @@ def test_generated_scope_does_not_invent_business_exclusions(tmp_path: Path) -> 
 
     output = tmp_path / "scope.docx"
     assert main([str(EXAMPLE_DIR), "--output", str(output)]) == 0
-    doc = Document(output)
+    doc = Document(str(output))
     content = "\n".join(p.text for p in doc.paragraphs)
 
     assert "These exclusions cannot be established from PBIP source alone." in content
     assert "No budget/forecast comparisons" not in content
     assert "No real-time or streaming refresh" not in content
+
+    from docx.oxml.ns import qn
+
+    linked = {node.get(qn("w:anchor")) for node in doc.element.body.xpath(".//w:hyperlink")}
+    targets = {node.get(qn("w:name")) for node in doc.element.body.xpath(".//w:bookmarkStart")}
+    required = {
+        "toc_control", "toc_scope", "toc_operations", "toc_technical", "toc_support", "toc_revision"
+    }
+    assert required <= linked & targets

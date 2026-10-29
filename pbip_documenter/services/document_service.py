@@ -19,6 +19,7 @@ from pbip_documenter.analysis.lineage import insert_lineage_diagram
 from pbip_documenter.analysis.observations import generate_observations
 from pbip_documenter.analysis.schema import insert_star_schema
 from pbip_documenter.config import _SCHEMA_LANDSCAPE_MARGIN_CM, FONT, C
+from pbip_documenter.docx_render.navigation import add_navigation, bookmark_navigation_targets
 from pbip_documenter.docx_render.pagination import (
     _BLOCK_BUFFER_IN,
     _H3_IN,
@@ -944,7 +945,8 @@ def build_doc(
         hp2.alignment = WD_ALIGN_PARAGRAPH.RIGHT
         _run(hp2, f"{report_name} \u2014 Design Specification", size=8, italic=True, color=C.DGRAY)
         h1(doc, "Table of Contents")
-        callout(doc, "Right-click \u2192 Update Field to refresh page numbers after opening in Word.")
+        callout(doc, "Select a section below to navigate directly to its heading in Word.")
+        add_navigation(doc)
         page_break(doc)
 
     h1(doc, "Document control")
@@ -1826,7 +1828,6 @@ def build_doc(
     placeholder(doc, "Testing evidence")
     placeholder(doc, "Release notes / change record")
     placeholder(doc, "Access document")
-    page_break(doc)
 
     h1(doc, "5. Revision history")
     data_table(
@@ -1838,4 +1839,5 @@ def build_doc(
     )
 
     _remove_unnecessary_breaks(doc)
+    bookmark_navigation_targets(doc)
     return doc
