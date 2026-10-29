@@ -32,14 +32,14 @@ Run the command on **one project at a time** when passing `--output`. The CLI re
 
 ```bash
 # Optional installation (normal project dependencies are installed explicitly)
-pipx install pbip-documenter
+pipx install "git+https://github.com/analienx/pbidocumenter.git@main"
 
 # Generate the full design specification
 pbip-documenter "path/to/YourProject" --mode full \
   --output "output/YourProject-design-specification.docx"
 ```
 
-If you want the exact behavior in [the current repository screenshots](EXAMPLES.md), install from the matching Git commit rather than assuming the latest PyPI version includes unreleased changes.
+This installs from the current GitHub source. The sample screenshots and [permanent downloadable documents](samples/README.md) are pinned to an earlier, recorded source commit; use that commit when exact output reproducibility matters.
 
 ## Recommended agent acceptance
 

@@ -1,35 +1,33 @@
-# Screenshot provenance
+# Visual evidence, not mockups
 
-[← Output gallery](../EXAMPLES.md) · [← Repository](../../README.md)
+[← Example gallery](../EXAMPLES.md) · [← Repository](../../README.md)
 
-This directory contains **real, checked-in visual evidence from PBIP Documenter**, not AI-generated document mockups.
+Everything here is traceable to actual generated Contoso Retail documentation.
 
-| Asset | Meaning |
-| :--- | :--- |
-| [`social-preview.png`](social-preview.png) | Designed repository banner combining **two actual document page renders** (relationship diagram and report wireframe) with decorative typography |
-| [`showcase/*.jpg`](showcase/) | Complete source-derived document page screenshots |
-| [`showcase-provenance.json`](showcase-provenance.json) | Precise CI run, source commit, PDF SHA-256, screenshot page references and image SHA-256 |
+| Asset | What you're viewing |
+| :-- | :-- |
+| [`hero-product.png`](hero-product.png) | Editorial banner composed from **actual** Word model-lineage and PBIR-wireframe excerpts |
+| [`social-preview.png`](social-preview.png) | 1280×640 social banner using the same source screenshots |
+| [`showcase/detail-*.jpg`](showcase/) | **Cropped excerpts** of two rendered full document pages, for legibility in GitHub |
+| [`showcase/*.jpg`](showcase/) | Seven **full, unmodified PDF-page renders** plus the two excerpts |
+| [`showcase-provenance.json`](showcase-provenance.json) | Git tree, CI run, rendered PDF source pages, SHA-256 hashes and permanent sample checksums |
 
-## Verification boundary
+**Source:** fictional public [Contoso Retail PBIP](../../examples/contoso-retail/). **Capture:** installed-package CI run [40870433647](https://github.com/analienx/pbidocumenter/actions/runs/40870433647), LibreOffice PDF conversion and PyMuPDF page extraction. The source diagrams were not recreated or retouched.
 
-- Inputs: fictional public [Contoso Retail PBIP project](../../examples/contoso-retail/).
-- Producer: installed-package CI in [`main` run 40870433647](https://github.com/analienx/pbidocumenter/actions/runs/40870433647).
-- Renderer: headless **LibreOffice → PDF**, then PyMuPDF → JPEG. These are **Word-document renders**, **not** screenshots of the live Power BI report.
-- Pages are reproduced without synthesizing report content. The banner is a composition of real rendered pages; its surrounding background and text are graphic design, not an assertion about a specific application UI.
-- Screenshot images are committed because temporary GitHub Actions artifacts expire.
+The hero adds **presentation only**: typography, framing, background and image crops. It is not an application screenshot. The wireframe is a source-derived PBIR layout diagram, **not** a screenshot of a live Power BI dashboard.
 
-## Regeneration
+## Reproduce and verify
 
 ```bash
 gh run download 40870433647 -R analienx/pbidocumenter \
   --name contoso-rendered-word-review-evidence \
   --dir /path/to/evidence
 
-python -m pip install pillow pymupdf
+python -m pip install Pillow pymupdf
 python scripts/build_readme_showcase.py --evidence-dir /path/to/evidence
 python scripts/ci_readme_showcase.py
 ```
 
-The screenshot builder checks that the referenced artifact has the expected 12 tables, 55 measures, 19 relationships, 5 pages and 54 visuals. If the fixture changes, regenerate the proof images from the **new matching run** and update the verified inventory rather than reusing a misleading old screenshot.
+The regeneration script produces all nine page screenshots/crops and both banners. The verification script checks image hashes, fixture provenance, Markdown image links and the real [sample Word/PDF files](../samples/README.md). Artifacts eventually expire, but the committed images and examples remain available.
 
-**Do not replace these images with concept art** without explicitly relabeling them as illustrations.
+Never replace evidence images with synthetic documents while presenting them as generated output.

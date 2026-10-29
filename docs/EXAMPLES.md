@@ -1,83 +1,63 @@
-# Real output gallery
+# Inside a real generated specification
 
-[← Back to PBIP Documenter](../README.md) · [CLI reference](CLI.md) · [Agent workflow](AGENT_WORKFLOW.md)
+[← Overview](../README.md) · [Download sample files](samples/README.md) · [How it works](ARCHITECTURE.md)
 
-Every capture below is from the **actual Word design specification generated from the public [Contoso Retail PBIP project](../examples/contoso-retail)**. GitHub Actions generated the DOCX using the installed package, rendered it with LibreOffice, and ran source-fidelity checks. They are not hand-designed substitutes or Power BI Desktop screenshots.
+**One fictional Power BI project. Two editable Word specifications. Real source-matched output.** All examples on this page come from the Contoso Retail PBIP bundled in the repository—not hand-built demonstration pages.
 
-> **Source of truth:** [successful `main` workflow 40870433647](https://github.com/analienx/pbidocumenter/actions/runs/40870433647) at commit [`ac6700c`](https://github.com/analienx/pbidocumenter/commit/ac6700c5d2c6adafcb784b2db4416c4d9fe99c9a). Each image's DOCX mode, PDF page number and SHA-256 are recorded in [`showcase-provenance.json`](images/showcase-provenance.json). Click any screenshot to see its full resolution.
+| Open the result | Get the editable Word document |
+| :-- | :-- |
+| **[Browse the 27-page full document as PDF](samples/Contoso-Retail-full.pdf)** | **[Full specification (.docx)](samples/Contoso-Retail-full.docx)** |
+| 18-page concise Word version | [Concise specification (.docx)](samples/Contoso-Retail-concise.docx) |
 
-## Overview
+## 01 / Understand the data model
 
-| Linked contents — generated output | Semantic model — generated inventory |
-| :---: | :---: |
-| [![Actual first page of Word documentation, with clickable contents](images/showcase/contents.jpg)](images/showcase/contents.jpg) | [![Actual semantic-model summary page showing tables and measures](images/showcase/semantic-model.jpg)](images/showcase/semantic-model.jpg) |
-| *A useful contents page without manually updating a Word field* | *The technical specification begins with source-derived facts* |
+[![Detail of the real Word semantic-model relationship diagram](images/showcase/detail-lineage.jpg)](images/showcase/model-lineage.jpg)
 
-## The sections that matter to engineers
+*Actual model relationship diagram, cropped for readability. [View the original full page](images/showcase/model-lineage.jpg).*
 
-### 1. Model relationships and lineage
+The document describes semantic-model structure and relationships. It doesn't invent table definitions or ask you to reconstruct the model manually.
 
-[![Real full-page relationship and lineage diagram from the Word document](images/showcase/model-lineage.jpg)](images/showcase/model-lineage.jpg)
+## 02 / Understand every report page
 
-The generated diagram summarizes semantic-model relationships. It is a diagram *of the source metadata*, not a screenshot of Power BI Desktop's relationship view.
+[![Detail of the real generated PBIR executive overview wireframe](images/showcase/detail-wireframe.jpg)](images/showcase/report-wireframe.jpg)
 
-### 2. DAX measures — full mode
+*Actual report-page wireframe, cropped for readability. [View the full page with visual bindings and filters](images/showcase/report-wireframe.jpg). A PBIR wireframe is not a screenshot of a rendered Power BI dashboard.*
 
-[![Full DAX code snippets rendered into a generated Word technical specification](images/showcase/dax-measures.jpg)](images/showcase/dax-measures.jpg)
+## 03 / See the engineering detail
 
-The **full** mode includes formula-level documentation, in addition to the measure inventory. This page shows the source-measure definitions rather than placeholder pseudocode.
+| DAX calculations | Power Query / M |
+| :--: | :--: |
+| [![Authentic DAX code in the full Word specification](images/showcase/dax-measures.jpg)](images/showcase/dax-measures.jpg) | [![Authentic Power Query transformations in the full Word specification](images/showcase/power-query.jpg)](images/showcase/power-query.jpg) |
+| Source expressions, not generated pseudocode | Extracted M transformation details |
 
-### 3. Power Query / M — full mode
+The **full** mode provides deeper formulas and technical inventories; the **concise** mode prioritizes orientation and handover.
 
-[![Power Query M code page from a real generated technical specification](images/showcase/power-query.jpg)](images/showcase/power-query.jpg)
+## 04 / Handover-ready structure
 
-Transformation-source coverage helps a future maintainer identify where data preparation lives. The source project is fictional; no private connection strings or customer data are showcased.
+| Navigation and document hierarchy | Model overview and key counts |
+| :--: | :--: |
+| [![Actual generated Word linked contents page](images/showcase/contents.jpg)](images/showcase/contents.jpg) | [![Source-derived semantic-model overview](images/showcase/semantic-model.jpg)](images/showcase/semantic-model.jpg) |
 
-### 4. Report structure — wireframe and bindings
+The result also includes [categorized technical observations](images/showcase/technical-observations.jpg). Anything that requires business context—owner, operational SLA, user intent or classification—is left for confirmation rather than asserted as a source fact.
 
-[![Report-page wireframe and visual/filter inventory in generated DOCX output](images/showcase/report-wireframe.jpg)](images/showcase/report-wireframe.jpg)
+## Verified against the original PBIP
 
-**Important:** this is a **generated PBIR wireframe**, deliberately abstracting the original report's layout and visual types. It is not a pixel-identical live dashboard render.
+| Inventory | Exact source-to-document verification |
+| :-- | --: |
+| Tables | **12 of 12** |
+| Measures, including owning tables | **55 of 55** |
+| Relationship endpoints | **19 of 19** |
+| Report pages | **5 of 5** |
+| Report visual totals | **54 of 54** |
 
-### 5. Technical observations
+The [successful GitHub CI run](https://github.com/analienx/pbidocumenter/actions/runs/40870433647) produced the actual DOCX files, rendered the PDFs and checked the inventories against source. The concise version rendered to **18 pages**, the full version to **27 pages**, with no detected text blocks outside page bounds in that run. Those are test results for this fixture, **not universal document-length or design guarantees**.
 
-[![Generated technical observations grouped by category in the DOCX output](images/showcase/technical-observations.jpg)](images/showcase/technical-observations.jpg)
+### Where these images came from
 
-The document distinguishes observations from business decisions. Report owners should verify suggested operational conclusions, support contacts and scope statements before treating the document as formally approved.
+- **Source:** [public fictional Contoso Retail PBIP](../examples/contoso-retail/)
+- **Generated document:** installed-wheel output from CI run `40870433647` (commit `ac6700c`)
+- **Screenshots:** full PDF pages from LibreOffice; hero and detail images are explicitly labeled compositions/crops of those actual pages
+- **Traceability:** [image hashes and page provenance](images/showcase-provenance.json) · [sample SHA-256 checksums](samples/README.md)
+- **Limitation:** LibreOffice verifies repeatable PDF rendering, but Microsoft Word may paginate differently. Final business and Word-layout approval remains a human decision.
 
-## What was independently checked
-
-| Source inventory | Verified in concise and full DOCX |
-| :--- | ---: |
-| Semantic-model tables | **12 / 12** |
-| DAX measures and owning tables | **55 / 55** |
-| Relationship endpoints | **19 / 19** |
-| Report pages | **5 / 5** |
-| Visual totals from the pages | **54 / 54** |
-
-The [GitHub Actions acceptance job](../.github/workflows/ci.yml) also renders **every page**, checks for completely blank pages, detects text bounds outside page geometry, and uploads PDF/JPEG evidence. In this run the concise output was **18 pages** and the full output **27 pages**, with no detected out-of-page blocks. Those page counts describe the sample, not a promise for arbitrary reports.
-
-**Rendering fidelity boundary:** LibreOffice/PDF is a repeatable visual verification environment. Microsoft Word can break pages differently; review Word-specific pagination when it matters.
-
-## Reproduce this gallery
-
-From a checkout of the corresponding source revision:
-
-```bash
-# Download the GitHub-hosted rendered Word/PDF evidence
-gh run download 40870433647 -R analienx/pbidocumenter \
-  --name contoso-rendered-word-review-evidence \
-  --dir /path/to/contoso-render-evidence
-
-# Only the screenshot-generation script needs these image libraries
-python -m pip install Pillow pymupdf
-
-python scripts/build_readme_showcase.py \
-  --evidence-dir /path/to/contoso-render-evidence \
-  --run-id 40870433647 \
-  --source-commit ac6700c5d2c6adafcb784b2db4416c4d9fe99c9a
-```
-
-The GitHub-hosted build artifacts have limited retention; the **committed screenshots and provenance manifest remain in the repository**. Regenerate screenshots whenever the documented fixture, output renderer or layout changes. Do not mix screenshots from different revisions while presenting them as one run.
-
-[Image provenance and regeneration policy](images/README.md) · [Technical architecture](ARCHITECTURE.md) · [Main README](../README.md)
+[← Back to the product](../README.md) · [Agent workflow](AGENT_WORKFLOW.md) · [Source fidelity and architecture](ARCHITECTURE.md)
