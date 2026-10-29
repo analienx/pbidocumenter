@@ -12,9 +12,10 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-import fitz
-from copiloter import PbipProject, build_project_summary
+import pymupdf as fitz
 from docx import Document
+
+from copiloter import PbipProject, build_project_summary
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SOURCE = PROJECT_ROOT / "examples" / "contoso-retail"
@@ -57,9 +58,9 @@ def _verify_source_fidelity(docx: Path, source: dict) -> dict:
     expected_relationships = sorted(
         (
             str(rel.get("from_table", "")),
-            str(rel.get("from_column", "")),
+            str(rel.get("from_field", "")),
             str(rel.get("to_table", "")),
-            str(rel.get("to_column", "")),
+            str(rel.get("to_field", "")),
         )
         for rel in sm["relationships"]
     )
