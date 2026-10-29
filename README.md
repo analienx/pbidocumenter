@@ -2,11 +2,9 @@
   <img src="docs/images/hero-product.png" alt="PBIP Documenter — semantic-model relationships and report-page wireframes taken from real generated Word documents" width="100%">
 </p>
 
-<h1 align="center">PBIP Documenter</h1>
 <p align="center"><strong>Turn Power BI project files into useful, editable Word documentation.</strong></p>
 <p align="center">
   <a href="https://github.com/analienx/pbidocumenter/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/analienx/pbidocumenter/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://pypi.org/project/pbip-documenter/"><img alt="PyPI" src="https://img.shields.io/pypi/v/pbip-documenter"></a>
   <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/badge/license-Apache--2.0-304C70"></a>
 </p>
 <p align="center">
@@ -41,7 +39,7 @@ Open the complete example before installing anything. All three files were gener
 ## Try it in two commands
 
 ```bash
-pipx install pbip-documenter
+pipx install "git+https://github.com/analienx/pbidocumenter.git@main"
 pbip-documenter "/path/to/YourProject" --mode full --output design-specification.docx
 ```
 
@@ -49,7 +47,7 @@ That's it: open the editable `design-specification.docx` in Word. Prefer a short
 
 **Trying the sample?** Clone this repository and substitute `examples/contoso-retail` for the project path. The sample PBIP is in the Git checkout, **not installed by pipx**. [Full CLI reference](docs/CLI.md).
 
-> **Version clarity:** This README reflects GitHub `main`. The latest PyPI release may not include every unreleased feature illustrated here. To reproduce the exact checked-in sample, use the [source revision and CI evidence](docs/samples/README.md).
+> **Distribution:** Install directly from GitHub as shown above. A PyPI package for this project has not been verified, so this README does not claim a published PyPI release. The [permanent samples](docs/samples/README.md) were generated from a specifically recorded commit, and output may evolve on `main`.
 
 ## What you get
 

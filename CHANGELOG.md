@@ -6,6 +6,7 @@
 - Added full/concise authentic Contoso Word files and a browsable PDF with file hashes, linked to the exact installed-wheel CI run.
 - Expanded reproducible imagery and CI provenance guards to include hero art, cropped evidence, Word/PDF samples and the source PBIP tree.
 - Reorganized the gallery around engineering questions and updated visual-evidence documentation.
+- Removed an unverified PyPI installation path and broken version badge; documented supported GitHub-source installation instead.
 
 
 - Rebuilt the public repository landing page around real, source-verified Contoso Word output rather than illustrative documentation mockups.
