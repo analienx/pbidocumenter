@@ -19,7 +19,7 @@ flowchart TB
         D["Extract + normalize<br/>copiloter.py"]
         E["CLI orchestration<br/>pbip_documenter/cli.py"]
         F["Specification assembly<br/>services/document_service.py"]
-        G["Native Word components<br/>docx_render/"]
+        G["Editable DrawingML diagrams<br/>and native Word components"]
         E --> D
         D --> F
         F --> G
@@ -44,11 +44,21 @@ The diagram reflects concrete code paths in the current repository; it does not 
 | Word presentation | [`docx_render/`](../pbip_documenter/docx_render/) | Native Word styles, tables, navigation, pagination hints and wireframes |
 | Acceptance | [`ci.yml`](../.github/workflows/ci.yml) | Validates installed CLI, generation and source-to-DOCX consistency |
 
-### Why Word, not a screenshot-based document?
+## Native Word diagrams ? not static images
 
-The output is **editable OOXML/DOCX**. Headings, tables, formulas and supporting sections remain Word content rather than being flattened into image pages. Relationship and page-wireframe diagrams are inserted for fast orientation; the underlying source inventories remain available separately.
+**A core differentiator:** the diagrams are **constructed programmatically from actual PBIP metadata** and written as **grouped Word DrawingML objects**. [\`diagrams.py\`](../pbip_documenter/docx_render/diagrams.py) builds \`wpg:wgp\` groups containing \`wps:wsp\` shapes, text boxes and connector definitions. This differs fundamentally from generating a screenshot/PNG and inserting it into a Word page.
 
-The generated document is **not** a recreation of the live Power BI report. A PBIR wireframe describes visual type, geometry and bindings; it does not represent actual rendered dataset values or claim to replace Power BI Desktop.
+| Diagram | Source and dynamic generation | Word representation |
+| :-- | :-- | :-- |
+| **Semantic-model relationships** | [\`schema.py\`](../pbip_documenter/analysis/schema.py) selects connected tables and relationships, computes focus layouts, then creates actual nodes and attached connectors | Native grouped DrawingML shapes and relationship lines |
+| **End-to-end data lineage** | [\`lineage.py\`](../pbip_documenter/analysis/lineage.py) traces data sources, staging queries, loaded tables and report-page usage where discoverable | Native Word shapes, labels and connectors |
+| **Report-page wireframes** | [\`wireframe.py\`](../pbip_documenter/docx_render/wireframe.py) derives visual zones, types and proportional layouts from PBIR geometry | Native Word shapes and text, not a pasted page capture |
+
+**Editable means the diagram consists of Word drawing objects.** Users can modify their shapes/text/position in a compatible Word editor (some edits may require selecting or ungrouping objects). **Dynamic means regenerated when the generator is run again.** It does *not* mean live data interaction, automatic syncing from the PBIP after document creation, or a live Power BI dashboard.
+
+The public [full Contoso DOCX](samples/Contoso-Retail-full.docx) currently contains **10 grouped diagrams, 266 native Word shape elements and 78 connector endpoint pairs**, and no embedded media files. [Installed-wheel generation CI](../scripts/ci_docx_generation_smoke.py) checks diagram structures so this feature cannot quietly regress to flattened images.
+
+The README's JPG/PNG illustrations are *previews made by PDF-rendering the Word document*. The **DOCX itself retains native shapes**. The wireframe conveys visual types and bindings, not live dataset values or pixel-identical report renders.
 
 ## Acceptance flow
 
