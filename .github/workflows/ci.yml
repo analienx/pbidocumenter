@@ -34,16 +34,10 @@ jobs:
       - run: python -m build
       - run: python -m pip install --force-reinstall dist/*.whl
       - run: pbip-documenter --version
-  vqs-consumer-contract:
-    # Genuine installed-entrypoint integration on a clean GitHub runner.
-    # VQS is optional for DOCX generation, and this job never needs Desktop.
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - run: python scripts/ci_docx_generation_smoke.py --output-dir generated-documents
+      - uses: actions/upload-artifact@v4
         with:
-          python-version: "3.12"
-      - run: python -m pip install --upgrade pip
-      - run: python -m pip install .
-      - run: python -m pip install "git+https://github.com/analienx/visual-quality-system.git@4f51f89f255a6a1798c4baaba3d7b916beb74b94"
-      - run: python scripts/ci_vqs_quality_smoke.py
+          name: contoso-generated-word-specifications
+          path: generated-documents/*.docx
+          if-no-files-found: error
+          retention-days: 7

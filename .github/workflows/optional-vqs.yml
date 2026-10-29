@@ -1,0 +1,19 @@
+name: Optional VQS consumer contract
+
+on:
+  workflow_dispatch:
+
+jobs:
+  vqs-consumer-contract:
+    # Genuine installed-entrypoint integration on a clean GitHub runner.
+    # VQS is optional for DOCX generation, and this job never needs Desktop.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install .
+      - run: python -m pip install "git+https://github.com/analienx/visual-quality-system.git@v0.1.0"
+      - run: python scripts/ci_vqs_quality_smoke.py

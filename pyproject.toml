@@ -90,10 +90,10 @@ pbip-documenter = "pbip_documenter.bootstrap:main"
 pbip-quality = "pbip_documenter.quality:main"
 
 [project.urls]
-Homepage = "https://github.com/analienx/pbip-documenter"
-Documentation = "https://github.com/analienx/pbip-documenter/blob/main/README.md"
-Repository = "https://github.com/analienx/pbip-documenter"
-Issues = "https://github.com/analienx/pbip-documenter/issues"
+Homepage = "https://github.com/analienx/pbidocumenter"
+Documentation = "https://github.com/analienx/pbidocumenter/blob/main/README.md"
+Repository = "https://github.com/analienx/pbidocumenter"
+Issues = "https://github.com/analienx/pbidocumenter/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

@@ -39,3 +39,33 @@ def test_contoso_sample_models_a_star_schema() -> typing.Any:
 
 def test_returns_error_for_empty_directory(tmp_path: Path) -> typing.Any:
     assert main([str(tmp_path)]) == 2
+
+
+
+def test_default_output_is_written_under_current_directory(tmp_path: Path, monkeypatch: typing.Any) -> None:
+    monkeypatch.chdir(tmp_path)
+    assert main([str(EXAMPLE_DIR), "--mode", "default"]) == 0
+    documents = list((tmp_path / "Exported Documents").rglob("*.docx"))
+    assert len(documents) == 1
+    assert documents[0].stat().st_size > 10_000
+
+
+def test_multi_project_explicit_filename_fails_before_overwrite(tmp_path: Path, monkeypatch: typing.Any) -> None:
+    from pbip_documenter import cli
+
+    project_root = tmp_path / "projects"
+    (project_root / "First").mkdir(parents=True)
+    (project_root / "Second").mkdir()
+
+    class FakeProject:
+        def __init__(self, path: Path) -> None:
+            self.name = path.name
+            self.is_valid = self.name in {"First", "Second"}
+
+    monkeypatch.setattr(cli, "PbipProject", FakeProject)
+    output = tmp_path / "existing.docx"
+    original = b"preserve-user-file"
+    output.write_bytes(original)
+
+    assert cli.main([str(project_root), "--output", str(output)]) == 2
+    assert output.read_bytes() == original
