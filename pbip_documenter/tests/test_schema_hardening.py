@@ -52,7 +52,10 @@ def test_relationship_order_invariant_when_priorities_tie() -> None:
 
 
 def test_component_order_independent_of_source_table_order() -> None:
-    tables = [{"name": n, "columns": [], "measures": []} for n in ("Fact A", "Dim A", "Fact B", "Dim B")]
+    tables: list[dict[str, object]] = [
+        {"name": n, "columns": [], "measures": []}
+        for n in ("Fact A", "Dim A", "Fact B", "Dim B")
+    ]
     rels = [
         {"from_table": "Fact A", "to_table": "Dim A"},
         {"from_table": "Fact B", "to_table": "Dim B"},
