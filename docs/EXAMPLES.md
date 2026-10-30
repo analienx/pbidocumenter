@@ -56,12 +56,12 @@ The result also includes [categorized technical observations](images/showcase/te
 | Report pages | **5 of 5** |
 | Report visual totals | **54 of 54** |
 
-The [successful GitHub CI run](https://github.com/analienx/pbidocumenter/actions/runs/40870433647) produced the actual DOCX files, rendered the PDFs and checked the inventories against source. The concise version rendered to **18 pages**, the full version to **27 pages**, with no detected text blocks outside page bounds in that run. Those are test results for this fixture, **not universal document-length or design guarantees**.
+The [successful GitHub CI run](https://github.com/analienx/pbidocumenter/actions/runs/41021358575) produced the actual DOCX files, rendered the PDFs and checked the inventories against source. The concise version rendered to **18 pages**, the full version to **27 pages**, with no detected text blocks outside page bounds in that run. Those are test results for this fixture, **not universal document-length or design guarantees**.
 
 ### Where these images came from
 
 - **Source:** [public fictional Contoso Retail PBIP](../examples/contoso-retail/)
-- **Generated document:** installed-wheel output from CI run `40870433647` (commit `ac6700c`)
+- **Generated document:** installed-wheel output from CI run `41021358575` (commit `750cedc`)
 - **Screenshots:** full PDF pages from LibreOffice; hero and detail images are explicitly labeled compositions/crops of those actual pages
 - **Traceability:** [image hashes and page provenance](images/showcase-provenance.json) · [sample SHA-256 checksums](samples/README.md)
 - **Limitation:** LibreOffice verifies repeatable PDF rendering, but Microsoft Word may paginate differently. Final business and Word-layout approval remains a human decision.

@@ -48,8 +48,8 @@ def render_pdf_page(pdf: Path, page: int) -> Image.Image:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--evidence-dir", type=Path, required=True)
-    parser.add_argument("--run-id", default="40870433647")
-    parser.add_argument("--source-commit", default="ac6700c5d2c6adafcb784b2db4416c4d9fe99c9a")
+    parser.add_argument("--run-id", default="41021358575")
+    parser.add_argument("--source-commit", default="750cedccd5b6041a744fe4399d48b3bcd71796f6")
     parser.add_argument("--out-dir", type=Path, default=ROOT / "docs/images")
     args = parser.parse_args()
     evidence = args.evidence_dir.resolve()
