@@ -1,0 +1,252 @@
+{
+  "$defs": {
+    "artifact": {
+      "additionalProperties": true,
+      "properties": {
+        "bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "document": {
+          "type": "string"
+        },
+        "document_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "generated_at_utc": {
+          "type": "string"
+        },
+        "manifest": {
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "full",
+            "default"
+          ]
+        },
+        "parser": {
+          "$ref": "#/$defs/parser"
+        },
+        "project": {
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0"
+        },
+        "source_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "project",
+        "document",
+        "document_sha256",
+        "source_sha256",
+        "bytes",
+        "mode",
+        "parser"
+      ],
+      "type": "object"
+    },
+    "diagnostic": {
+      "additionalProperties": true,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "hint": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "type": "object"
+    },
+    "parser": {
+      "additionalProperties": true,
+      "properties": {
+        "confidence": {
+          "type": [
+            "string",
+            "number",
+            "null"
+          ]
+        },
+        "full_tmdl_grammar_verified": {
+          "const": false
+        },
+        "mode": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "mode",
+        "full_tmdl_grammar_verified"
+      ],
+      "type": "object"
+    },
+    "project": {
+      "additionalProperties": true,
+      "properties": {
+        "diagnostic_counts": {
+          "type": "object"
+        },
+        "diagnostics": {
+          "items": {
+            "$ref": "#/$defs/diagnostic"
+          },
+          "type": "array"
+        },
+        "inventory": {
+          "type": "object"
+        },
+        "parser": {
+          "$ref": "#/$defs/parser"
+        },
+        "path": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "strict": {
+          "type": "boolean"
+        },
+        "valid": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "project",
+        "path",
+        "valid",
+        "strict",
+        "parser",
+        "diagnostics"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/analienx/pbidocumenter/blob/main/schemas/cli-result-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "description": "Stable versioned machine-readable result for generate/validate/inspect/doctor; additive fields permitted.",
+  "properties": {
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/artifact"
+      },
+      "type": "array"
+    },
+    "checks": {
+      "items": {
+        "properties": {
+          "detail": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "ok",
+          "detail"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "command": {
+      "enum": [
+        "generate",
+        "validate",
+        "inspect",
+        "doctor",
+        "unknown"
+      ]
+    },
+    "diagnostics": {
+      "items": {
+        "$ref": "#/$defs/diagnostic"
+      },
+      "type": "array"
+    },
+    "dry_run": {
+      "type": "boolean"
+    },
+    "exit_code": {
+      "enum": [
+        0,
+        2,
+        3,
+        4,
+        5
+      ],
+      "type": "integer"
+    },
+    "outputs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "planned_outputs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "projects": {
+      "items": {
+        "$ref": "#/$defs/project"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "error"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "command",
+    "status",
+    "exit_code"
+  ],
+  "title": "PBIP Documenter CLI result v1",
+  "type": "object"
+}
