@@ -16,8 +16,10 @@ from collections.abc import Sequence
 from importlib import metadata
 from pathlib import Path
 from typing import Any, NoReturn
+from zipfile import BadZipFile, ZipFile
 
 from copiloter import PbipProject, _resolve_reports_dir
+from pbip_documenter.cli_artifacts import artifact_record, manifest_path, write_manifest
 from pbip_documenter.cli_validation import SCHEMA_VERSION, diagnostic, inventory, source_fingerprint, validate_project
 from pbip_documenter.config import VERSION
 
@@ -59,6 +61,10 @@ def _parser() -> argparse.ArgumentParser:
             p.add_argument("-o", "--output", type=Path, help="A single DOCX output path")
             p.add_argument("--template", "-t", type=Path)
             p.add_argument("--logo", type=Path)
+            p.add_argument("--output-dir", type=Path, help="Batch output directory, one DOCX per project")
+            p.add_argument("--dry-run", action="store_true", help="Preview destinations without writing files")
+            p.add_argument("--no-overwrite", action="store_true", help="Reject existing documents or manifests")
+            p.add_argument("--manifest", action="store_true", help="Write source and DOCX SHA-256 evidence beside output")
         elif command == "inspect":
             p.add_argument("--details", action="store_true", help="Show model table and report page names (no source code)")
     doctor = sub.add_parser("doctor", help="Check basic installed CLI and document dependencies")
@@ -107,10 +113,20 @@ def _format(payload: dict[str, Any], *, json_output: bool) -> None:
                   f"{data['report_visuals']} visuals")
         for diag in item["diagnostics"]:
             print(f"    {diag['severity'].upper()} [{diag['code']}]: {diag['message']}")
+            if diag.get("hint"):
+                print(f"      Next: {diag['hint']}")
     for finding in payload.get("diagnostics", []):
         print(f"  {finding['severity'].upper()} [{finding['code']}]: {finding['message']}")
+        if finding.get("hint"):
+            print(f"    Next: {finding['hint']}")
+    if payload.get("dry_run"):
+        for path in payload.get("planned_outputs", []):
+            print(f"  Planned (no files written): {path}")
     for path in payload.get("outputs", []):
         print(f"  Word document: {path}")
+    for artifact in payload.get("artifacts", []):
+        if artifact.get("manifest"):
+            print(f"  Provenance manifest: {artifact['manifest']}")
     if payload["command"] == "doctor":
         for check in payload.get("checks", []):
             print(f"  {'OK' if check['ok'] else 'FAIL'} {check['name']}: {check['detail']}")
@@ -137,6 +153,7 @@ def _preflight(
             validation, summary = validate_project(project, strict=args.strict)
         if command == "inspect":
             validation["inventory"] = inventory(summary, details=args.details)
+        if command in {"inspect", "generate"}:
             validation["source_sha256"] = source_fingerprint(project)
         results.append(validation)
     code = EXIT_VALIDATION if any(not item["valid"] for item in results) else EXIT_OK
@@ -146,45 +163,113 @@ def _preflight(
 def _generation_paths(projects: list[PbipProject], args: argparse.Namespace) -> list[str]:
     if args.output:
         return [str(args.output.expanduser().resolve())]
-    paths = []
+    base = args.output_dir.expanduser().resolve() if args.output_dir else Path.cwd() / "Exported Documents"
+    paths: list[str] = []
     for project in projects:
         slug = re.sub(r"[^a-zA-Z0-9_-]", "_", project.name)
-        path = Path.cwd() / "Exported Documents" / project.name / f"{slug}_DesignSpecification_{args.mode}.docx"
+        path = base / project.name / f"{slug}_DesignSpecification_{args.mode}.docx"
         paths.append(str(path.resolve()))
     return paths
 
 
+def _generate_precheck(
+    args: argparse.Namespace, projects: list[PbipProject], paths: list[str]
+) -> list[dict[str, str]]:
+    problems: list[dict[str, str]] = []
+    if args.output and args.output_dir:
+        problems.append(diagnostic("OUTPUT_CONFLICT", "error", "Choose --output or --output-dir, not both"))
+    if args.output and len(projects) > 1:
+        problems.append(diagnostic("MULTIPLE_PROJECTS", "error", "--output requires exactly one project"))
+    if args.template and not args.template.is_file():
+        problems.append(diagnostic("TEMPLATE_NOT_FOUND", "error", "Explicit Word template does not exist"))
+    elif args.template:
+        if args.template.suffix.lower() != ".docx":
+            problems.append(diagnostic("TEMPLATE_INVALID", "error", "Template must be a .docx file"))
+        else:
+            try:
+                with ZipFile(args.template) as package:
+                    if "word/document.xml" not in package.namelist():
+                        problems.append(diagnostic("TEMPLATE_INVALID", "error", "Template is not a valid Word document"))
+            except (OSError, BadZipFile):
+                problems.append(diagnostic("TEMPLATE_INVALID", "error", "Template is not a valid DOCX archive"))
+    if args.logo and not args.logo.is_file():
+        problems.append(diagnostic("LOGO_NOT_FOUND", "error", "Logo path does not exist"))
+    elif args.logo and args.logo.suffix.lower() not in {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff"}:
+        problems.append(diagnostic("LOGO_INVALID", "error", "Logo must be a supported raster image"))
+    if args.output and args.output.suffix.lower() != ".docx":
+        problems.append(diagnostic("OUTPUT_INVALID", "error", "Word output filename must end with .docx"))
+    if args.output_dir and args.output_dir.exists() and not args.output_dir.is_dir():
+        problems.append(diagnostic("OUTPUT_DIRECTORY_INVALID", "error", "Output directory path points to a file"))
+    if args.template:
+        template = args.template.expanduser().resolve()
+        if any(Path(path) == template for path in paths):
+            problems.append(diagnostic("TEMPLATE_OUTPUT_COLLISION", "error", "Output must not replace the input template"))
+    if len({str(Path(path)).casefold() if sys.platform == "win32" else path for path in paths}) != len(paths):
+        problems.append(diagnostic("DUPLICATE_OUTPUT", "error", "Multiple projects resolve to the same output path"))
+    if args.no_overwrite:
+        for path in paths:
+            docx = Path(path)
+            targets = (docx, manifest_path(docx)) if args.manifest else (docx,)
+            for target in targets:
+                if target.exists():
+                    problems.append(diagnostic("OUTPUT_EXISTS", "error", "Target already exists", str(target)))
+    return problems
+
+
 def _run_generate(
-    args: argparse.Namespace, projects: list[PbipProject], results: list[dict[str, Any]]
-) -> tuple[int, list[str], list[dict[str, str]]]:
+    args: argparse.Namespace, projects: list[PbipProject],
+    results: list[dict[str, Any]], paths: list[str]
+) -> tuple[int, list[str], list[dict[str, str]], list[dict[str, Any]]]:
     from pbip_documenter import cli
 
-    if args.output and len(projects) > 1:
-        return EXIT_USAGE, [], [diagnostic("MULTIPLE_PROJECTS", "error", "--output requires exactly one project")]
-    if args.template and not args.template.is_file():
-        return EXIT_USAGE, [], [diagnostic("TEMPLATE_NOT_FOUND", "error", "Explicit Word template does not exist")]
-    if args.logo and not args.logo.is_file():
-        return EXIT_USAGE, [], [diagnostic("LOGO_NOT_FOUND", "error", "Logo path does not exist")]
-    if args.output and args.template and args.output.expanduser().resolve() == args.template.resolve():
-        return EXIT_USAGE, [], [diagnostic("TEMPLATE_OUTPUT_COLLISION", "error", "Output must not replace the input template")]
     if any(not item["valid"] for item in results):
-        return EXIT_VALIDATION, [], []
+        return EXIT_VALIDATION, [], [], []
+    if args.dry_run:
+        return EXIT_OK, [], [], []
 
-    legacy_args = [str(_resolve_reports_dir(args.reports_dir)), "--mode", args.mode]
-    if args.output:
-        legacy_args += ["--output", str(args.output)]
-    if args.template:
-        legacy_args += ["--template", str(args.template)]
-    if args.logo:
-        legacy_args += ["--logo", str(args.logo)]
-    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-        code = cli.main(legacy_args)
-    if code:
-        return code, [], [diagnostic("GENERATION_FAILED", "error", "Document generator did not complete")]
-    outputs = _generation_paths(projects, args)
-    if not all(Path(path).is_file() and Path(path).stat().st_size > 0 for path in outputs):
-        return EXIT_INTERNAL, [], [diagnostic("OUTPUT_MISSING", "error", "Generated document could not be verified")]
-    return EXIT_OK, outputs, []
+    outputs: list[str] = []
+    artifacts: list[dict[str, Any]] = []
+    for project, result, raw_path in zip(projects, results, paths, strict=True):
+        document = Path(raw_path)
+        legacy_args = [
+            str(project.project_dir), "--mode", args.mode, "--output", str(document),
+            "--expect-source-sha256", result["source_sha256"],
+        ]
+        if args.template:
+            legacy_args += ["--template", str(args.template)]
+        if args.logo:
+            legacy_args += ["--logo", str(args.logo)]
+        if args.no_overwrite:
+            legacy_args += ["--no-overwrite"]
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            code = cli.main(legacy_args)
+        if code:
+            if code == EXIT_VALIDATION:
+                return EXIT_VALIDATION, outputs, [
+                    diagnostic("SOURCE_CHANGED", "error", "Source changed during generation", project.name)
+                ], artifacts
+            return EXIT_INTERNAL, outputs, [
+                diagnostic("GENERATION_FAILED", "error", f"Generation failed for {project.name}")
+            ], artifacts
+        if not document.is_file() or document.stat().st_size <= 0:
+            return EXIT_INTERNAL, outputs, [
+                diagnostic("OUTPUT_MISSING", "error", "Generated document could not be verified", raw_path)
+            ], artifacts
+        if source_fingerprint(project) != result["source_sha256"]:
+            return EXIT_INTERNAL, outputs, [
+                diagnostic("SOURCE_CHANGED", "error", "Source changed during generation", project.name)
+            ], artifacts
+        record = artifact_record(
+            document, project=project.name, source_sha256=result["source_sha256"],
+            mode=args.mode, parser=result["parser"]
+        )
+        if args.manifest:
+            sidecar = manifest_path(document)
+            write_manifest(sidecar, record, no_overwrite=args.no_overwrite)
+            record["manifest"] = str(sidecar.resolve())
+        artifacts.append(record)
+        outputs.append(str(document.resolve()))
+    return EXIT_OK, outputs, [], artifacts
 
 
 def _doctor(template: Path | None) -> dict[str, Any]:
@@ -244,12 +329,22 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     try:
         projects, results, errors, code = _preflight(args.command, args)
-        if args.command == "generate" and code == EXIT_OK:
-            code, outputs, generation_errors = _run_generate(args, projects, results)
-            errors.extend(generation_errors)
-        else:
-            outputs = []
-        payload = _result(args.command, code, projects=results, diagnostics=errors, outputs=outputs)
+        planned = _generation_paths(projects, args) if args.command == "generate" and projects else []
+        artifacts: list[dict[str, Any]] = []
+        outputs: list[str] = []
+        if args.command == "generate":
+            precheck = _generate_precheck(args, projects, planned) if projects else []
+            if precheck:
+                errors.extend(precheck)
+                code = EXIT_USAGE
+            elif code == EXIT_OK:
+                code, outputs, generation_errors, artifacts = _run_generate(args, projects, results, planned)
+                errors.extend(generation_errors)
+        payload = _result(
+            args.command, code, projects=results, diagnostics=errors, outputs=outputs,
+            **({"planned_outputs": planned, "dry_run": args.dry_run, "artifacts": artifacts}
+               if args.command == "generate" else {}),
+        )
     except (OSError, ValueError, TypeError, RuntimeError):
         payload = _result(
             args.command, EXIT_INTERNAL, projects=[], outputs=[],

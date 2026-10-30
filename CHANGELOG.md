@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Premium agent CLI improvements: preview-only dry runs, deterministic multi-project --output-dir, atomic --no-overwrite publishing, opt-in SHA-256 DOCX/source manifests, source-change detection and actionable repair hints.
+- Hardened validation of user-provided Word templates, logos and destination paths; added a formal JSON Schema and stronger Windows/Linux installed-wheel acceptance.
+- Reworked the README and agent workflow around preview, generate and verify rather than feature lists alone.
+
 - Introduced the agent-first CLI with `generate`, `validate`, `inspect` and `doctor`, versioned JSON results, stable exit codes, conservative source validation and fingerprinted inventories while retaining the historical command.
 - Added an installed-wheel CLI acceptance matrix on GitHub-hosted Windows and Linux, plus updated CLI and AI-agent documentation.
 

@@ -16,9 +16,12 @@ You are documenting the Power BI project at:
    pbip-documenter validate "<ABSOLUTE_PATH_TO_PBIP_PROJECT>" --strict --json
    pbip-documenter inspect "<ABSOLUTE_PATH_TO_PBIP_PROJECT>" --json
    Stop if validation fails; retain the source_sha256.
+   Preview the document path without writing any files:
+   pbip-documenter generate "<ABSOLUTE_PATH_TO_PBIP_PROJECT>"
+     --mode full --strict --dry-run --json --output "<OUTPUT_DIRECTORY>/design-specification.docx"
 3. Generate through the same existing Word engine:
    pbip-documenter generate "<ABSOLUTE_PATH_TO_PBIP_PROJECT>"
-     --mode full --strict --json --output "<OUTPUT_DIRECTORY>/design-specification.docx"
+     --mode full --strict --manifest --no-overwrite --json --output "<OUTPUT_DIRECTORY>/design-specification.docx"
    Treat a nonzero exit code or missing output as failure.
 4. Verify the DOCX opens, contains substantive headings and source
    inventories, and includes native Word DrawingML shapes/connectors
@@ -27,7 +30,8 @@ You are documenting the Power BI project at:
 5. Report extracted facts separately from generated recommendations
    and human-confirmation fields. Never invent scope, owners, RLS,
    classification, business impact or refresh SLAs.
-6. Return the exact file path and a concise completeness summary.
+6. Verify the returned DOCX SHA-256, source SHA-256 and optional manifest.
+   Return the exact file path and a concise completeness summary.
    Do not publish source project or generated documents externally.
 ```
 
@@ -40,7 +44,7 @@ Run the command on **one project at a time** when passing `--output`. The CLI re
 pipx install "git+https://github.com/analienx/pbidocumenter.git@main"
 
 # Generate the full design specification
-pbip-documenter generate "path/to/YourProject" --mode full --strict --json \
+pbip-documenter generate "path/to/YourProject" --mode full --strict --manifest --no-overwrite --json \
   --output "output/YourProject-design-specification.docx"
 ```
 
@@ -53,7 +57,7 @@ This installs from the current GitHub source. The sample screenshots and [perman
 | **Source integrity** | Input PBIP/PBIR/TMDL files are not modified |
 | **Command** | Installed `pbip-documenter` exits successfully |
 | **DOCX** | Valid ZIP/OOXML, nonempty heading structure and substantive technical tables |
-| **Editable diagrams** | Native OOXML DrawingML groups, shapes and connectors?not flattened report screenshots; regenerate by rerunning the CLI after PBIP changes |
+| **Editable diagrams** | Native OOXML DrawingML groups, shapes and connectors, not flattened report screenshots; regenerate by rerunning the CLI after PBIP changes |
 | **Completeness** | Table, measure, relationship, page and visual counts are consistent with source |
 | **Business certainty** | Suggested requirements and unverified metadata are explicitly flagged |
 | **Privacy** | Source projects, DOCX files and logs remain in approved local/private locations |

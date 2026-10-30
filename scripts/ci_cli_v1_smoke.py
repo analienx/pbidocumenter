@@ -63,13 +63,35 @@ def main() -> None:
         assert len(result["projects"][0]["source_sha256"]) == 64
 
         destination = root / "contoso-cli.docx"
+        code, preview = run(
+            executable, root, "generate", str(EXAMPLE),
+            "--mode", "default", "--strict", "--output", str(destination), "--dry-run", "--manifest",
+        )
+        assert code == 0 and preview["dry_run"]
+        assert preview["planned_outputs"] == [str(destination.resolve())]
+        assert not destination.exists() and not destination.with_suffix(".manifest.json").exists()
         code, result = run(
             executable, root, "generate", str(EXAMPLE),
             "--mode", "default", "--strict", "--output", str(destination),
+            "--manifest", "--no-overwrite",
         )
         assert code == 0, result
         assert result["outputs"] == [str(destination.resolve())]
         assert destination.stat().st_size > 10_000
+        sidecar = destination.with_suffix(".manifest.json")
+        assert sidecar.exists()
+        manifest = json.loads(sidecar.read_text(encoding="utf-8"))
+        assert manifest["document_sha256"] == result["artifacts"][0]["document_sha256"]
+        assert manifest["source_sha256"] == result["projects"][0]["source_sha256"]
+        assert len(manifest["document_sha256"]) == 64
+        code, replay = run(
+            executable, root, "generate", str(EXAMPLE),
+            "--mode", "default", "--strict", "--output", str(destination),
+            "--manifest", "--no-overwrite",
+        )
+        assert code == 2
+        assert any(d["code"] == "OUTPUT_EXISTS" for d in replay["diagnostics"])
+        assert json.loads(sidecar.read_text(encoding="utf-8")) == manifest
         with ZipFile(destination) as archive:
             assert archive.testzip() is None
             assert "word/document.xml" in archive.namelist()

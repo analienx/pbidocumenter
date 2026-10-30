@@ -31,21 +31,28 @@ Point PBIP Documenter at a local **PBIP / PBIR / TMDL project**. It reads the se
 | **Technical quality insights** | Categorized technical observations, warnings and review opportunities for maintenance and handover. |
 | **Agent-ready Word handover** | Concise/full DOCX with native headings, tables, linked contents and clearly labeled owner-confirmation fields; source-read-only CLI. |
 
-**?Dynamic? means generated from the PBIP source at runtime.** In the resulting Word document, diagrams are editable native shapes and connectors?not screenshot images. The DOCX is a snapshot, **not a live-synced connection** to future PBIP changes. [How DrawingML works](docs/ARCHITECTURE.md#native-word-diagrams--not-static-images).
+**Dynamic means generated from the PBIP source at runtime.** In the resulting Word document, diagrams are editable native shapes and connectors, not screenshot images. The DOCX is a snapshot, **not a live-synced connection** to future PBIP changes. [How DrawingML works](docs/ARCHITECTURE.md#native-word-diagrams--not-static-images).
 
 [See the real Microsoft Word before/after relationship-layout comparison](docs/SCHEMA_LAYOUT_QUALITY.md) ? four simulated model sizes plus Contoso, with scored fallback and page-image evidence.
 
-## Agent-first CLI
+## Document confidently: preview, generate, verify
 
-The same Word generation engine now has a **predictable, JSON-capable interface**: inspect a project, validate source structure, then generate its editable specification.
+PBIP Documenter combines a **premium agent-ready CLI** with editable, source-derived Microsoft Word diagrams. The CLI validates input, previews destinations, supports safe batch output and returns auditable SHA-256 provenance.
 
+    # Understand the source
     pbip-documenter inspect "./MyReport" --details --json
-    pbip-documenter validate "./MyReport" --strict --json
-    pbip-documenter generate "./MyReport" --mode full --strict -o design-specification.docx --json
 
-All four commands — **generate, validate, inspect, doctor** — return stable exit codes and a versioned JSON envelope. Agents get diagnostics and source fingerprints rather than parsing console banners. **Strict checks recognizable structural failures; it is not a complete Microsoft TMDL grammar validator.** Historical direct commands remain compatible.
+    # Plan Word generation without writing files
+    pbip-documenter generate "./MyReport" --strict --mode full --dry-run -o specification.docx --json
 
-[Complete CLI reference](docs/CLI.md) · [AI-agent runbook](docs/AGENT_WORKFLOW.md) · [Windows/Linux installed-wheel acceptance](.github/workflows/ci.yml)
+    # Generate with atomic no-clobber and an audit-ready manifest
+    pbip-documenter generate "./MyReport" --strict --mode full --manifest --no-overwrite -o specification.docx --json
+
+For multiple reports, choose `--output-dir ./Generated` to create separate folders and Word files. An agent receives **versioned JSON** with clear diagnostics, remediation hints, source revision hashes, output hashes and paths. The original CLI remains compatible.
+
+**No hidden magic:** the default parser is a lightweight Python TMDL parser, not full Microsoft TMDL grammar certification. The resulting diagrams are native editable Word shapes and connectors, not screenshots.
+
+[CLI reference](docs/CLI.md) ? [JSON contract](schemas/cli-result-v1.schema.json) ? [AI-agent runbook](docs/AGENT_WORKFLOW.md)
 
 ## Explore an actual generated document
 
@@ -100,7 +107,7 @@ flowchart LR
     A["PBIP / PBIR / TMDL"] --> B["Source extraction"]
     B --> C["Model and report inventory"]
     C --> D["Native DrawingML diagrams<br/>and Word renderer"]
-    D --> E["Editable DOCX<br/>model ? lineage ? wireframes"]
+    D --> E["Editable DOCX<br/>model / lineage / wireframes"]
 ```
 
 Core generation is **local and read-only**. GitHub CI separately exercises the **installed wheel**, compares source inventories and renders documents to PDF for page-level evidence. The PDF renderer is LibreOffice, so it does **not** certify exact Microsoft Word pagination. [Architecture, trust boundaries and acceptance](docs/ARCHITECTURE.md).

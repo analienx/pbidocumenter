@@ -80,6 +80,8 @@ def main(argv: Sequence[str] | None = None) -> typing.Any:
     )
     ap.add_argument("--logo", type=str, default=None, help="Path to logo image for document header")
     ap.add_argument("--template", "-t", type=str, default=None, help="Path to Word template (.docx)")
+    ap.add_argument("--no-overwrite", action="store_true", help="Refuse to replace an existing DOCX")
+    ap.add_argument("--expect-source-sha256", default=None, help=argparse.SUPPRESS)
     ap.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
     args = ap.parse_args(argv)
 
@@ -193,13 +195,33 @@ def main(argv: Sequence[str] | None = None) -> typing.Any:
             op = Path.cwd() / "Exported Documents" / proj.name / f"{proj_slug}_DesignSpecification_{args.mode}.docx"
 
         op.parent.mkdir(parents=True, exist_ok=True)
+        if args.no_overwrite and op.exists():
+            print(f"ERROR: Output already exists (no-overwrite enabled): {op}")
+            return 2
         # Save into the destination directory and publish atomically. Failed
         # generation must not replace the previously valid specification.
         fd, temporary_path = tempfile.mkstemp(prefix=".pbipdoc-", suffix=".docx", dir=op.parent)
         os.close(fd)
         try:
             doc.save(temporary_path)
-            os.replace(temporary_path, op)
+            if args.expect_source_sha256:
+                # Detect edits made while Word was being assembled, BEFORE
+                # replacing a previous document with an inconsistent result.
+                from pbip_documenter.cli_validation import source_fingerprint
+
+                if source_fingerprint(proj) != args.expect_source_sha256:
+                    print(f"ERROR: Project source changed during generation: {proj.name}")
+                    return 3
+            if args.no_overwrite:
+                # Atomic no-clobber publish on the same filesystem. The hard
+                # link fails if another process created the output meanwhile.
+                try:
+                    os.link(temporary_path, op)
+                except FileExistsError:
+                    print(f"ERROR: Output was created during generation: {op}")
+                    return 2
+            else:
+                os.replace(temporary_path, op)
         finally:
             Path(temporary_path).unlink(missing_ok=True)
         generated += 1

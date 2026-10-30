@@ -152,3 +152,20 @@ def test_invalid_args_preserve_json_contract(capsys: pytest.CaptureFixture[str])
     assert code == 2
     assert result["diagnostics"][0]["code"] == "ARGUMENT_INVALID"
     assert result["status"] == "error"
+
+def test_formal_cli_schema_is_valid_for_live_results(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    jsonschema = pytest.importorskip("jsonschema")
+    schema_file = Path(__file__).resolve().parents[2] / "schemas" / "cli-result-v1.schema.json"
+    schema = json.loads(schema_file.read_text(encoding="utf-8"))
+    jsonschema.Draft202012Validator.check_schema(schema)
+    for argv in (
+        ["doctor"],
+        ["inspect", str(FIXTURE)],
+        ["validate", str(FIXTURE), "--strict"],
+        ["generate", str(FIXTURE), "--strict", "--dry-run", "-o", str(tmp_path / "sample.docx")],
+        ["validate", str(tmp_path / "missing")],
+    ):
+        _, result = call_json(capsys, [*argv, "--json"])
+        jsonschema.validate(result, schema)
