@@ -24,6 +24,8 @@ The script saves a **before and after native Word document for each case** along
 
 **Rendering boundaries:** PDF/JPEG evidence is output of an actual document renderer, not a conceptual graph. Microsoft Word may position elements differently from LibreOffice; local Microsoft Word COM exports may be used as an additional visual review. The source fixture is fictional and does not certify the algorithm for every custom semantic model.
 
+**Hardening/code review:** [determinism, long-name safety, non-global comparisons and adversarial coverage](SCHEMA_HARDENING_REVIEW.md).
+
 ## Maintainability and rollback
 
 Only node center placement is modified. The [native DrawingML renderer](../pbip_documenter/docx_render/diagrams.py), relationship identities, attached connectors and diagram legends continue to work as before. Disable the optimization by switching `_build_layout` back to `_build_layout_legacy`; no report migration or document schema transformation is required.

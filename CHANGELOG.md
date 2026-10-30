@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Hardened Word semantic-model diagrams: stable priority/cutoff ordering for relationships, stable equal-scored components and safe two-line truncation of unbroken table names.
+- Removed module-level rendering monkeypatch from the before/after comparison tool; added an optional per-call layout builder.
+- Added adversarial regression coverage (long/Unicode identifiers, relationship permutations, role extremes, duplicate edges, safe slots and renderer isolation). See [review findings](docs/SCHEMA_HARDENING_REVIEW.md).
+
+
 - Refreshed the public Contoso Word/PDF downloads and every gallery screenshot from the new layout engine in successful main CI run 41021358575; updated authenticity hashes, generator provenance and README hero to match actual native Word output.
 
 

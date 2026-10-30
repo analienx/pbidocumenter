@@ -181,7 +181,7 @@ def analyze_relationship_landscape(summary: typing.Any) -> typing.Any:
                 "score": sum(_score(n, tm, g, u) for n in c) + e * 20,
             }
         )
-    comps.sort(key=lambda x: (-x["is_large"], -x["score"]))
+    comps.sort(key=lambda x: (-x["is_large"], -x["score"], tuple(x["nodes"])))
     return {
         "table_map": tm,
         "relationships": rels,
@@ -310,8 +310,11 @@ def plan_schema_views(summary: typing.Any) -> typing.Any:
 
 
 def _wrap(s: typing.Any, w: typing.Any) -> typing.Any:
-    lines = textwrap.wrap(str(s).replace("_", " "), width=w, break_long_words=False) or [""]
-    return lines[:1] + ([lines[1][: w - 1] + "..."] if len(lines) > 2 else lines[1:])
+    """Keep long identifier labels within their native Word drawing boxes."""
+    lines = textwrap.wrap(str(s).replace("_", " "), width=w, break_long_words=True, break_on_hyphens=False) or [""]
+    if len(lines) > 2:
+        return [lines[0], lines[1][: max(0, w - 3)] + "..."]
+    return lines
 
 
 def _txt(fill: typing.Any) -> typing.Any:
@@ -390,7 +393,13 @@ def _prioritized_relationships(view: typing.Any) -> typing.Any:
         view["relationships"],
         key=lambda r: (
             0 if view["anchor"] in (r.get("from_table"), r.get("to_table")) else 1,
-            r.get("from_table", ""),
+            str(r.get("from_table") or ""),
+            str(r.get("to_table") or ""),
+            str(r.get("from_column") or ""),
+            str(r.get("to_column") or ""),
+            str(r.get("name") or ""),
+            str(r.get("is_active", True)),
+            str(r.get("cross_filtering") or ""),
         ),
     )[:_SCHEMA_EDGE_RENDER_LIMIT]
 
@@ -506,10 +515,19 @@ def _legend(shapes: typing.Any, y: typing.Any) -> typing.Any:
         x += _emu(SCHEMA_LEGEND_ITEM_W_IN + SCHEMA_LEGEND_GAP_IN)
 
 
-def _render_focus(doc: typing.Any, view: typing.Any, analysis: typing.Any, fig: typing.Any) -> typing.Any:
-    # TWEAK: per-diagram rendering. Assembles title, connectors, nodes, summary cards, legend and caption.
+def _render_focus(
+    doc: typing.Any,
+    view: typing.Any,
+    analysis: typing.Any,
+    fig: typing.Any,
+    *,
+    layout_builder: typing.Any = None,
+) -> typing.Any:
+    # An explicit layout dependency permits baseline comparisons without
+    # replacing a module global, making concurrent document renders safe.
     tm = analysis["table_map"]
-    pos, w, h = _build_layout(view, tm)
+    builder = layout_builder if layout_builder is not None else _build_layout
+    pos, w, h = builder(view, tm)
     base = fig * 10000
     ids = {n: base + 1000 + i for i, n in enumerate(view["visible"], 1)}
     shapes: list[typing.Any] = []
