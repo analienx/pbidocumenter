@@ -70,13 +70,10 @@ def word_figure(destination: Path, view: dict, analysis: dict, legacy: bool) -> 
     section.top_margin = Inches(0.36)
     section.bottom_margin = Inches(0.32)
     doc.add_heading(("Baseline" if legacy else "Optimized") + f" relationship diagram — {destination.stem}", 2)
-    orig = schema._build_layout
-    try:
-        if legacy:
-            schema._build_layout = schema._build_layout_legacy
-        schema._render_focus(doc, view, analysis, 2)
-    finally:
-        schema._build_layout = orig
+    schema._render_focus(
+        doc, view, analysis, 2,
+        layout_builder=schema._build_layout_legacy if legacy else None,
+    )
     doc.save(str(destination))
 
 
