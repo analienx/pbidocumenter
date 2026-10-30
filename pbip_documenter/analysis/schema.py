@@ -383,6 +383,17 @@ def _build_layout_legacy(view: typing.Any, tm: typing.Any) -> typing.Any:
 
 
 
+
+def _prioritized_relationships(view: typing.Any) -> typing.Any:
+    """The exact edges drawn in Word; layout scoring must use the same set."""
+    return sorted(
+        view["relationships"],
+        key=lambda r: (
+            0 if view["anchor"] in (r.get("from_table"), r.get("to_table")) else 1,
+            r.get("from_table", ""),
+        ),
+    )[:_SCHEMA_EDGE_RENDER_LIMIT]
+
 def _build_layout(view: typing.Any, tm: typing.Any) -> typing.Any:
     """Select a scored graph-aware placement, preserving a safe legacy fallback.
 
@@ -395,7 +406,7 @@ def _build_layout(view: typing.Any, tm: typing.Any) -> typing.Any:
     points = {n: (coords[0] / _emu(1), coords[1] / _emu(1)) for n, coords in baseline.items()}
     edges = [
         (r["from_table"], r["to_table"])
-        for r in view["relationships"][:_SCHEMA_EDGE_RENDER_LIMIT]
+        for r in _prioritized_relationships(view)
         if r.get("from_table") in points and r.get("to_table") in points
     ]
     updated, _evidence = optimize_layout(points, edges, anchor, roles)
@@ -528,10 +539,7 @@ def _render_focus(doc: typing.Any, view: typing.Any, analysis: typing.Any, fig: 
             bIns="0",
         )
     )
-    rels = sorted(
-        view["relationships"],
-        key=lambda r: (0 if view["anchor"] in (r.get("from_table"), r.get("to_table")) else 1, r.get("from_table", "")),
-    )[:_SCHEMA_EDGE_RENDER_LIMIT]
+    rels = _prioritized_relationships(view)
     for i, r in enumerate(rels, 1):
         a, b = r.get("from_table"), r.get("to_table")
         if a not in pos or b not in pos:

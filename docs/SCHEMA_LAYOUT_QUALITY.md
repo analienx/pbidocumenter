@@ -10,6 +10,12 @@ The replacement in [`schema_layout.py`](../pbip_documenter/analysis/schema_layou
 
 **Safe fallback:** The historical algorithm is evaluated for every diagram. The new arrangement is accepted only when its cost improves by both an absolute minimum of 2 points or a relative minimum of 3%; otherwise the original placement remains. Coordinates do not alter nodes, relationships, DrawingML object types or the document canvas size.
 
+## Actual Microsoft Word before/after capture
+
+[![Real Microsoft Word render of the public Contoso semantic model, original layout compared with crossing-aware positioning](images/schema-contoso-word-before-after.jpg)](images/schema-contoso-word-before-after.jpg)
+
+*The two halves are genuine page captures from Microsoft Word's PDF export on the authorized Windows device. The model relationships and node contents are source-derived; only layout changes. The original Contoso focus had 26 connector crossings and 4 connector-through-node hits; the second search pass has 10 crossings and 0 connector-through-node hits, with no node overlaps. This is an illustrative test result for Contoso, not a guarantee that every semantic model is planar or crossing-free.*
+
 ## Tested model scales
 
 The [comparison script](../scripts/schema_layout_comparison.py) simulates deterministic models of **6, 14, 48 and 160 total tables**, and separately tests the **actual public Contoso Retail PBIP project**. Large project diagrams intentionally display a maximum of 20 explicit tables per focus diagram and summarize the hidden remainder. A 160-table project is not presented as one 160-node hairball.

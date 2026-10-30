@@ -99,7 +99,7 @@ def main() -> None:
         base, _, _ = schema._build_layout_legacy(view, tm)
         points = {k: (v[0] / schema._emu(1), v[1] / schema._emu(1)) for k, v in base.items()}
         roles = {t: schema._role(tm[t]) for t in view["visible"]}
-        edges = [(e["from_table"], e["to_table"]) for e in view["relationships"][:24]]
+        edges = [(e["from_table"], e["to_table"]) for e in schema._prioritized_relationships(view)]
         after, evidence = optimize_layout(points, edges, view["anchor"], roles)
         assert evidence["selected_cost"] <= evidence["baseline_cost"]
         # Deterministic output, fallback and geometry contract.

@@ -22,7 +22,7 @@ def test_layout_improves_or_preserves_geometric_quality(size: str) -> None:
     coords = {n: (x / schema._emu(1), y / schema._emu(1))
               for n, (x, y, _) in base.items()}
     roles = {n: schema._role(analysis["table_map"][n]) for n in coords}
-    edges = [(r["from_table"], r["to_table"]) for r in view["relationships"][:24]]
+    edges = [(r["from_table"], r["to_table"]) for r in schema._prioritized_relationships(view)]
     selected, audit = optimize_layout(coords, edges, view["anchor"], roles)
     assert audit["selected_cost"] <= audit["baseline_cost"], size
     assert audit["selected_metrics"]["node_overlaps"] == 0, size
@@ -43,7 +43,7 @@ def test_contoso_layout_reduces_connector_crossings() -> None:
     points = {n: (x / schema._emu(1), y / schema._emu(1))
               for n, (x, y, _) in base.items()}
     roles = {n: schema._role(analysis["table_map"][n]) for n in points}
-    edges = [(e["from_table"], e["to_table"]) for e in view["relationships"][:24]]
+    edges = [(e["from_table"], e["to_table"]) for e in schema._prioritized_relationships(view)]
     _, score = optimize_layout(points, edges, view["anchor"], roles)
     assert score["selected_cost"] < score["baseline_cost"]
     assert score["selected_metrics"]["connector_crossings"] < score["baseline_metrics"]["connector_crossings"]

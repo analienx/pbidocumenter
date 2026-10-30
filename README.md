@@ -33,6 +33,8 @@ Point PBIP Documenter at a local **PBIP / PBIR / TMDL project**. It reads the se
 
 **?Dynamic? means generated from the PBIP source at runtime.** In the resulting Word document, diagrams are editable native shapes and connectors?not screenshot images. The DOCX is a snapshot, **not a live-synced connection** to future PBIP changes. [How DrawingML works](docs/ARCHITECTURE.md#native-word-diagrams--not-static-images).
 
+[See the real Microsoft Word before/after relationship-layout comparison](docs/SCHEMA_LAYOUT_QUALITY.md) ? four simulated model sizes plus Contoso, with scored fallback and page-image evidence.
+
 ## Explore an actual generated document
 
 Open the complete example before installing anything. All three files were generated from the **fictional Contoso Retail PBIP project** and checked in so the proof doesn't expire with a CI artifact.
