@@ -23,6 +23,23 @@ jobs:
       - run: ruff check .
       - run: mypy pbip_documenter
 
+  cli-installed-wheel:
+    name: CLI wheel / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip build
+      - run: python -m build --wheel
+      - name: Install built wheel and verify CLI JSON and native DOCX
+        run: python scripts/ci_cli_v1_smoke.py --install-wheel
+
   package:
     runs-on: ubuntu-latest
     steps:

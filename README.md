@@ -35,6 +35,18 @@ Point PBIP Documenter at a local **PBIP / PBIR / TMDL project**. It reads the se
 
 [See the real Microsoft Word before/after relationship-layout comparison](docs/SCHEMA_LAYOUT_QUALITY.md) ? four simulated model sizes plus Contoso, with scored fallback and page-image evidence.
 
+## Agent-first CLI
+
+The same Word generation engine now has a **predictable, JSON-capable interface**: inspect a project, validate source structure, then generate its editable specification.
+
+    pbip-documenter inspect "./MyReport" --details --json
+    pbip-documenter validate "./MyReport" --strict --json
+    pbip-documenter generate "./MyReport" --mode full --strict -o design-specification.docx --json
+
+All four commands — **generate, validate, inspect, doctor** — return stable exit codes and a versioned JSON envelope. Agents get diagnostics and source fingerprints rather than parsing console banners. **Strict checks recognizable structural failures; it is not a complete Microsoft TMDL grammar validator.** Historical direct commands remain compatible.
+
+[Complete CLI reference](docs/CLI.md) · [AI-agent runbook](docs/AGENT_WORKFLOW.md) · [Windows/Linux installed-wheel acceptance](.github/workflows/ci.yml)
+
 ## Explore an actual generated document
 
 Open the complete example before installing anything. All three files were generated from the **fictional Contoso Retail PBIP project** and checked in so the proof doesn't expire with a CI artifact.

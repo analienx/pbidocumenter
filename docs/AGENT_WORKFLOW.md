@@ -12,10 +12,14 @@ You are documenting the Power BI project at:
 
 1. Confirm this path contains a valid PBIP project. Do not edit any
    PBIP, PBIR, TMDL, source report or dataset files.
-2. Run:
-   pbip-documenter "<ABSOLUTE_PATH_TO_PBIP_PROJECT>"
-     --mode full --output "<OUTPUT_DIRECTORY>/design-specification.docx"
-3. Treat a nonzero exit code or missing output as failure.
+2. Validate and inspect first:
+   pbip-documenter validate "<ABSOLUTE_PATH_TO_PBIP_PROJECT>" --strict --json
+   pbip-documenter inspect "<ABSOLUTE_PATH_TO_PBIP_PROJECT>" --json
+   Stop if validation fails; retain the source_sha256.
+3. Generate through the same existing Word engine:
+   pbip-documenter generate "<ABSOLUTE_PATH_TO_PBIP_PROJECT>"
+     --mode full --strict --json --output "<OUTPUT_DIRECTORY>/design-specification.docx"
+   Treat a nonzero exit code or missing output as failure.
 4. Verify the DOCX opens, contains substantive headings and source
    inventories, and includes native Word DrawingML shapes/connectors
    for model relationships, lineage and PBIR page wireframes. Don't
@@ -36,7 +40,7 @@ Run the command on **one project at a time** when passing `--output`. The CLI re
 pipx install "git+https://github.com/analienx/pbidocumenter.git@main"
 
 # Generate the full design specification
-pbip-documenter "path/to/YourProject" --mode full \
+pbip-documenter generate "path/to/YourProject" --mode full --strict --json \
   --output "output/YourProject-design-specification.docx"
 ```
 
