@@ -54,6 +54,8 @@ The diagram reflects concrete code paths in the current repository; it does not 
 | **End-to-end data lineage** | [\`lineage.py\`](../pbip_documenter/analysis/lineage.py) traces data sources, staging queries, loaded tables and report-page usage where discoverable | Native Word shapes, labels and connectors |
 | **Report-page wireframes** | [\`wireframe.py\`](../pbip_documenter/docx_render/wireframe.py) derives visual zones, types and proportional layouts from PBIR geometry | Native Word shapes and text, not a pasted page capture |
 
+**Relationship diagram positioning:** the [crossing-aware schema layout](SCHEMA_LAYOUT_QUALITY.md) compares the historical layout with bounded, role-aware candidate positions and retains the lower-cost arrangement. Four model scales and real Contoso are exercised by CI with before/after Word-page evidence.
+
 **Editable means the diagram consists of Word drawing objects.** Users can modify their shapes/text/position in a compatible Word editor (some edits may require selecting or ungrouping objects). **Dynamic means regenerated when the generator is run again.** It does *not* mean live data interaction, automatic syncing from the PBIP after document creation, or a live Power BI dashboard.
 
 The public [full Contoso DOCX](samples/Contoso-Retail-full.docx) currently contains **10 grouped diagrams, 266 native Word shape elements and 78 connector endpoint pairs**, and no embedded media files. [Installed-wheel generation CI](../scripts/ci_docx_generation_smoke.py) checks diagram structures so this feature cannot quietly regress to flattened images.

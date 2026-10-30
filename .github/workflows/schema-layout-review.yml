@@ -1,0 +1,44 @@
+name: Native Word schema layout quality
+
+on:
+  pull_request:
+    paths:
+      - "pbip_documenter/analysis/schema.py"
+      - "pbip_documenter/analysis/schema_layout.py"
+      - "pbip_documenter/tests/test_schema_layout.py"
+      - "scripts/schema_layout_comparison.py"
+      - "scripts/ci_schema_layout_render.py"
+      - ".github/workflows/schema-layout-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render-and-compare:
+    name: Four model sizes + Contoso rendered comparison
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install native Word-compatible PDF renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-liberation2
+      - run: python -m pip install ".[all]" "pymupdf>=1.24,<2" "Pillow>=10,<13"
+      - name: Validate small, medium, large, very large and real Contoso graph
+        run: python -m pytest pbip_documenter/tests/test_schema_layout.py -q
+      - name: Generate baseline and optimized native DrawingML Word diagrams
+        run: python scripts/schema_layout_comparison.py --out-dir schema-layout-evidence
+      - name: Render ten Word documents to PDF and compare page images
+        run: python scripts/ci_schema_layout_render.py --dir schema-layout-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: word-schema-layout-before-after
+          path: schema-layout-evidence/
+          retention-days: 14
+          if-no-files-found: warn
