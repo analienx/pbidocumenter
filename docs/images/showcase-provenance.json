@@ -1,8 +1,8 @@
 {
   "fixture": "examples/contoso-retail",
   "fixture_git_tree": "83b9de165570af104829192330a8be9cac38c415",
-  "github_workflow_run": "40870433647",
-  "source_commit": "ac6700c5d2c6adafcb784b2db4416c4d9fe99c9a",
+  "github_workflow_run": "41021358575",
+  "source_commit": "750cedccd5b6041a744fe4399d48b3bcd71796f6",
   "render_engine": "LibreOffice PDF from installed-wheel DOCX CI",
   "screenshot_truth": "Full pages: unmodified PDF renders; detail crops: original rendered page pixels; hero: decorative layout composed from real Word excerpts, not a Power BI Desktop screenshot.",
   "inventory": {
@@ -13,8 +13,8 @@
     "visuals_verified": 54
   },
   "pdf_sha256": {
-    "contoso-default.pdf": "65b85e40ff096d0088e7cdc9a354424afef22e4cd4efdf62035ea467e36ce071",
-    "contoso-full.pdf": "bf09e3aecce637e65192bbd19b736b113899bd052899e6c25839e172ae281746"
+    "contoso-default.pdf": "f5a71c8269c4b180f58d21e076edc5ab7ad95819d07341291fcbc8fcddfb5ca3",
+    "contoso-full.pdf": "3b7fab1986f5c33ac4cac77fa6db60f25acec1e0bdf774a3bd1581c118d272e9"
   },
   "images": {
     "showcase/contents.jpg": {
@@ -33,7 +33,7 @@
       "generated_document": "contoso-full.docx",
       "render_pdf": "contoso-full.pdf",
       "pdf_page_1based": 5,
-      "sha256": "e262a183daf2673d2443776199129bdb57c7cdd48403528527b7c1257383588c"
+      "sha256": "78928d1e9bfeac5b7b509abefd588bda4cfb2d336937cc0866d9275b1a018149"
     },
     "showcase/power-query.jpg": {
       "generated_document": "contoso-full.docx",
@@ -65,7 +65,7 @@
         5,
         21
       ],
-      "sha256": "14c9bd6ae7470060e251eade9c9d4e85149e2a7b84f88d88d18b2b5810c358a2"
+      "sha256": "4ffdcfb4f3b5223a7dde6b3cc1f6b70162f07e675bcb2427a5fe37dd0258b837"
     },
     "social-preview.png": {
       "note": "Decorative layout composed from real generated Word-page crops",
@@ -73,14 +73,14 @@
         5,
         21
       ],
-      "sha256": "02d563231b3b5df07bfeda6077f4d1d7974d912a149a8ec9bb5ba38f3a1d8166"
+      "sha256": "5e3cd4bcb3322b36014140cc86e4126e99acad9d490841110bfe5a85d314bf90"
     },
     "showcase/detail-lineage.jpg": {
       "note": "Authentic source-page crop",
       "source_pdf_pages_1based": [
         5
       ],
-      "sha256": "2b4e267f1d9b6443feb777976e19c1090ecfe2435bd301d9840d0c9f386da37d"
+      "sha256": "c9643c83b0c08faee07cbd6bdb4a3652d1c2c55802ddf8fc7bf93f48bc0a1594"
     },
     "showcase/detail-wireframe.jpg": {
       "note": "Authentic source-page crop",
@@ -94,20 +94,20 @@
     "docs/samples/Contoso-Retail-full.docx": {
       "mode": "full",
       "format": "docx",
-      "sha256": "1221ff424163f9c4d99458fc8841a8b415c4eeb8bcbe1d156201229193fc1426",
-      "byte_size": 78800
+      "sha256": "331b7cbdce84feb33722a72ae69148795d0aa0f27d6a05deeacb1706f981deaf",
+      "byte_size": 79279
     },
     "docs/samples/Contoso-Retail-concise.docx": {
       "mode": "default",
       "format": "docx",
-      "sha256": "3b40b676be7cfdfa6a3c8db0f22b45dfeeb514e57e97d52da9af2c931f79377c",
-      "byte_size": 67911
+      "sha256": "f6386b6ea0dfe08efac7e69261b1e24c0beb29a43dc329735fd2f26dd42ae999",
+      "byte_size": 68373
     },
     "docs/samples/Contoso-Retail-full.pdf": {
       "mode": "full",
       "format": "pdf",
-      "sha256": "bf09e3aecce637e65192bbd19b736b113899bd052899e6c25839e172ae281746",
-      "byte_size": 889086
+      "sha256": "3b7fab1986f5c33ac4cac77fa6db60f25acec1e0bdf774a3bd1581c118d272e9",
+      "byte_size": 889563
     }
   }
 }

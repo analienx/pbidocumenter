@@ -12,14 +12,14 @@ Everything here is traceable to actual generated Contoso Retail documentation. *
 | [`showcase/*.jpg`](showcase/) | Seven **full, unmodified PDF-page renders** plus the two excerpts |
 | [`showcase-provenance.json`](showcase-provenance.json) | Git tree, CI run, rendered PDF source pages, SHA-256 hashes and permanent sample checksums |
 
-**Source:** fictional public [Contoso Retail PBIP](../../examples/contoso-retail/). **Capture:** installed-package CI run [40870433647](https://github.com/analienx/pbidocumenter/actions/runs/40870433647), LibreOffice PDF conversion and PyMuPDF page extraction. The source diagrams were not recreated or retouched.
+**Source:** fictional public [Contoso Retail PBIP](../../examples/contoso-retail/). **Capture:** installed-package CI run [41021358575](https://github.com/analienx/pbidocumenter/actions/runs/41021358575), LibreOffice PDF conversion and PyMuPDF page extraction. The source diagrams were not recreated or retouched.
 
 The hero adds **presentation only**: typography, framing, background and image crops. It is not an application screenshot. The wireframe is a source-derived PBIR layout diagram, **not** a screenshot of a live Power BI dashboard.
 
 ## Reproduce and verify
 
 ```bash
-gh run download 40870433647 -R analienx/pbidocumenter \
+gh run download 41021358575 -R analienx/pbidocumenter \
   --name contoso-rendered-word-review-evidence \
   --dir /path/to/evidence
 

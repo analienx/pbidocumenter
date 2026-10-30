@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Refreshed the public Contoso Word/PDF downloads and every gallery screenshot from the new layout engine in successful main CI run 41021358575; updated authenticity hashes, generator provenance and README hero to match actual native Word output.
+
+
 - Added deterministic graph-aware relationship positioning for native Word schema diagrams; reduced connector crossings and eliminated baseline node collisions in large simulated models while retaining a scored legacy fallback.
 - Added 6-, 14-, 48- and 160-table simulation fixtures plus actual Contoso, geometry-quality tests, reproducible before/after DOCX and PDF/JPEG visual review artifacts for GitHub Actions.
 
