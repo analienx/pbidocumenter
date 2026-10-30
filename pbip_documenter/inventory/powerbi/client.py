@@ -5,6 +5,7 @@ import time
 import typing
 from dataclasses import dataclass
 from typing import Any
+from urllib.parse import urlsplit
 
 import requests
 
@@ -99,20 +100,42 @@ class PowerBIClient:
         if "$top" not in request_params:
             request_params["$top"] = self.page_size
 
+        visited_urls: set[str] = set()
         while state.has_more:
+            if url in visited_urls and not request_params:
+                raise ValueError("Power BI API continuation link repeated")
+            visited_urls.add(url)
             logger.debug(f"Fetching: {url}")
             response = self._make_request(url, request_params)
             data = response.json()
 
             # Extract values from response
-            batch = data["value"] if "value" in data else data if isinstance(data, list) else [data]
+            if isinstance(data, list):
+                batch = data
+            elif isinstance(data, dict):
+                batch = data.get("value", [data])
+            else:
+                raise ValueError("Power BI API pagination response must be a JSON object or list")
+            if not isinstance(batch, list):
+                raise ValueError("Power BI API 'value' must be a list")
 
             results.extend(batch)
             logger.debug(f"Retrieved {len(batch)} items, total: {len(results)}")
 
             # Check for continuation
-            state.next_link = data.get("@odata.nextLink")
+            state.next_link = data.get("@odata.nextLink") if isinstance(data, dict) else None
             if state.next_link:
+                next_url = urlsplit(state.next_link)
+                base = urlsplit(self.BASE_URL)
+                if (
+                    next_url.scheme != "https"
+                    or next_url.hostname != base.hostname
+                    or next_url.port is not None
+                    or next_url.username is not None
+                    or next_url.password is not None
+                    or not next_url.path.startswith(base.path + "/")
+                ):
+                    raise ValueError("Untrusted Power BI continuation URL; bearer token not sent")
                 url = state.next_link
                 request_params = {}  # nextLink contains all params
             else:

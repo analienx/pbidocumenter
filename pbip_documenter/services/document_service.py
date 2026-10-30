@@ -63,8 +63,6 @@ from pbip_documenter.docx_render.wireframe import insert_page_layout
 # Before entering landscape, the original portrait header/footer references are captured,
 # then restored when returning to portrait. This avoids cloning image XML and prevents
 # broken logo/header placeholders after the schema pages.
-_SCHEMA_PORTRAIT_HEADER_FOOTER_REFS = None
-
 
 def _clear_hdrftr(hdrftr: typing.Any) -> typing.Any:
     for child in list(hdrftr._element):
@@ -138,7 +136,7 @@ def _set_section_landscape(section: typing.Any, margin_cm: typing.Any = _SCHEMA_
     return section
 
 
-def _set_section_portrait(section: typing.Any) -> typing.Any:
+def _set_section_portrait(section: typing.Any, original_refs: typing.Any) -> typing.Any:
     section.orientation = WD_ORIENT.PORTRAIT
     if section.page_width > section.page_height:
         section.page_width, section.page_height = section.page_height, section.page_width
@@ -150,19 +148,18 @@ def _set_section_portrait(section: typing.Any) -> typing.Any:
     # otherwise the new section inherits the landscape page-number-only header.
     section.header.is_linked_to_previous = False
     section.footer.is_linked_to_previous = False
-    _restore_hdrftr_refs(section, _SCHEMA_PORTRAIT_HEADER_FOOTER_REFS)
+    _restore_hdrftr_refs(section, original_refs)
     return section
 
 
 def _begin_schema_landscape_section(doc: typing.Any) -> typing.Any:
-    global _SCHEMA_PORTRAIT_HEADER_FOOTER_REFS
-    if _SCHEMA_PORTRAIT_HEADER_FOOTER_REFS is None:
-        _SCHEMA_PORTRAIT_HEADER_FOOTER_REFS = _capture_hdrftr_refs(doc.sections[0])
     return _set_section_landscape(doc.add_section(WD_SECTION.NEW_PAGE))
 
 
 def _end_schema_portrait_section(doc: typing.Any) -> typing.Any:
-    return _set_section_portrait(doc.add_section(WD_SECTION.NEW_PAGE))
+    # Derive original references from THIS document, not a prior build.
+    original_refs = _capture_hdrftr_refs(doc.sections[0])
+    return _set_section_portrait(doc.add_section(WD_SECTION.NEW_PAGE), original_refs)
 
 
 def _schema_has_relationship_diagrams(summary: typing.Any) -> typing.Any:
@@ -928,8 +925,7 @@ def build_doc(
         _update_template_header(doc, report_name, rpt.get("logical_id", ""), sm.get("logical_id", ""))
         # Capture template header/footer refs immediately while intact —
         # before any section breaks overwrite them.
-        global _SCHEMA_PORTRAIT_HEADER_FOOTER_REFS
-        _SCHEMA_PORTRAIT_HEADER_FOOTER_REFS = _capture_hdrftr_refs(doc.sections[0])
+
     else:
         doc = Document()
         sec = doc.sections[0]

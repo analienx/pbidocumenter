@@ -119,6 +119,7 @@ class JiraClient:
         url = f"{self.auth.base_url}/rest/api/3/search/jql"
         results: list[typing.Any] = []
         next_page_token: str | None = None
+        seen_tokens: set[str] = set()
         page = 0
 
         while True:
@@ -148,6 +149,9 @@ class JiraClient:
             next_page_token = data.get("nextPageToken")
             if not next_page_token:
                 break
+            if next_page_token in seen_tokens:
+                raise ValueError("Jira pagination returned a repeated nextPageToken")
+            seen_tokens.add(next_page_token)
 
             page += 1
 

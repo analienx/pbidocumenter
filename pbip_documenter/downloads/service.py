@@ -124,13 +124,16 @@ class DownloadService:
         self: typing.Any,
         p: Path,
         stable_checks: int = 2,
+        deadline: float | None = None,
     ) -> typing.Any:
-        """Wait until file size and timestamp stop changing."""
+        """Wait until stable without exceeding the total download deadline."""
+        if deadline is None:
+            deadline = time.monotonic() + self.config.timeout_seconds
         last = None
         stable = 0
         print(f"\nWaiting for file to stabilize: {p.name}")
 
-        while True:
+        while time.monotonic() < deadline:
             if not p.exists():
                 print(".", end="", flush=True)
                 stable = 0
@@ -164,6 +167,7 @@ class DownloadService:
                 last = cur
 
             time.sleep(self.config.poll_seconds)
+        raise TimeoutError(f"Download did not stabilize before timeout: {p.name}")
 
     def _wait_for_matching_download(
         self: typing.Any,
@@ -173,19 +177,19 @@ class DownloadService:
         before_snapshot: dict[Path, tuple[int, float]],
     ) -> typing.Any:
         """Wait for a file matching the pattern to appear and stabilize."""
-        deadline = time.time() + self.config.timeout_seconds
-        start_time = time.time()
+        deadline = time.monotonic() + self.config.timeout_seconds
+        start_time = time.monotonic()
         print(f"\nWaiting for download to appear (timeout: {self.config.timeout_seconds}s)...")
 
-        while time.time() < deadline:
-            elapsed = int(time.time() - start_time)
+        while time.monotonic() < deadline:
+            elapsed = int(time.monotonic() - start_time)
             remaining = self.config.timeout_seconds - elapsed
             print(f"\rScanning... ({elapsed}s elapsed, {remaining}s remaining)", end="", flush=True)
 
             hit = self._pick_best_candidate(folder, before_snapshot, prefix, suffix)
             if hit:
                 print(f"\n✓ Detected file: {hit.name}")
-                return self._wait_until_file_stable(hit, stable_checks=2)
+                return self._wait_until_file_stable(hit, stable_checks=2, deadline=deadline)
             time.sleep(self.config.poll_seconds)
 
         print()  # newline after progress
@@ -202,9 +206,14 @@ class DownloadService:
     def _cache_file(self: typing.Any, src: Path, cache_name: str) -> typing.Any:
         """Copy downloaded file to cache directory."""
         # preserve detected extension unless cache_name already has one
-        cache_path = self.cache_dir / cache_name
+        cache_root = self.cache_dir.resolve()
+        cache_path = (cache_root / cache_name).resolve()
+        if cache_path == cache_root or not cache_path.is_relative_to(cache_root):
+            raise ValueError("Download cache name must stay within the configured cache directory")
         if cache_path.suffix == "":
             cache_path = cache_path.with_suffix(src.suffix)
+        if not cache_path.parent.is_dir():
+            raise ValueError("Download cache target directory does not exist")
 
         shutil.copy2(src, cache_path)
         return cache_path
