@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Product-wide hardening from the [2026-10-30 independent code review](docs/FULL_PRODUCT_CODE_REVIEW_2026-10-30.md): fail-closed malformed PBIR handling, output/template collision protection, atomic DOCX saves and omission of raw live connection strings from exportable summaries.
+- Hardened optional Power BI/Jira pagination and bearer-token continuation trust, restricted SharePoint cache destinations and bounded browser-download stabilization by its configured deadline.
+- Removed cross-document Word header/footer reference state, with focused security, privacy, malformed-source and failure-injection regressions.
+
+
 - Hardened Word semantic-model diagrams: stable priority/cutoff ordering for relationships, stable equal-scored components and safe two-line truncation of unbroken table names.
 - Removed module-level rendering monkeypatch from the before/after comparison tool; added an optional per-call layout builder.
 - Added adversarial regression coverage (long/Unicode identifiers, relationship permutations, role extremes, duplicate edges, safe slots and renderer isolation). See [review findings](docs/SCHEMA_HARDENING_REVIEW.md).

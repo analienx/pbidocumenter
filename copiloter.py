@@ -1066,7 +1066,9 @@ class ReportExtractor:
                 }
                 conn_str = by_conn.get("connectionString", "")
                 if conn_str:
-                    result["dataset_connection"]["connection_string"] = conn_str
+                    # Do not persist raw connection strings: PBIR may include
+                    # credentials, tokens or user identifiers. Only extract
+                    # the non-secret source/catalog details below.
                     cat = re.search(r'Initial Catalog="?([^";]+)"?', conn_str, re.IGNORECASE)
                     if cat:
                         result["dataset_connection"]["catalog"] = cat.group(1)
@@ -1175,7 +1177,7 @@ class ReportExtractor:
         for pf in page_folders:
             page_json = safe_read_json(pf / "page.json")
             if not page_json:
-                self.warnings.append(f"Could not read page.json in {pf.name}")
+                self.warnings.append(f"ERROR: Could not read page.json in {pf.name}")
                 continue
             page: dict[typing.Any, typing.Any] = {
                 "id": page_json.get("name", pf.name),
@@ -1321,7 +1323,10 @@ class ReportExtractor:
             if not vf.is_dir():
                 continue
             vj = safe_read_json(vf / "visual.json")
-            if not vj:
+            if not isinstance(vj, dict) or not vj:
+                self.warnings.append(
+                    f"ERROR: Invalid or missing PBIR visual definition: {(vf / 'visual.json').relative_to(self.report_dir)}"
+                )
                 continue
             vis = vj.get("visual", {})
             visual: dict[typing.Any, typing.Any] = {

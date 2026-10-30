@@ -9,6 +9,7 @@ import argparse
 import os
 import re
 import sys
+import tempfile
 import typing
 from collections.abc import Sequence
 from pathlib import Path
@@ -147,15 +148,32 @@ def main(argv: Sequence[str] | None = None) -> typing.Any:
         else:
             print(f"  SKIP: {proj.name}")
 
+    # Never replace a user-supplied Word template with generated output.
+    # Regular reruns to the same output DOCX remain supported.
+    if args.output and template_path and Path(args.output).expanduser().resolve() == Path(template_path).resolve():
+        print("ERROR: --output must not overwrite the Word template specified by --template.")
+        return 2
+
     if args.output and len(valid_projects) > 1:
         print("ERROR: --output is a single DOCX filename, but multiple valid projects were found.")
         print("Run once per project with --output, or omit --output to generate separate files.")
         return 2
 
     generated = 0
+    extraction_failures = 0
     for proj in valid_projects:
         print(f"  Extracting: {proj.name}")
         summary = build_project_summary(proj)
+        extraction_errors = [
+            warning for warning in (summary.get("report") or {}).get("warnings", [])
+            if str(warning).startswith("ERROR:")
+        ]
+        if extraction_errors:
+            for warning in extraction_errors:
+                print(f"  {warning}")
+            print("  ERROR: Invalid PBIR source definitions; refusing an incomplete specification.")
+            extraction_failures += 1
+            continue
         augmentation = None
         if augmentation_enabled():
             # pandas and the Parquet engine are optional in local-only mode.
@@ -175,13 +193,24 @@ def main(argv: Sequence[str] | None = None) -> typing.Any:
             op = Path.cwd() / "Exported Documents" / proj.name / f"{proj_slug}_DesignSpecification_{args.mode}.docx"
 
         op.parent.mkdir(parents=True, exist_ok=True)
-        doc.save(str(op))
+        # Save into the destination directory and publish atomically. Failed
+        # generation must not replace the previously valid specification.
+        fd, temporary_path = tempfile.mkstemp(prefix=".pbipdoc-", suffix=".docx", dir=op.parent)
+        os.close(fd)
+        try:
+            doc.save(temporary_path)
+            os.replace(temporary_path, op)
+        finally:
+            Path(temporary_path).unlink(missing_ok=True)
         generated += 1
         print(f"  [OK] {op} ({op.stat().st_size:,} bytes)\n")
 
     if not generated:
         print(f"ERROR: No valid PBIP projects found in {REPORTS_DIR}")
         return 2
+    if extraction_failures:
+        print(f"ERROR: {extraction_failures} project(s) contained malformed PBIR source definitions.")
+        return 3
     print("Done.")
     return 0
 

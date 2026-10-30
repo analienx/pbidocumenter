@@ -96,3 +96,5 @@ This keeps documentation claims proportionate to available evidence.
 ## Generated-output documentation
 
 The [gallery](EXAMPLES.md) is sourced from actual DOCX PDF rendering in [successful main CI](https://github.com/analienx/pbidocumenter/actions/runs/41021358575). Each screenshot is mapped to its source Word file and original PDF page in [the provenance manifest](images/showcase-provenance.json). This prevents attractive but disconnected mock screenshots from becoming misleading documentation.
+
+**Full product code review:** [2026-10-30 independent review and release-readiness gaps](FULL_PRODUCT_CODE_REVIEW_2026-10-30.md).
