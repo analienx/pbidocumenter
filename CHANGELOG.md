@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Introduced the agent-first CLI with `generate`, `validate`, `inspect` and `doctor`, versioned JSON results, stable exit codes, conservative source validation and fingerprinted inventories while retaining the historical command.
+- Added an installed-wheel CLI acceptance matrix on GitHub-hosted Windows and Linux, plus updated CLI and AI-agent documentation.
+
+
 - Product-wide hardening from the [2026-10-30 independent code review](docs/FULL_PRODUCT_CODE_REVIEW_2026-10-30.md): fail-closed malformed PBIR handling, output/template collision protection, atomic DOCX saves and omission of raw live connection strings from exportable summaries.
 - Hardened optional Power BI/Jira pagination and bearer-token continuation trust, restricted SharePoint cache destinations and bounded browser-download stabilization by its configured deadline.
 - Removed cross-document Word header/footer reference state, with focused security, privacy, malformed-source and failure-injection regressions.
