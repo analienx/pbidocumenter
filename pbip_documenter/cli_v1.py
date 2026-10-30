@@ -13,6 +13,7 @@ import json
 import re
 import sys
 from collections.abc import Sequence
+from importlib import metadata
 from pathlib import Path
 from typing import Any, NoReturn
 
@@ -187,14 +188,14 @@ def _run_generate(
 
 
 def _doctor(template: Path | None) -> dict[str, Any]:
-    import importlib.util
+    from importlib.util import find_spec
 
     checks: list[dict[str, Any]] = []
     for module, package in (("docx", "python-docx"), ("lxml", "lxml"), ("copiloter", "pbip-documenter")):
-        installed = importlib.util.find_spec(module) is not None
+        installed = find_spec(module) is not None
         try:
-            version = importlib.metadata.version(package)
-        except importlib.metadata.PackageNotFoundError:
+            version = metadata.version(package)
+        except metadata.PackageNotFoundError:
             version = "not installed as a distribution"
         checks.append({"name": module, "ok": installed, "detail": version})
     checks.append({"name": "python", "ok": sys.version_info[:2] >= (3, 10),
