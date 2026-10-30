@@ -36,9 +36,9 @@ def scenario(count: int, seed: int = 73) -> dict:
     pairs: set[tuple[str, str]] = set()
 
     def add(a: str, b: str) -> None:
-        if a == b or tuple(sorted((a, b))) in pairs:
+        if a == b or ((a, b) if a < b else (b, a)) in pairs:
             return
-        pairs.add(tuple(sorted((a, b))))
+        pairs.add((a, b) if a < b else (b, a))
         rels.append({"from_table": a, "to_table": b, "is_active": True, "cross_filtering": "single"})
 
     # Fact 01 is a high-degree hub; other facts connect through overlapping
@@ -77,7 +77,7 @@ def word_figure(destination: Path, view: dict, analysis: dict, legacy: bool) -> 
         schema._render_focus(doc, view, analysis, 2)
     finally:
         schema._build_layout = orig
-    doc.save(destination)
+    doc.save(str(destination))
 
 
 def main() -> None:

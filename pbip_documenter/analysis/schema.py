@@ -249,13 +249,13 @@ def _view(comp: typing.Any, analysis: typing.Any, anchor: typing.Any = None) -> 
     a = anchor or _anchor(comp, tm, g, u)
     direct = sorted(
         [n for n in g[a] if n in comp["nodes"]],
-        key=lambda n: (_role(tm[n]) not in ("dim", "date"), -_score(n, tm, g, u)),
+        key=lambda n: (_role(tm[n]) not in ("dim", "date"), -_score(n, tm, g, u), n),
     )
     visible = [a] + direct[: _SCHEMA_FOCUS_MAX_NODES - 1]
     if len(visible) < _SCHEMA_FOCUS_MAX_NODES:
         d = _dist(a, comp["nodes"], g)
         extra = sorted(
-            [n for n in comp["nodes"] if n not in visible], key=lambda n: (d.get(n, 9), -_score(n, tm, g, u))
+            [n for n in comp["nodes"] if n not in visible], key=lambda n: (d.get(n, 9), -_score(n, tm, g, u), n)
         )
         visible += extra[: _SCHEMA_FOCUS_MAX_NODES - len(visible)]
     visible = list(dict.fromkeys(visible))

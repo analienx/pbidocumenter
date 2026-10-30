@@ -217,7 +217,7 @@ def optimize_layout(
     seed = int(hashlib.sha256(("|".join(nodes) + repr(unique_edges)).encode()).hexdigest()[:12], 16)
     rng = random.Random(seed)
 
-    # Four deterministic restarts, with graph-degree seeding and alternate
+    # Twelve deterministic restarts, with graph-degree seeding and alternate
     # rotations. Swaps cover both ordering and lane assignment; crossings
     # are computed against the actual connector-to-box endpoints.
     degree: Counter[str] = Counter()
@@ -225,14 +225,14 @@ def optimize_layout(
         degree[a] += 1
         degree[b] += 1
     ordered = sorted(dim, key=lambda n: (-degree[n], n)) + sorted(other, key=lambda n: (-degree[n], n))
-    for restart in range(4):
+    for restart in range(12):
         permutation = list(ordered)
         if restart:
             rng.shuffle(permutation)
         placement = dict(zip(permutation, slots, strict=True))
         placement[anchor] = base[anchor]
         score = layout_cost(layout_metrics(placement, unique_edges, anchor, roles))
-        for _ in range(4):
+        for _ in range(8):
             improvement = False
             # Best-improvement 2-opt on node-to-slot assignments.
             move: tuple[str, str] | None = None
