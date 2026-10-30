@@ -61,6 +61,7 @@ def test_doctor_core_and_explicit_template(tmp_path: Path, capsys: pytest.Captur
     code, data = call_json(capsys, ["doctor", "--json"])
     assert code == 0
     assert all(item["ok"] for item in data["checks"])
+    assert data["projects"] == [] and data["diagnostics"] == [] and data["outputs"] == []
     code, data = call_json(capsys, ["doctor", "--template", str(tmp_path / "missing.docx"), "--json"])
     assert code == 4
     assert data["checks"][-1]["ok"] is False

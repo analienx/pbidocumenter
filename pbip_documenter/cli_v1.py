@@ -94,7 +94,7 @@ def _discover(raw: str | None) -> tuple[list[PbipProject], list[dict[str, str]]]
 
 def _format(payload: dict[str, Any], *, json_output: bool) -> None:
     if json_output:
-        print(json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
+        print(json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":")))
         return
     status = "OK" if payload["exit_code"] == EXIT_OK else "FAILED"
     print(f"PBIP Documenter {VERSION} | {payload['command']} | {status}")
@@ -204,7 +204,7 @@ def _doctor(template: Path | None) -> dict[str, Any]:
         checks.append({"name": "template", "ok": template.is_file(),
                        "detail": str(template.expanduser().resolve())})
     code = EXIT_OK if all(check["ok"] for check in checks) else EXIT_ENVIRONMENT
-    return _result("doctor", code, checks=checks)
+    return _result("doctor", code, checks=checks, projects=[], diagnostics=[], outputs=[])
 
 
 def main(argv: Sequence[str] | None = None) -> int:
