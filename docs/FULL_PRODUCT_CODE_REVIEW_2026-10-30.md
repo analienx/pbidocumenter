@@ -76,6 +76,12 @@ These fixes are deliberately narrow. They do not alter semantic-model relationsh
 5. No package publishing and no changes to private/local Contoso work.
 6. Any red CI gate must be repaired and rerun before merge.
 
+## Tracked follow-ups
+
+- [#31 ? P1 tagged-release acceptance gates](https://github.com/analienx/pbidocumenter/issues/31)
+- [#32 ? P1 strict TMDL/source-fidelity diagnostics](https://github.com/analienx/pbidocumenter/issues/32)
+- [#33 ? P2 Word/integration/optional-feature acceptance](https://github.com/analienx/pbidocumenter/issues/33)
+
 ## Decision and next priorities
 
 **Recommended decision:** Merge the narrow fail-safe/privacy/network fixes only after all green gates. Keep unrestricted product-production certification **open** until OPEN-01, OPEN-02 and OPEN-03 have independent acceptance. Avoid expanding VQS scope; VQS is not part of this document-generation release gate.

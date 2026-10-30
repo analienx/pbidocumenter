@@ -60,9 +60,9 @@ from pbip_documenter.docx_render.wireframe import insert_page_layout
 # LANDSCAPE / PORTRAIT SECTION HANDLING
 # Schema relationship diagrams are rendered on landscape pages to maximize width.
 # Landscape pages intentionally use a minimal header with only a page number.
-# Before entering landscape, the original portrait header/footer references are captured,
-# then restored when returning to portrait. This avoids cloning image XML and prevents
-# broken logo/header placeholders after the schema pages.
+# The original first-section portrait header/footer references are restored
+# when returning from landscape. They must be read from the current Word document,
+# never cached in module state or borrowed from a previous document.
 
 def _clear_hdrftr(hdrftr: typing.Any) -> typing.Any:
     for child in list(hdrftr._element):
