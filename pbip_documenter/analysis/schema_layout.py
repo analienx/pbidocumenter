@@ -217,22 +217,24 @@ def optimize_layout(
     seed = int(hashlib.sha256(("|".join(nodes) + repr(unique_edges)).encode()).hexdigest()[:12], 16)
     rng = random.Random(seed)
 
-    # Twelve deterministic restarts, with graph-degree seeding and alternate
-    # rotations. Swaps cover both ordering and lane assignment; crossings
-    # are computed against the actual connector-to-box endpoints.
+    # Compact graphs benefit from a deeper search. Dense 20-node focused
+    # views already gain most of their quality from collision-free slots;
+    # using fewer restarts there keeps full-document generation responsive.
+    restarts = 12 if len(nodes) <= 14 else 4
+    swap_passes = 8 if len(nodes) <= 14 else 4
     degree: Counter[str] = Counter()
     for a, b in unique_edges:
         degree[a] += 1
         degree[b] += 1
     ordered = sorted(dim, key=lambda n: (-degree[n], n)) + sorted(other, key=lambda n: (-degree[n], n))
-    for restart in range(12):
+    for restart in range(restarts):
         permutation = list(ordered)
         if restart:
             rng.shuffle(permutation)
         placement = dict(zip(permutation, slots, strict=True))
         placement[anchor] = base[anchor]
         score = layout_cost(layout_metrics(placement, unique_edges, anchor, roles))
-        for _ in range(8):
+        for _ in range(swap_passes):
             improvement = False
             # Best-improvement 2-opt on node-to-slot assignments.
             move: tuple[str, str] | None = None

@@ -6,7 +6,7 @@ This document describes the **schema relationship positioning** of native Word D
 
 The previous placement used an alternating left/right list of dimensions, top/bottom slices of other tables and a basic vertical overlap nudge. In dense models, boxes could collide, leave the diagram canvas or force connectors through unrelated tables.
 
-The replacement in [`schema_layout.py`](../pbip_documenter/analysis/schema_layout.py) constructs a bounded set of safe slots in the existing landscape diagram. It then assigns nodes using deterministic, role-aware restarts and best-improvement swaps. **Every candidate is evaluated with connector endpoints at actual node edges**, using box-overlap, connector-through-node, crossing and out-of-bounds penalties plus smaller penalties for edge length and role mismatches.
+The replacement in [`schema_layout.py`](../pbip_documenter/analysis/schema_layout.py) constructs a bounded set of safe slots in the existing landscape diagram. It then assigns nodes using deterministic, role-aware restarts and best-improvement swaps. Search depth adapts to diagram size: twelve restarts for compact layouts, four for dense views to avoid unnecessary generation latency. **Every candidate is evaluated with connector endpoints at actual node edges**, using box-overlap, connector-through-node, crossing and out-of-bounds penalties plus smaller penalties for edge length and role mismatches.
 
 **Safe fallback:** The historical algorithm is evaluated for every diagram. The new arrangement is accepted only when its cost improves by both an absolute minimum of 2 points or a relative minimum of 3%; otherwise the original placement remains. Coordinates do not alter nodes, relationships, DrawingML object types or the document canvas size.
 
