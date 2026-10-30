@@ -25,6 +25,7 @@ import textwrap
 import typing
 from collections import Counter, defaultdict, deque
 
+from pbip_documenter.analysis.schema_layout import optimize_layout
 from pbip_documenter.config import (
     _SCHEMA_EDGE_RENDER_LIMIT,
     _SCHEMA_FOCUS_MAX_NODES,
@@ -248,13 +249,13 @@ def _view(comp: typing.Any, analysis: typing.Any, anchor: typing.Any = None) -> 
     a = anchor or _anchor(comp, tm, g, u)
     direct = sorted(
         [n for n in g[a] if n in comp["nodes"]],
-        key=lambda n: (_role(tm[n]) not in ("dim", "date"), -_score(n, tm, g, u)),
+        key=lambda n: (_role(tm[n]) not in ("dim", "date"), -_score(n, tm, g, u), n),
     )
     visible = [a] + direct[: _SCHEMA_FOCUS_MAX_NODES - 1]
     if len(visible) < _SCHEMA_FOCUS_MAX_NODES:
         d = _dist(a, comp["nodes"], g)
         extra = sorted(
-            [n for n in comp["nodes"] if n not in visible], key=lambda n: (d.get(n, 9), -_score(n, tm, g, u))
+            [n for n in comp["nodes"] if n not in visible], key=lambda n: (d.get(n, 9), -_score(n, tm, g, u), n)
         )
         visible += extra[: _SCHEMA_FOCUS_MAX_NODES - len(visible)]
     visible = list(dict.fromkeys(visible))
@@ -326,7 +327,7 @@ def _span(count: typing.Any, start: typing.Any, end: typing.Any) -> typing.Any:
     return [int(start + i * step) for i in range(count)]
 
 
-def _build_layout(view: typing.Any, tm: typing.Any) -> typing.Any:
+def _build_layout_legacy(view: typing.Any, tm: typing.Any) -> typing.Any:
     # TWEAK: node placement inside the schema diagram canvas.
     # Layout lanes: anchor center, dimensions/date left/right, facts/domain/planning top/bottom/middle.
     anchor = view["anchor"]
@@ -379,6 +380,41 @@ def _build_layout(view: typing.Any, tm: typing.Any) -> typing.Any:
             coords[n][0] = max(_emu(0.55), min(_emu(9.65), coords[n][0]))
             coords[n][1] = max(_emu(SCHEMA_NODE_CLAMP_TOP_IN), min(_emu(SCHEMA_NODE_CLAMP_BOTTOM_IN), coords[n][1]))
     return {n: (coords[n][0], coords[n][1], pos[n][2]) for n in names}, widths, heights
+
+
+
+
+def _prioritized_relationships(view: typing.Any) -> typing.Any:
+    """The exact edges drawn in Word; layout scoring must use the same set."""
+    return sorted(
+        view["relationships"],
+        key=lambda r: (
+            0 if view["anchor"] in (r.get("from_table"), r.get("to_table")) else 1,
+            r.get("from_table", ""),
+        ),
+    )[:_SCHEMA_EDGE_RENDER_LIMIT]
+
+def _build_layout(view: typing.Any, tm: typing.Any) -> typing.Any:
+    """Select a scored graph-aware placement, preserving a safe legacy fallback.
+
+    The native Word DrawingML node/connector rendering is intentionally
+    unchanged; only the node coordinates are improved.
+    """
+    baseline, widths, heights = _build_layout_legacy(view, tm)
+    anchor = view["anchor"]
+    roles = {n: _role(tm[n]) for n in view["visible"]}
+    points = {n: (coords[0] / _emu(1), coords[1] / _emu(1)) for n, coords in baseline.items()}
+    edges = [
+        (r["from_table"], r["to_table"])
+        for r in _prioritized_relationships(view)
+        if r.get("from_table") in points and r.get("to_table") in points
+    ]
+    updated, _evidence = optimize_layout(points, edges, anchor, roles)
+    placement = {
+        n: (_emu(x), _emu(y), n == anchor)
+        for n, (x, y) in updated.items()
+    }
+    return placement, widths, heights
 
 
 def _node(
@@ -503,10 +539,7 @@ def _render_focus(doc: typing.Any, view: typing.Any, analysis: typing.Any, fig: 
             bIns="0",
         )
     )
-    rels = sorted(
-        view["relationships"],
-        key=lambda r: (0 if view["anchor"] in (r.get("from_table"), r.get("to_table")) else 1, r.get("from_table", "")),
-    )[:_SCHEMA_EDGE_RENDER_LIMIT]
+    rels = _prioritized_relationships(view)
     for i, r in enumerate(rels, 1):
         a, b = r.get("from_table"), r.get("to_table")
         if a not in pos or b not in pos:

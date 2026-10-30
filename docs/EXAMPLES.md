@@ -9,6 +9,8 @@
 | **[Browse the 27-page full document as PDF](samples/Contoso-Retail-full.pdf)** | **[Full specification (.docx)](samples/Contoso-Retail-full.docx)** |
 | 18-page concise Word version | [Concise specification (.docx)](samples/Contoso-Retail-concise.docx) |
 
+**Relationship positioning matters:** view the [native Word before/after comparison](SCHEMA_LAYOUT_QUALITY.md) to see the crossing-aware layout, with model-size simulations and real Microsoft Word exports.
+
 ## 01 / Understand the data model
 
 [![Detail of the real Word semantic-model relationship diagram](images/showcase/detail-lineage.jpg)](images/showcase/model-lineage.jpg)

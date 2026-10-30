@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added deterministic graph-aware relationship positioning for native Word schema diagrams; reduced connector crossings and eliminated baseline node collisions in large simulated models while retaining a scored legacy fallback.
+- Added 6-, 14-, 48- and 160-table simulation fixtures plus actual Contoso, geometry-quality tests, reproducible before/after DOCX and PDF/JPEG visual review artifacts for GitHub Actions.
+
+
 - Made dynamically generated **native editable Word diagrams** (schema relationships, source lineage and PBIR-derived wireframes) a prominent product feature, distinct from screenshot previews.
 - Documented the actual DrawingML shapes/connectors architecture and the saved-document snapshot boundary; strengthened installed-wheel CI to prevent regressions to static embedded diagram images.
 
