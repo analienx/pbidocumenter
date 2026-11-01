@@ -35,7 +35,7 @@ jobs:
         run: python scripts/schema_layout_comparison.py --out-dir schema-layout-evidence
       - name: Render ten Word documents to PDF and compare page images
         run: python scripts/ci_schema_layout_render.py --dir schema-layout-evidence
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: word-schema-layout-before-after
